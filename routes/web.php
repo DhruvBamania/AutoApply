@@ -721,4 +721,105 @@ Route::get('/terms', [\App\Http\Controllers\LegalController::class, 'terms'])->n
 Route::get('/privacy', [\App\Http\Controllers\LegalController::class, 'privacy'])->name('privacy');
 Route::get('/cookies', [\App\Http\Controllers\LegalController::class, 'cookies'])->name('cookies');
 
+// --- Temporary Remote Database Migration Route (For Vercel / Aiven MySQL) ---
+// Visit: /migrate?secret=ailoop_migrate_2026 (or custom MIGRATION_SECRET from .env)
+Route::match(['get', 'post'], '/migrate', function (\Illuminate\Http\Request $request) {
+    $expectedSecret = env('MIGRATION_SECRET', 'ailoop_migrate_2026');
+    $providedSecret = $request->input('secret') ?? $request->query('secret');
+
+    if ($providedSecret !== $expectedSecret) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Unauthorized. Please supply the valid secret token: ?secret=YOUR_SECRET (Default: ?secret=ailoop_migrate_2026)',
+        ], 403);
+    }
+
+    $action = $request->query('action', 'migrate');
+
+    try {
+        // Test database connection first
+        \Illuminate\Support\Facades\DB::connection()->getPdo();
+        $dbHost = config('database.connections.mysql.host');
+        $dbName = config('database.connections.mysql.database');
+        $dbPrefix = config('database.connections.mysql.prefix');
+
+        switch ($action) {
+            case 'status':
+                \Illuminate\Support\Facades\Artisan::call('migrate:status');
+                $message = 'Migration status check completed.';
+                break;
+            case 'migrate':
+            default:
+                \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+                $message = 'Migrations executed successfully with prefix: [' . ($dbPrefix ?: 'none') . ']';
+                break;
+        }
+
+        $artisanOutput = \Illuminate\Support\Facades\Artisan::output();
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'database' => [
+                    'host' => $dbHost,
+                    'database' => $dbName,
+                    'prefix' => $dbPrefix,
+                ],
+                'output' => $artisanOutput,
+            ]);
+        }
+
+        return response("
+            <!DOCTYPE html>
+            <html lang='en'>
+            <head>
+                <meta charset='UTF-8'>
+                <title>Database Migration Console - AI Looping</title>
+                <style>
+                    body { font-family: ui-monospace, Menlo, Monaco, Consolas, monospace; background: #0f172a; color: #f8fafc; padding: 2rem; margin: 0; }
+                    .card { max-width: 800px; margin: 0 auto; background: #1e293b; border-radius: 12px; padding: 1.5rem; border: 1px solid #334155; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+                    .badge { display: inline-block; padding: 0.35rem 0.75rem; border-radius: 6px; font-size: 0.85rem; font-weight: bold; background: #10b981; color: white; margin-bottom: 1rem; }
+                    .info { background: #0f172a; padding: 1rem; border-radius: 8px; font-size: 0.9rem; margin-bottom: 1.5rem; border: 1px solid #334155; line-height: 1.6; }
+                    pre { background: #020617; padding: 1rem; border-radius: 8px; overflow-x: auto; color: #38bdf8; font-size: 0.88rem; line-height: 1.5; border: 1px solid #1e293b; }
+                    .btn { display: inline-block; padding: 0.5rem 1rem; background: #4f46e5; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; margin-right: 0.5rem; }
+                </style>
+            </head>
+            <body>
+                <div class='card'>
+                    <span class='badge'>✓ Migration Console</span>
+                    <h2>Database Operations Output</h2>
+                    <div class='info'>
+                        <strong>Host:</strong> {$dbHost}<br>
+                        <strong>Database:</strong> {$dbName}<br>
+                        <strong>Table Prefix:</strong> <code>{$dbPrefix}</code> (Isolates AI Looping from other applications)<br>
+                        <strong>Status:</strong> {$message}
+                    </div>
+                    <h3>Artisan Console Log:</h3>
+                    <pre>" . htmlspecialchars($artisanOutput ?: 'Nothing to migrate or command completed with no output.') . "</pre>
+                    <div style='margin-top: 1.5rem;'>
+                        <a href='?secret=" . urlencode($providedSecret) . "&action=migrate' class='btn'>Run Migrate</a>
+                        <a href='?secret=" . urlencode($providedSecret) . "&action=status' class='btn' style='background: #0284c7;'>Check Status</a>
+                        <a href='/' class='btn' style='background: #475569;'>Go to Website &rarr;</a>
+                    </div>
+                </div>
+            </body>
+            </html>
+        ", 200, ['Content-Type' => 'text/html']);
+
+    } catch (\Throwable $e) {
+        return response()->json([
+            'success' => false,
+            'error' => 'Database operation failed',
+            'message' => $e->getMessage(),
+            'connection' => [
+                'host' => config('database.connections.mysql.host'),
+                'database' => config('database.connections.mysql.database'),
+                'prefix' => config('database.connections.mysql.prefix'),
+            ],
+            'file' => $e->getFile() . ':' . $e->getLine(),
+        ], 500);
+    }
+})->name('artisan.migrate');
+
 
