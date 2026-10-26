@@ -18,7 +18,7 @@
 
     <!-- Job Creation Form -->
     <div class="card">
-        <form action="{{ route('company.jobs.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('company.jobs.store') }}" method="POST" enctype="multipart/form-data" id="job-post-form">
             @csrf
 
             <!-- Section 1: Basic Role Details -->
@@ -207,7 +207,7 @@
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="btn-primary" style="width: 100%; padding: 0.9rem; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 0.6rem;">
+            <button type="submit" id="job-submit-btn" class="btn-primary" style="width: 100%; padding: 0.9rem; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 0.6rem; transition: all 0.2s;">
                 <span>🚀</span> Publish & Post to Selected Platforms (1-Click)
             </button>
         </form>
@@ -216,6 +216,25 @@
 </div>
 
 <script>
+    // Double-submit prevention & loading indicator
+    const jobForm = document.getElementById('job-post-form');
+    if (jobForm) {
+        jobForm.addEventListener('submit', function (e) {
+            const btn = document.getElementById('job-submit-btn');
+            if (jobForm.dataset.submitting === 'true') {
+                e.preventDefault();
+                return false;
+            }
+            jobForm.dataset.submitting = 'true';
+            setTimeout(() => {
+                btn.disabled = true;
+                btn.innerHTML = '<span>⏳</span> Publishing & Distributing to Platforms... Please wait...';
+                btn.style.opacity = '0.75';
+                btn.style.cursor = 'not-allowed';
+            }, 10);
+        });
+    }
+
     function toggleAllPlatforms(checked) {
         document.querySelectorAll('.platform-checkbox').forEach(cb => cb.checked = checked);
     }

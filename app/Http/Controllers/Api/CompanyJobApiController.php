@@ -76,6 +76,21 @@ class CompanyJobApiController extends Controller
             $imagePath = $request->file('image')->store('job_images', 'public');
         }
 
+        // Idempotency guard: prevent duplicate job creation from rapid multiple calls
+        $recentDuplicate = JobPosting::where('user_id', $user->id)
+            ->where('title', $request->title)
+            ->where('created_at', '>=', now()->subSeconds(15))
+            ->latest()
+            ->first();
+
+        if ($recentDuplicate) {
+            return response()->json([
+                'success' => true,
+                'message' => "Job '{$recentDuplicate->title}' is already created.",
+                'job' => $recentDuplicate,
+            ], 200);
+        }
+
         $job = JobPosting::create([
             'user_id' => $user->id,
             'title' => $request->title,

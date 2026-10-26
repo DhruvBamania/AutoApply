@@ -58,6 +58,18 @@ class CompanyJobController extends Controller
 
         $platforms = $request->input('platforms', ['linkedin', 'naukri', 'indeed']);
 
+        // Idempotency guard: prevent duplicate job creation from rapid multiple clicks
+        $recentDuplicate = Auth::user()->jobPostings()
+            ->where('title', $request->title)
+            ->where('created_at', '>=', now()->subSeconds(15))
+            ->latest()
+            ->first();
+
+        if ($recentDuplicate) {
+            return redirect()->route('company.jobs.show', $recentDuplicate->id)
+                ->with('success', "Job '{$recentDuplicate->title}' is already being processed.");
+        }
+
         $job = Auth::user()->jobPostings()->create([
             'title' => $request->title,
             'job_type' => $request->job_type,
