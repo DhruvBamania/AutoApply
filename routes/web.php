@@ -689,9 +689,15 @@ Route::get('/download-apk', function () {
         return redirect()->away($externalUrl);
     }
 
-    $apkPath = public_path('app-debug.apk');
+    $apkPath = file_exists(public_path('app-release.apk'))
+        ? public_path('app-release.apk')
+        : public_path('app-debug.apk');
+
     if (!file_exists($apkPath)) {
-        $sourcePath = base_path('mobile_app/build/app/outputs/flutter-apk/app-debug.apk');
+        $sourcePath = file_exists(base_path('mobile_app/build/app/outputs/flutter-apk/app-release.apk'))
+            ? base_path('mobile_app/build/app/outputs/flutter-apk/app-release.apk')
+            : base_path('mobile_app/build/app/outputs/flutter-apk/app-debug.apk');
+
         if (file_exists($sourcePath)) {
             copy($sourcePath, $apkPath);
         } else {
