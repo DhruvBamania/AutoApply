@@ -19,6 +19,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (config('app.env') === 'production' || env('VERCEL') || isset($_SERVER['VERCEL']) || request()->header('x-forwarded-proto') === 'https') {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
         \Illuminate\Auth\Middleware\RedirectIfAuthenticated::redirectUsing(function () {
             return \Illuminate\Support\Facades\Auth::user()?->isCompany()
                 ? route('company.dashboard')
