@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoApply - Playful Pastel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Fredoka', sans-serif; }
+        body { background: #fffaf0; color: #4a4a4a; padding: 2rem; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: #ffe4e1; border-radius: 100px; margin-bottom: 3rem; border: 3px solid #ffb6c1; }
+        .logo { font-size: 1.8rem; font-weight: 600; color: #ff69b4; }
+        
+        .nav-pill { background: white; padding: 0.5rem 1.5rem; border-radius: 100px; text-decoration: none; color: #ff69b4; font-weight: 500; border: 2px solid #ffb6c1; transition: transform 0.2s; }
+        .nav-pill:hover { transform: translateY(-3px); background: #fff0f5; }
+        
+        .main-container { max-width: 1000px; margin: 0 auto; }
+        .card { background: white; border-radius: 30px; padding: 3rem; border: 4px solid #e6e6fa; box-shadow: 10px 10px 0px #e6e6fa; margin-bottom: 3rem; }
+        
+        h1 { color: #9370db; font-size: 2.5rem; margin-bottom: 1.5rem; }
+        
+        input, textarea { width: 100%; border: 3px solid #f0e68c; border-radius: 20px; padding: 1rem; font-size: 1.1rem; outline: none; margin-bottom: 1.5rem; background: #fffacd; color: #555; }
+        input:focus, textarea:focus { border-color: #ffd700; }
+        
+        .btn-magic { background: #98fb98; border: 3px solid #3cb371; color: #2e8b57; font-size: 1.2rem; font-weight: 600; padding: 1rem 2rem; border-radius: 100px; cursor: pointer; width: 100%; transition: all 0.2s; box-shadow: 4px 4px 0px #3cb371; }
+        .btn-magic:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px #3cb371; }
+        .btn-magic:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px #3cb371; }
+        
+        .history { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 1rem; }
+        .hist-card { min-width: 250px; background: #e0ffff; border: 3px solid #afeeee; border-radius: 20px; padding: 1.5rem; box-shadow: 6px 6px 0px #afeeee; }
+        .hist-card h3 { color: #008b8b; margin-bottom: 0.5rem; }
+        .btn-dl { background: #ffa07a; border: 2px solid #cd5c5c; color: white; padding: 0.5rem 1rem; border-radius: 15px; cursor: pointer; margin-top: 1rem; font-weight: 500; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">🚀 AutoApply</div>
+        <div style="display: flex; gap: 1rem;">
+            <a href="#" class="nav-pill">Builder</a>
+            <a href="#" class="nav-pill">Socials</a>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <div class="card">
+            <h1>Create Magic Resume ✨</h1>
+            <input type="text" placeholder="Target Company Name">
+            <textarea rows="6" placeholder="Paste the job description here..."></textarea>
+            <button class="btn-magic">Do The Magic!</button>
+        </div>
+        
+        <h2 style="color: #dda0dd; margin-bottom: 1.5rem; font-size: 2rem;">Your Creations</h2>
+        <div class="history">
+            <div class="hist-card">
+                <h3>Google Inc.</h3>
+                <p style="color: #66cdaa;">Software Engineer</p>
+                <button class="btn-dl">Download Docs</button>
+            </div>
+            <div class="hist-card" style="background: #fff0f5; border-color: #ffb6c1; box-shadow: 6px 6px 0px #ffb6c1;">
+                <h3 style="color: #c71585;">Netflix</h3>
+                <p style="color: #db7093;">UI Designer</p>
+                <button class="btn-dl" style="background: #9370db; border-color: #8a2be2;">Download Docs</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

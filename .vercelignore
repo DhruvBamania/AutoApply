@@ -1,0 +1,51 @@
+# Vercel Deployment Ignore Rules
+# Exclude non-production, development, mobile, test, and temporary assets
+
+# Mobile application source code (built separately with Flutter)
+mobile_app/
+
+# Testing and automated test suites
+tests/
+phpunit.xml
+.phpunit.result.cache
+
+# Development tools and dependencies
+node_modules/
+.npm
+.yarn
+
+# Local scratch and test scripts
+scratch/
+check_db.php
+check_text.php
+generate_distinct_templates.php
+generate_templates.php
+generate_test.php
+generated_resume.docx
+test_ai_parse.php
+test_html_writer.php
+test_preview.html
+htmls files/
+AUDIT_REPORT.md
+
+# Sensitive local environment files
+.env
+.env.*
+!.env.example
+
+# Git metadata
+.git/
+.github/
+.gitignore
+.gitattributes
+
+# Editor and IDE configurations
+.idea/
+.vscode/
+.fleet/
+.nova/
+.zed/
+
+# Large binaries that exceed Vercel serverless function quotas
+# (Host release APK on GitHub Releases or external CDN and set APK_DOWNLOAD_URL in Vercel environment)
+public/app-debug.apk

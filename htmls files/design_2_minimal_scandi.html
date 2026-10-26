@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoApply - Ultra Minimal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #fcfcfc; --text: #111111; --text-light: #888888; --border: #eaeaea; --accent: #000000; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        body { background: var(--bg); color: var(--text); padding: 4rem 10%; line-height: 1.5; }
+        
+        header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid var(--border); padding-bottom: 2rem; margin-bottom: 4rem; }
+        .logo { font-size: 2.5rem; font-weight: 700; letter-spacing: -1px; }
+        nav { display: flex; gap: 2rem; }
+        nav a { color: var(--text-light); text-decoration: none; font-weight: 500; font-size: 1.1rem; transition: color 0.3s; }
+        nav a:hover, nav a.active { color: var(--text); }
+        
+        .layout { display: flex; gap: 4rem; }
+        .col-main { flex: 1.2; }
+        .col-side { flex: 0.8; }
+        
+        h1 { font-size: 3rem; font-weight: 600; letter-spacing: -1px; margin-bottom: 1rem; }
+        p.desc { font-size: 1.2rem; color: var(--text-light); margin-bottom: 3rem; font-weight: 300; }
+        
+        .input-block { margin-bottom: 2.5rem; }
+        label { display: block; font-weight: 500; margin-bottom: 1rem; font-size: 1.1rem; }
+        input, textarea {
+            width: 100%; border: none; border-bottom: 2px solid var(--border);
+            background: transparent; padding: 0.5rem 0; font-size: 1.2rem; color: var(--text);
+            outline: none; transition: border-color 0.3s;
+        }
+        textarea { resize: vertical; min-height: 150px; border: 2px solid var(--border); padding: 1.5rem; border-radius: 8px; margin-top: 0.5rem; }
+        input:focus, textarea:focus { border-color: var(--accent); }
+        
+        .btn {
+            background: var(--accent); color: white; border: none; padding: 1.2rem 2.5rem;
+            font-size: 1.1rem; font-weight: 600; border-radius: 100px; cursor: pointer;
+            transition: transform 0.3s, background 0.3s;
+        }
+        .btn:hover { transform: scale(1.02); }
+        
+        .history-list { list-style: none; }
+        .history-list li {
+            padding: 2rem 0; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .hist-title { font-size: 1.3rem; font-weight: 500; }
+        .hist-meta { color: var(--text-light); margin-top: 0.5rem; }
+        .btn-outline {
+            background: transparent; border: 2px solid var(--border); color: var(--text);
+            padding: 0.8rem 1.5rem; border-radius: 100px; font-weight: 500; cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-outline:hover { border-color: var(--accent); }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">AutoApply.</div>
+        <nav>
+            <a href="#" class="active">Builder</a>
+            <a href="#">Campaigns</a>
+            <a href="#">Integrations</a>
+        </nav>
+    </header>
+    
+    <div class="layout">
+        <div class="col-main">
+            <h1>Tailor Your Resume</h1>
+            <p class="desc">Input the job description. Our AI will align your experience seamlessly.</p>
+            
+            <div class="input-block">
+                <label>Company Name</label>
+                <input type="text" placeholder="e.g. OpenAI">
+            </div>
+            
+            <div class="input-block">
+                <label>Job Requirements</label>
+                <textarea placeholder="Paste the JD here..."></textarea>
+            </div>
+            
+            <button class="btn">Generate Resume</button>
+        </div>
+        
+        <div class="col-side">
+            <h2 style="font-size: 2rem; font-weight: 500; margin-bottom: 2rem;">Recent Documents</h2>
+            <ul class="history-list">
+                <li>
+                    <div>
+                        <div class="hist-title">Software Engineer @ OpenAI</div>
+                        <div class="hist-meta">Generated today</div>
+                    </div>
+                    <button class="btn-outline">Download</button>
+                </li>
+                <li>
+                    <div>
+                        <div class="hist-title">Frontend Developer @ Vercel</div>
+                        <div class="hist-meta">Generated yesterday</div>
+                    </div>
+                    <button class="btn-outline">Download</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
