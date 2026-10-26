@@ -49,92 +49,723 @@
             min-width: 0;
         }
 
-        /* Navbar */
+        /* ==========================================================================
+           MODERN RESPONSIVE FLOATING HEADER & NAVIGATION
+           ========================================================================== */
+        
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.85rem 1.4rem;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.85);
+            padding: 0.75rem 1.25rem;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.95);
             border-radius: 20px;
             margin-bottom: 2rem;
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
-            position: relative;
-            z-index: 50;
+            box-shadow: 0 10px 30px -10px rgba(79, 70, 229, 0.08), 0 4px 15px -3px rgba(0, 0, 0, 0.04);
+            position: sticky;
+            top: 0.75rem;
+            z-index: 1000;
             width: 100%;
             max-width: 100%;
             box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .logo {
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: #4c51bf;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-        .nav-links {
-            display: flex;
-            gap: 0.45rem;
-            align-items: center;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-        .nav-item {
-            padding: 0.45rem 0.75rem;
-            text-decoration: none;
-            color: #4a5568;
-            font-weight: 500;
-            border-radius: 10px;
-            transition: all 0.25s ease;
-            font-size: 0.88rem;
-            white-space: nowrap;
+
+        /* Brand Logo */
+        .header-brand {
             display: inline-flex;
             align-items: center;
+            gap: 0.65rem;
+            text-decoration: none;
+            color: #1e1b4b;
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
         }
-        .nav-item:hover {
-            background: rgba(255, 255, 255, 0.85);
-            color: #4c51bf;
+        .header-brand:hover {
             transform: translateY(-1px);
         }
-        .nav-user-email {
-            max-width: 160px;
+        .brand-icon-box {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+            flex-shrink: 0;
+        }
+        .brand-icon-box.sm {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+        }
+        .brand-icon-svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff;
+        }
+        .brand-text-group {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.15;
+        }
+        .brand-title {
+            font-size: 1.22rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #0f172a;
+        }
+        .brand-title-accent {
+            background: linear-gradient(135deg, #4f46e5, #9333ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .brand-subtitle {
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+        .brand-live-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            color: #059669;
+            padding: 0.2rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            margin-left: 0.15rem;
+        }
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: pulseLiveDot 2s infinite;
+        }
+        @keyframes pulseLiveDot {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* Center Nav Links (Desktop) */
+        .header-nav-center {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .header-nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.45rem 0.75rem;
+            color: #475569;
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            background: transparent;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+        .header-nav-link:hover {
+            color: #4f46e5;
+            background: rgba(99, 102, 241, 0.08);
+            transform: translateY(-1px);
+        }
+        .header-nav-link.active {
+            color: #4338ca;
+            background: rgba(99, 102, 241, 0.12);
+            font-weight: 600;
+            border-color: rgba(99, 102, 241, 0.15);
+        }
+        .nav-link-icon {
+            font-size: 0.95rem;
+            line-height: 1;
+        }
+        .highlight-pill {
+            background: rgba(2, 132, 199, 0.08);
+            color: #0369a1;
+            font-weight: 600;
+        }
+        .highlight-pill:hover {
+            background: rgba(2, 132, 199, 0.15);
+            color: #0284c7;
+        }
+        .pill-sparkle {
+            background: linear-gradient(135deg, #0284c7, #6366f1);
+            color: white;
+            font-size: 0.62rem;
+            font-weight: 700;
+            padding: 0.1rem 0.35rem;
+            border-radius: 6px;
+            letter-spacing: 0.02em;
+        }
+
+        /* Dropdown Trigger & Menus */
+        .header-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-chevron {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.2s ease;
+            color: #64748b;
+        }
+        .header-dropdown.open .dropdown-chevron {
+            transform: rotate(180deg);
+        }
+        .header-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            min-width: 250px;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 16px;
+            box-shadow: 0 20px 40px -12px rgba(15, 23, 42, 0.15);
+            padding: 0.5rem;
+            z-index: 1050;
+            animation: dropdownFadeIn 0.2s ease-out;
+        }
+        .header-dropdown.open .header-dropdown-menu {
+            display: block;
+        }
+        @keyframes dropdownFadeIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .dropdown-menu-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #94a3b8;
+            letter-spacing: 0.08em;
+            padding: 0.4rem 0.75rem 0.2rem 0.75rem;
+            text-transform: uppercase;
+        }
+        .dropdown-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.55rem 0.75rem;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #334155;
+            transition: all 0.18s ease;
+        }
+        .dropdown-menu-item:hover {
+            background: #f1f5f9;
+            color: #4f46e5;
+            transform: translateX(2px);
+        }
+        .dropdown-menu-item.active {
+            background: rgba(99, 102, 241, 0.08);
+            color: #4338ca;
+            font-weight: 600;
+        }
+        .item-icon-box {
+            font-size: 1.05rem;
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: #f8fafc;
+            flex-shrink: 0;
+        }
+        .item-text-group {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.25;
+        }
+        .item-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .item-desc {
+            font-size: 0.72rem;
+            color: #64748b;
+        }
+        .dropdown-menu-divider {
+            height: 1px;
+            background: #e2e8f0;
+            margin: 0.4rem 0;
+        }
+
+        /* Right Actions */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+        .header-cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.45rem 1rem;
+            border-radius: 12px;
+            font-size: 0.86rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            min-height: 38px;
+        }
+        .header-cta-btn.primary-cta {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+            border: none;
+        }
+        .header-cta-btn.primary-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.5);
+            color: white;
+        }
+        .header-cta-btn.secondary-cta {
+            background: rgba(99, 102, 241, 0.08);
+            color: #4338ca;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        .header-cta-btn.secondary-cta:hover {
+            background: rgba(99, 102, 241, 0.15);
+            transform: translateY(-2px);
+            color: #3730a3;
+        }
+
+        /* User Profile Button & Dropdown */
+        .user-profile-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            padding: 0.35rem 0.65rem 0.35rem 0.4rem;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .user-profile-trigger:hover {
+            background: white;
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .user-avatar-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            color: white;
+            font-size: 0.88rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(99, 102, 241, 0.3);
+            flex-shrink: 0;
+        }
+        .user-info-text {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            line-height: 1.15;
+            max-width: 110px;
+        }
+        .user-name-line {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #1e293b;
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
-            color: var(--text-muted);
-            cursor: default;
-            display: inline-block;
-            vertical-align: middle;
         }
-        
-        .hamburger {
+        .user-role-badge {
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .badge-role-company {
+            color: #0284c7;
+        }
+        .badge-role-candidate {
+            color: #7c3aed;
+        }
+
+        /* User Menu Dropdown Card */
+        .user-dropdown-card {
             display: none;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 0.4rem;
-            flex-direction: column;
-            gap: 5px;
-            z-index: 60;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 290px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.03);
+            padding: 0.75rem;
+            z-index: 1050;
+            animation: dropdownFadeIn 0.2s ease-out;
         }
-        .hamburger span {
+        .header-dropdown.open .user-dropdown-card {
             display: block;
-            width: 24px;
-            height: 2.5px;
-            background: #4c51bf;
+        }
+        .dropdown-user-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0.4rem;
+        }
+        .dropdown-avatar-large {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+            color: white;
+            font-size: 1.15rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+            flex-shrink: 0;
+        }
+        .dropdown-user-meta {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            line-height: 1.25;
+        }
+        .user-display-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #0f172a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .user-display-email {
+            font-size: 0.76rem;
+            color: #64748b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 0.2rem;
+        }
+        .user-display-role {
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 0.15rem 0.5rem;
+            border-radius: 6px;
+            display: inline-block;
+            width: fit-content;
+        }
+        .user-display-role.company {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+        .user-display-role.candidate {
+            background: #f3e8ff;
+            color: #7e22ce;
+        }
+        .dropdown-menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+        .dropdown-signout-form {
+            margin: 0;
+            padding: 0.25rem 0 0 0;
+        }
+        .dropdown-signout-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.6rem;
+            background: #fff1f2;
+            color: #e11d48;
+            border: 1px solid #ffe4e6;
+            border-radius: 12px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .dropdown-signout-btn:hover {
+            background: #ffe4e6;
+            color: #be123c;
+            transform: translateY(-1px);
+        }
+
+        /* Modern Animated Hamburger Button */
+        .hamburger-btn {
+            display: none;
+            width: 40px;
+            height: 40px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 10px;
+            cursor: pointer;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            transition: all 0.2s ease;
+            z-index: 1060;
+        }
+        .hamburger-btn:hover {
+            background: white;
+            border-color: #cbd5e1;
+        }
+        .hamburger-btn .bar {
+            width: 22px;
+            height: 2.2px;
+            background: #334155;
             border-radius: 3px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .hamburger.active span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
-        .hamburger.active span:nth-child(2) { opacity: 0; transform: scale(0.5); }
-        .hamburger.active span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+        .hamburger-btn.active .bar-1 {
+            transform: translateY(7px) rotate(45deg);
+            background: #4f46e5;
+        }
+        .hamburger-btn.active .bar-2 {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+        .hamburger-btn.active .bar-3 {
+            transform: translateY(-7px) rotate(-45deg);
+            background: #4f46e5;
+        }
+
+        /* Mobile Slide Drawer & Overlay */
+        .mobile-drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 1090;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .mobile-drawer-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .mobile-nav-drawer {
+            position: fixed;
+            top: 0;
+            right: -340px;
+            width: 320px;
+            max-width: 88vw;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            box-shadow: -10px 0 35px rgba(0, 0, 0, 0.15);
+            z-index: 1100;
+            display: flex;
+            flex-direction: column;
+            transition: right 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 1.25rem;
+            box-sizing: border-box;
+        }
+        .mobile-nav-drawer.active {
+            right: 0;
+        }
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .drawer-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+        .drawer-close-btn {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .drawer-close-btn:hover {
+            background: #fee2e2;
+            color: #ef4444;
+            border-color: #fecaca;
+        }
+        .drawer-user-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            border-radius: 14px;
+            padding: 0.85rem;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .drawer-user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .drawer-user-details {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            line-height: 1.25;
+        }
+        .drawer-user-name {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #0f172a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .drawer-user-email {
+            font-size: 0.74rem;
+            color: #64748b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 0.2rem;
+        }
+        .drawer-user-role {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.12rem 0.45rem;
+            border-radius: 6px;
+            width: fit-content;
+        }
+        .drawer-user-role.company { background: #e0f2fe; color: #0284c7; }
+        .drawer-user-role.candidate { background: #f3e8ff; color: #7e22ce; }
+        .drawer-body {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            flex: 1;
+        }
+        .drawer-section-title {
+            font-size: 0.66rem;
+            font-weight: 700;
+            color: #94a3b8;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.75rem 0.5rem 0.25rem 0.5rem;
+        }
+        .drawer-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.65rem 0.85rem;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #334155;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .drawer-link:hover {
+            background: #f1f5f9;
+            color: #4f46e5;
+            transform: translateX(3px);
+        }
+        .drawer-link.active {
+            background: rgba(99, 102, 241, 0.1);
+            color: #4338ca;
+            font-weight: 600;
+        }
+        .drawer-link-icon {
+            font-size: 1rem;
+            margin-right: 0.65rem;
+            display: inline-block;
+        }
+        .drawer-badge {
+            font-size: 0.62rem;
+            font-weight: 700;
+            background: #0284c7;
+            color: white;
+            padding: 0.1rem 0.4rem;
+            border-radius: 6px;
+        }
+        .drawer-action-block {
+            margin: 0.85rem 0;
+        }
+        .drawer-footer {
+            margin-top: auto;
+            padding-top: 1.5rem;
+            border-top: 1px solid #f1f5f9;
+        }
+        .drawer-logout-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: #fff1f2;
+            color: #e11d48;
+            border: 1px solid #ffe4e6;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .drawer-logout-btn:hover {
+            background: #ffe4e6;
+            color: #be123c;
+        }
 
         /* Buttons */
         .btn-primary, .btn {
@@ -229,65 +860,27 @@
 
         /* --- RESPONSIVE MEDIA QUERIES --- */
         
-        /* Laptops, Tablets & Medium Screens (<= 1200px) */
-        @media (max-width: 1200px) {
+        /* Laptops & Desktops (<= 1150px) */
+        @media (max-width: 1150px) {
             .app-layout { padding-left: 1.25rem; padding-right: 1.25rem; }
+            .user-info-text { display: none; } /* Show avatar only to preserve horizontal room */
+            .header-nav-link { padding: 0.4rem 0.6rem; font-size: 0.84rem; }
+        }
+
+        /* Tablets & Mobile Navigation (<= 960px) */
+        @media (max-width: 960px) {
             .grid-2 { grid-template-columns: 1fr; }
-            
-            /* Navbar Collapses into Mobile Menu */
-            .hamburger { display: flex; }
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: calc(100% + 10px);
-                left: 0;
-                right: 0;
-                background: rgba(255, 255, 255, 0.97);
-                backdrop-filter: blur(20px);
-                -webkit-backdrop-filter: blur(20px);
-                border: 1px solid rgba(255, 255, 255, 0.95);
-                border-radius: 20px;
-                box-shadow: 0 16px 40px rgba(31, 38, 135, 0.15);
-                padding: 1.25rem;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0.5rem;
-                z-index: 100;
-                width: 100%;
-                max-width: 100%;
-                box-sizing: border-box;
-            }
-            .nav-links.active {
-                display: flex;
-                animation: slideDownMenu 0.25s ease-out forwards;
-            }
-            .nav-item {
-                width: 100%;
-                text-align: left;
-                padding: 0.75rem 1rem;
-                font-size: 0.95rem;
-                border-radius: 12px;
-            }
-            .nav-user-email {
-                max-width: 100% !important;
-            }
-            .nav-links .btn-primary, .nav-links .btn-secondary, .nav-links form, .nav-links form button {
-                width: 100% !important;
-                margin: 0.25rem 0 !important;
-                text-align: center;
-                justify-content: center;
-            }
+            .header-nav-center { display: none; } /* Seamlessly collapse center links into mobile drawer */
+            .hamburger-btn { display: flex; }
+            .navbar { padding: 0.65rem 1rem; margin-bottom: 1.5rem; }
+            .header-brand .brand-live-pill { display: none; }
+            .user-profile-trigger { display: none; } /* Integrated into mobile drawer hero */
             
             /* Editor Layout Stack */
             .editor-layout { flex-direction: column !important; height: auto !important; }
             .editor-layout > div { flex: none !important; width: 100% !important; }
             .editor-sidebar { border-right: none !important; border-bottom: 1px solid var(--surface-border); padding-right: 0 !important; padding-bottom: 1.5rem; margin-bottom: 1.5rem; overflow-y: visible !important; }
             .editor-preview { overflow-y: visible !important; }
-        }
-
-        @keyframes slideDownMenu {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Small Screens & Mobile (<= 768px) */
@@ -384,47 +977,406 @@
     <div class="blob-2"></div>
 
     <div class="app-layout">
-        <header class="navbar">
-            <a href="/" class="logo">✨ {{ config('app.name', 'AI Looping') }}</a>
-            <button class="hamburger" id="nav-toggle" aria-label="Toggle Navigation">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <nav class="nav-links" id="nav-links">
+        <header class="navbar" id="mainHeader">
+            <!-- Brand Logo & Live Status -->
+            <a href="/" class="header-brand" title="{{ config('app.name', 'AI Looping') }}">
+                <div class="brand-icon-box">
+                    <svg class="brand-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                    </svg>
+                </div>
+                <div class="brand-text-group">
+                    <span class="brand-title">Auto<span class="brand-title-accent">Apply</span></span>
+                    <span class="brand-subtitle">AI LOOPING</span>
+                </div>
+                <div class="brand-live-pill" title="Production Cluster Active">
+                    <span class="live-dot"></span>
+                    <span>LIVE</span>
+                </div>
+            </a>
+
+            <!-- Desktop Nav Center -->
+            <nav class="header-nav-center" id="desktopNav">
                 @auth
                     @if(auth()->user()->role === 'company')
-                        <a href="{{ route('company.dashboard') }}" class="nav-item">🏢 Dashboard</a>
-                        <a href="{{ route('company.jobs.index') }}" class="nav-item">💼 Job Postings</a>
-                        <a href="{{ route('company.inquiries.index') }}" class="nav-item">💬 Inquiries & Queries</a>
-                        <a href="{{ route('company.integrations') }}" class="nav-item">🔗 Integrations</a>
-                        <a href="{{ route('contact') }}" class="nav-item">💬 Contact</a>
-                        <a href="{{ route('company.jobs.create') }}" class="btn-primary" style="padding: 0.4rem 1rem; font-size: 0.85rem; margin-right: 0.5rem;">➕ Post a Job</a>
+                        <a href="{{ route('company.dashboard') }}" class="header-nav-link {{ request()->routeIs('company.dashboard') ? 'active' : '' }}">
+                            <span class="nav-link-icon">🏢</span> Dashboard
+                        </a>
+                        <a href="{{ route('company.jobs.index') }}" class="header-nav-link {{ request()->routeIs('company.jobs.*') && !request()->routeIs('company.jobs.create') ? 'active' : '' }}">
+                            <span class="nav-link-icon">💼</span> Jobs
+                        </a>
+                        <a href="{{ route('company.inquiries.index') }}" class="header-nav-link {{ request()->routeIs('company.inquiries.*') ? 'active' : '' }}">
+                            <span class="nav-link-icon">💬</span> Inquiries
+                        </a>
+                        <a href="{{ route('company.integrations') }}" class="header-nav-link {{ request()->routeIs('company.integrations') ? 'active' : '' }}">
+                            <span class="nav-link-icon">🔗</span> Integrations
+                        </a>
+                        <a href="{{ route('contact') }}" class="header-nav-link {{ request()->routeIs('contact*') ? 'active' : '' }}">
+                            <span class="nav-link-icon">🎧</span> Support
+                        </a>
                     @else
-                        <a href="{{ route('resumes.tailor') }}" class="nav-item">Resume Builder</a>
-                        <a href="{{ route('templates.index') }}" class="nav-item">Template Gallery</a>
-                        <a href="{{ route('resume_editor.index') }}" class="nav-item">Dynamic Editor</a>
-                        <a href="{{ route('role_resume.index') }}" class="nav-item">Role Resume</a>
-                        <a href="{{ route('social_posts.index') }}" class="nav-item">Social Campaign</a>
-                        <a href="{{ route('interview_prep.index') }}" class="nav-item" style="font-weight: 600; color: #4338ca;">🎯 Interview Prep</a>
-                        <a href="{{ route('candidate.headhunter.index') }}" class="nav-item" style="font-weight: 600; color: #0284c7;">🎯 Scouted Jobs</a>
-                        <a href="{{ route('integrations.index') }}" class="nav-item">Integrations</a>
-                        <a href="{{ route('contact') }}" class="nav-item">💬 Contact</a>
-                        <a href="{{ route('app.download.page') }}" class="nav-item" style="font-weight: 600; color: #4f46e5;">📱 Mobile App</a>
+                        <a href="{{ route('candidate.headhunter.index') }}" class="header-nav-link highlight-pill {{ request()->routeIs('candidate.headhunter.*') ? 'active' : '' }}">
+                            <span class="nav-link-icon">🎯</span> Scouted Jobs
+                            <span class="pill-sparkle">AI</span>
+                        </a>
+                        <a href="{{ route('resumes.tailor') }}" class="header-nav-link {{ request()->routeIs('resumes.*') ? 'active' : '' }}">
+                            <span class="nav-link-icon">📄</span> Resume Studio
+                        </a>
+                        <a href="{{ route('templates.index') }}" class="header-nav-link {{ request()->routeIs('templates.*') ? 'active' : '' }}">
+                            <span class="nav-link-icon">🎨</span> Templates
+                        </a>
+                        <a href="{{ route('interview_prep.index') }}" class="header-nav-link {{ request()->routeIs('interview_prep.*') ? 'active' : '' }}">
+                            <span class="nav-link-icon">💡</span> Interview Prep
+                        </a>
+
+                        <!-- Desktop Tools Dropdown -->
+                        <div class="header-dropdown" id="toolsDropdown">
+                            <button type="button" class="header-nav-link {{ request()->routeIs('resume_editor.*', 'role_resume.*', 'social_posts.*', 'integrations.*') ? 'active' : '' }}" id="toolsDropdownBtn" aria-haspopup="true" aria-expanded="false">
+                                <span>Tools</span>
+                                <svg class="dropdown-chevron" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+                            <div class="header-dropdown-menu" id="toolsDropdownMenu">
+                                <div class="dropdown-menu-label">AI CAREER TOOLS</div>
+                                <a href="{{ route('resume_editor.index') }}" class="dropdown-menu-item {{ request()->routeIs('resume_editor.*') ? 'active' : '' }}">
+                                    <span class="item-icon-box">⚡</span>
+                                    <div class="item-text-group">
+                                        <span class="item-title">Dynamic Editor</span>
+                                        <span class="item-desc">Real-time AI resume tailoring</span>
+                                    </div>
+                                </a>
+                                <a href="{{ route('role_resume.index') }}" class="dropdown-menu-item {{ request()->routeIs('role_resume.*') ? 'active' : '' }}">
+                                    <span class="item-icon-box">🎯</span>
+                                    <div class="item-text-group">
+                                        <span class="item-title">Role-Tailored Resumes</span>
+                                        <span class="item-desc">Targeted keywords for ATS</span>
+                                    </div>
+                                </a>
+                                <a href="{{ route('social_posts.index') }}" class="dropdown-menu-item {{ request()->routeIs('social_posts.*') ? 'active' : '' }}">
+                                    <span class="item-icon-box">📣</span>
+                                    <div class="item-text-group">
+                                        <span class="item-title">Social Campaign</span>
+                                        <span class="item-desc">LinkedIn & viral posts</span>
+                                    </div>
+                                </a>
+                                <div class="dropdown-menu-divider"></div>
+                                <a href="{{ route('integrations.index') }}" class="dropdown-menu-item {{ request()->routeIs('integrations.*') ? 'active' : '' }}">
+                                    <span class="item-icon-box">🔗</span>
+                                    <div class="item-text-group">
+                                        <span class="item-title">Account Integrations</span>
+                                        <span class="item-desc">LinkedIn & API keys</span>
+                                    </div>
+                                </a>
+                                <a href="{{ route('contact') }}" class="dropdown-menu-item {{ request()->routeIs('contact*') ? 'active' : '' }}">
+                                    <span class="item-icon-box">🎧</span>
+                                    <div class="item-text-group">
+                                        <span class="item-title">Help & Support</span>
+                                        <span class="item-desc">24/7 dedicated assistance</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
                     @endif
-                    <span class="nav-item nav-user-email" title="{{ auth()->user()->email }}">{{ auth()->user()->email }}</span>
-                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                        @csrf
-                        <button type="submit" class="btn-primary" style="margin-left: 0.5rem; padding: 0.45rem 1rem; font-size: 0.88rem; min-height: 38px;">Sign Out</button>
-                    </form>
                 @else
-                    <a href="{{ route('contact') }}" class="nav-item">💬 Contact Us</a>
-                    <a href="{{ route('app.download.page') }}" class="nav-item" style="color: #4f46e5; font-weight: 600;">📱 Mobile App</a>
-                    <a href="{{ route('login') }}" class="nav-item">Log In</a>
-                    <a href="{{ route('register') }}" class="btn-primary">Register</a>
+                    <a href="{{ route('contact') }}" class="header-nav-link {{ request()->routeIs('contact*') ? 'active' : '' }}">
+                        <span class="nav-link-icon">💬</span> Contact Us
+                    </a>
+                    <a href="{{ route('app.download.page') }}" class="header-nav-link {{ request()->routeIs('app.download.*') ? 'active' : '' }}">
+                        <span class="nav-link-icon">📱</span> Mobile App
+                    </a>
                 @endauth
             </nav>
+
+            <!-- Right: Actions & User Dropdown -->
+            <div class="header-actions">
+                @auth
+                    @if(auth()->user()->role === 'company')
+                        <a href="{{ route('company.jobs.create') }}" class="header-cta-btn primary-cta">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            <span>Post Job</span>
+                        </a>
+                    @else
+                        <a href="{{ route('app.download.page') }}" class="header-cta-btn secondary-cta" title="Download Android APK">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                            </svg>
+                            <span>Get App</span>
+                        </a>
+                    @endif
+
+                    <!-- User Profile Dropdown Button -->
+                    <div class="header-dropdown" id="userMenuWrapper">
+                        <button type="button" class="user-profile-trigger" id="userMenuBtn" aria-expanded="false" aria-haspopup="true">
+                            <div class="user-avatar-circle">
+                                {{ strtoupper(substr(auth()->user()->name ?? auth()->user()->email, 0, 1)) }}
+                            </div>
+                            <div class="user-info-text">
+                                <span class="user-name-line">{{ auth()->user()->name ?? explode('@', auth()->user()->email)[0] }}</span>
+                                <span class="user-role-badge {{ auth()->user()->role === 'company' ? 'badge-role-company' : 'badge-role-candidate' }}">
+                                    {{ auth()->user()->role === 'company' ? 'Company' : 'Candidate' }}
+                                </span>
+                            </div>
+                            <svg class="dropdown-chevron" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+
+                        <!-- User Profile Dropdown Card -->
+                        <div class="user-dropdown-card" id="userMenuDropdown">
+                            <div class="dropdown-user-header">
+                                <div class="dropdown-avatar-large">
+                                    {{ strtoupper(substr(auth()->user()->name ?? auth()->user()->email, 0, 1)) }}
+                                </div>
+                                <div class="dropdown-user-meta">
+                                    <div class="user-display-name">{{ auth()->user()->name ?? 'Account User' }}</div>
+                                    <div class="user-display-email" title="{{ auth()->user()->email }}">{{ auth()->user()->email }}</div>
+                                    <span class="user-display-role {{ auth()->user()->role === 'company' ? 'company' : 'candidate' }}">
+                                        {{ auth()->user()->role === 'company' ? '🏢 Employer & Recruiter' : '🎯 Candidate Pro' }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="dropdown-menu-divider"></div>
+
+                            <div class="dropdown-menu-links">
+                                @if(auth()->user()->role === 'company')
+                                    <a href="{{ route('company.dashboard') }}" class="dropdown-menu-item">
+                                        <span class="item-icon-box">🏢</span>
+                                        <div class="item-text-group">
+                                            <span class="item-title">Company Dashboard</span>
+                                            <span class="item-desc">Metrics & scouted talents</span>
+                                        </div>
+                                    </a>
+                                    <a href="{{ route('company.jobs.index') }}" class="dropdown-menu-item">
+                                        <span class="item-icon-box">💼</span>
+                                        <div class="item-text-group">
+                                            <span class="item-title">Job Postings Hub</span>
+                                            <span class="item-desc">Active, draft & closed roles</span>
+                                        </div>
+                                    </a>
+                                    <a href="{{ route('company.inquiries.index') }}" class="dropdown-menu-item">
+                                        <span class="item-icon-box">💬</span>
+                                        <div class="item-text-group">
+                                            <span class="item-title">Inquiries & Comments</span>
+                                            <span class="item-desc">Lead responses & pinned questions</span>
+                                        </div>
+                                    </a>
+                                    <a href="{{ route('company.integrations') }}" class="dropdown-menu-item">
+                                        <span class="item-icon-box">🔗</span>
+                                        <div class="item-text-group">
+                                            <span class="item-title">Platform Integrations</span>
+                                            <span class="item-desc">LinkedIn, Indeed & APIs</span>
+                                        </div>
+                                    </a>
+                                @else
+                                    <a href="{{ route('candidate.headhunter.index') }}" class="dropdown-menu-item">
+                                        <span class="item-icon-box">🎯</span>
+                                        <div class="item-text-group">
+                                            <span class="item-title">Scouted Invitations</span>
+                                            <span class="item-desc">Direct invitations from recruiters</span>
+                                        </div>
+                                    </a>
+                                    <a href="{{ route('resumes.tailor') }}" class="dropdown-menu-item">
+                                        <span class="item-icon-box">📄</span>
+                                        <div class="item-text-group">
+                                            <span class="item-title">Resume Studio</span>
+                                            <span class="item-desc">Tailor resumes to job descriptions</span>
+                                        </div>
+                                    </a>
+                                    <a href="{{ route('templates.index') }}" class="dropdown-menu-item">
+                                        <span class="item-icon-box">🎨</span>
+                                        <div class="item-text-group">
+                                            <span class="item-title">Template Gallery</span>
+                                            <span class="item-desc">ATS-friendly curated layouts</span>
+                                        </div>
+                                    </a>
+                                    <a href="{{ route('interview_prep.index') }}" class="dropdown-menu-item">
+                                        <span class="item-icon-box">💡</span>
+                                        <div class="item-text-group">
+                                            <span class="item-title">Interview Simulator</span>
+                                            <span class="item-desc">AI behavioral & tech practice</span>
+                                        </div>
+                                    </a>
+                                @endif
+
+                                <a href="{{ route('contact') }}" class="dropdown-menu-item">
+                                    <span class="item-icon-box">🎧</span>
+                                    <div class="item-text-group">
+                                        <span class="item-title">Support & Contact</span>
+                                        <span class="item-desc">Submit tickets & feedback</span>
+                                    </div>
+                                </a>
+                                <a href="{{ route('app.download.page') }}" class="dropdown-menu-item">
+                                    <span class="item-icon-box">📱</span>
+                                    <div class="item-text-group">
+                                        <span class="item-title">Download Mobile App</span>
+                                        <span class="item-desc">Android Release (v2.4)</span>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="dropdown-menu-divider"></div>
+
+                            <form action="{{ route('logout') }}" method="POST" class="dropdown-signout-form">
+                                @csrf
+                                <button type="submit" class="dropdown-signout-btn">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                        <polyline points="16 17 21 12 16 7"></polyline>
+                                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                                    </svg>
+                                    <span>Sign Out</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @else
+                    <a href="{{ route('login') }}" class="header-nav-link {{ request()->routeIs('login') ? 'active' : '' }}">Log In</a>
+                    <a href="{{ route('register') }}" class="header-cta-btn primary-cta">Get Started</a>
+                @endauth
+
+                <!-- Responsive Hamburger Toggle -->
+                <button type="button" class="hamburger-btn" id="nav-toggle" aria-label="Toggle Navigation Menu" aria-expanded="false">
+                    <span class="bar bar-1"></span>
+                    <span class="bar bar-2"></span>
+                    <span class="bar bar-3"></span>
+                </button>
+            </div>
         </header>
+
+        <!-- Mobile Slide Drawer & Overlay -->
+        <div class="mobile-drawer-overlay" id="mobileDrawerOverlay"></div>
+        <aside class="mobile-nav-drawer" id="mobileDrawer" aria-hidden="true">
+            <div class="drawer-header">
+                <a href="/" class="drawer-brand">
+                    <div class="brand-icon-box sm">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="white" stroke-width="2.5">
+                            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                        </svg>
+                    </div>
+                    <span class="brand-title">Auto<span class="brand-title-accent">Apply</span></span>
+                </a>
+                <button type="button" class="drawer-close-btn" id="drawerCloseBtn" aria-label="Close Navigation">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            @auth
+                <!-- Mobile User Profile Card -->
+                <div class="drawer-user-card">
+                    <div class="drawer-user-avatar">
+                        {{ strtoupper(substr(auth()->user()->name ?? auth()->user()->email, 0, 1)) }}
+                    </div>
+                    <div class="drawer-user-details">
+                        <div class="drawer-user-name">{{ auth()->user()->name ?? 'Account User' }}</div>
+                        <div class="drawer-user-email">{{ auth()->user()->email }}</div>
+                        <span class="drawer-user-role {{ auth()->user()->role === 'company' ? 'company' : 'candidate' }}">
+                            {{ auth()->user()->role === 'company' ? '🏢 Employer / Company' : '🎯 Candidate Pro' }}
+                        </span>
+                    </div>
+                </div>
+            @endauth
+
+            <div class="drawer-body">
+                @auth
+                    @if(auth()->user()->role === 'company')
+                        <div class="drawer-section-title">COMPANY WORKSPACE</div>
+                        <a href="{{ route('company.dashboard') }}" class="drawer-link {{ request()->routeIs('company.dashboard') ? 'active' : '' }}">
+                            <span><span class="drawer-link-icon">🏢</span> Dashboard</span>
+                        </a>
+                        <a href="{{ route('company.jobs.index') }}" class="drawer-link {{ request()->routeIs('company.jobs.*') && !request()->routeIs('company.jobs.create') ? 'active' : '' }}">
+                            <span><span class="drawer-link-icon">💼</span> Job Postings</span>
+                        </a>
+                        <a href="{{ route('company.inquiries.index') }}" class="drawer-link {{ request()->routeIs('company.inquiries.*') ? 'active' : '' }}">
+                            <span><span class="drawer-link-icon">💬</span> Inquiries & Queries</span>
+                        </a>
+                        <a href="{{ route('company.integrations') }}" class="drawer-link {{ request()->routeIs('company.integrations') ? 'active' : '' }}">
+                            <span><span class="drawer-link-icon">🔗</span> Integrations & APIs</span>
+                        </a>
+
+                        <div class="drawer-action-block">
+                            <a href="{{ route('company.jobs.create') }}" class="header-cta-btn primary-cta" style="width: 100%; justify-content: center;">➕ Post New Job</a>
+                        </div>
+                    @else
+                        <div class="drawer-section-title">CORE NAVIGATION</div>
+                        <a href="{{ route('candidate.headhunter.index') }}" class="drawer-link highlight {{ request()->routeIs('candidate.headhunter.*') ? 'active' : '' }}">
+                            <span><span class="drawer-link-icon">🎯</span> Scouted Jobs</span>
+                            <span class="drawer-badge">AI MATCH</span>
+                        </a>
+                        <a href="{{ route('resumes.tailor') }}" class="drawer-link {{ request()->routeIs('resumes.*') ? 'active' : '' }}">
+                            <span><span class="drawer-link-icon">📄</span> Resume Studio</span>
+                        </a>
+                        <a href="{{ route('templates.index') }}" class="drawer-link {{ request()->routeIs('templates.*') ? 'active' : '' }}">
+                            <span><span class="drawer-link-icon">🎨</span> Template Gallery</span>
+                        </a>
+                        <a href="{{ route('interview_prep.index') }}" class="drawer-link {{ request()->routeIs('interview_prep.*') ? 'active' : '' }}">
+                            <span><span class="drawer-link-icon">💡</span> Interview Simulator</span>
+                        </a>
+
+                        <div class="drawer-section-title">AI TOOLS & CAMPAIGNS</div>
+                        <a href="{{ route('resume_editor.index') }}" class="drawer-link {{ request()->routeIs('resume_editor.*') ? 'active' : '' }}">
+                            <span><span class="drawer-link-icon">⚡</span> Dynamic Resume Editor</span>
+                        </a>
+                        <a href="{{ route('role_resume.index') }}" class="drawer-link {{ request()->routeIs('role_resume.*') ? 'active' : '' }}">
+                            <span><span class="drawer-link-icon">🎯</span> Role-Tailored Resumes</span>
+                        </a>
+                        <a href="{{ route('social_posts.index') }}" class="drawer-link {{ request()->routeIs('social_posts.*') ? 'active' : '' }}">
+                            <span><span class="drawer-link-icon">📣</span> Social Campaign</span>
+                        </a>
+                        <a href="{{ route('integrations.index') }}" class="drawer-link {{ request()->routeIs('integrations.*') ? 'active' : '' }}">
+                            <span><span class="drawer-link-icon">🔗</span> Integrations & APIs</span>
+                        </a>
+                    @endif
+
+                    <div class="drawer-section-title">HELP & PLATFORM</div>
+                    <a href="{{ route('contact') }}" class="drawer-link {{ request()->routeIs('contact*') ? 'active' : '' }}">
+                        <span><span class="drawer-link-icon">🎧</span> Contact & Support</span>
+                    </a>
+                    <a href="{{ route('app.download.page') }}" class="drawer-link {{ request()->routeIs('app.download.*') ? 'active' : '' }}">
+                        <span><span class="drawer-link-icon">📱</span> Download Android APK</span>
+                    </a>
+
+                    <div class="drawer-footer">
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="drawer-logout-btn">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                                <span>Sign Out</span>
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <div class="drawer-section-title">GET STARTED</div>
+                    <a href="{{ route('contact') }}" class="drawer-link {{ request()->routeIs('contact*') ? 'active' : '' }}">
+                        <span><span class="drawer-link-icon">💬</span> Contact & Support</span>
+                    </a>
+                    <a href="{{ route('app.download.page') }}" class="drawer-link {{ request()->routeIs('app.download.*') ? 'active' : '' }}">
+                        <span><span class="drawer-link-icon">📱</span> Download Mobile App</span>
+                    </a>
+                    <a href="{{ route('login') }}" class="drawer-link {{ request()->routeIs('login') ? 'active' : '' }}">
+                        <span><span class="drawer-link-icon">🔐</span> Sign In</span>
+                    </a>
+
+                    <div class="drawer-action-block" style="margin-top: 1.5rem;">
+                        <a href="{{ route('register') }}" class="header-cta-btn primary-cta" style="width: 100%; justify-content: center;">
+                            🚀 Register Free
+                        </a>
+                    </div>
+                @endauth
+            </div>
+        </aside>
 
         <main class="container">
             @if(session('success'))
@@ -522,32 +1474,118 @@
     </div>
 
     <script>
-        const navToggle = document.getElementById('nav-toggle');
-        const navLinks = document.getElementById('nav-links');
+        // Navigation & Interactive Dropdowns Controller
+        document.addEventListener('DOMContentLoaded', function() {
+            const navToggle = document.getElementById('nav-toggle');
+            const mobileDrawer = document.getElementById('mobileDrawer');
+            const drawerOverlay = document.getElementById('mobileDrawerOverlay');
+            const drawerCloseBtn = document.getElementById('drawerCloseBtn');
 
-        if (navToggle && navLinks) {
-            navToggle.addEventListener('click', function(e) {
-                e.stopPropagation();
-                navToggle.classList.toggle('active');
-                navLinks.classList.toggle('active');
-            });
+            const userMenuWrapper = document.getElementById('userMenuWrapper');
+            const userMenuBtn = document.getElementById('userMenuBtn');
 
-            // Close menu when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!navLinks.contains(e.target) && !navToggle.contains(e.target)) {
+            const toolsDropdown = document.getElementById('toolsDropdown');
+            const toolsDropdownBtn = document.getElementById('toolsDropdownBtn');
+
+            // Open Mobile Drawer
+            function openDrawer() {
+                if (mobileDrawer && drawerOverlay && navToggle) {
+                    mobileDrawer.classList.add('active');
+                    drawerOverlay.classList.add('active');
+                    navToggle.classList.add('active');
+                    navToggle.setAttribute('aria-expanded', 'true');
+                    mobileDrawer.setAttribute('aria-hidden', 'false');
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+
+            // Close Mobile Drawer
+            function closeDrawer() {
+                if (mobileDrawer && drawerOverlay && navToggle) {
+                    mobileDrawer.classList.remove('active');
+                    drawerOverlay.classList.remove('active');
                     navToggle.classList.remove('active');
-                    navLinks.classList.remove('active');
+                    navToggle.setAttribute('aria-expanded', 'false');
+                    mobileDrawer.setAttribute('aria-hidden', 'true');
+                    document.body.style.overflow = '';
+                }
+            }
+
+            if (navToggle) {
+                navToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (mobileDrawer && mobileDrawer.classList.contains('active')) {
+                        closeDrawer();
+                    } else {
+                        openDrawer();
+                    }
+                });
+            }
+
+            if (drawerCloseBtn) {
+                drawerCloseBtn.addEventListener('click', closeDrawer);
+            }
+
+            if (drawerOverlay) {
+                drawerOverlay.addEventListener('click', closeDrawer);
+            }
+
+            // Close mobile drawer on any link click
+            if (mobileDrawer) {
+                mobileDrawer.querySelectorAll('a').forEach(function(link) {
+                    link.addEventListener('click', closeDrawer);
+                });
+            }
+
+            // User Profile Dropdown Toggle
+            if (userMenuBtn && userMenuWrapper) {
+                userMenuBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (toolsDropdown) toolsDropdown.classList.remove('open');
+                    userMenuWrapper.classList.toggle('open');
+                    const isOpen = userMenuWrapper.classList.contains('open');
+                    userMenuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                });
+            }
+
+            // Candidate Tools Dropdown Toggle
+            if (toolsDropdownBtn && toolsDropdown) {
+                toolsDropdownBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (userMenuWrapper) userMenuWrapper.classList.remove('open');
+                    toolsDropdown.classList.toggle('open');
+                    const isOpen = toolsDropdown.classList.contains('open');
+                    toolsDropdownBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                });
+            }
+
+            // Close dropdowns on outside click
+            document.addEventListener('click', function(e) {
+                if (userMenuWrapper && !userMenuWrapper.contains(e.target)) {
+                    userMenuWrapper.classList.remove('open');
+                    if (userMenuBtn) userMenuBtn.setAttribute('aria-expanded', 'false');
+                }
+                if (toolsDropdown && !toolsDropdown.contains(e.target)) {
+                    toolsDropdown.classList.remove('open');
+                    if (toolsDropdownBtn) toolsDropdownBtn.setAttribute('aria-expanded', 'false');
                 }
             });
 
-            // Close menu when any navigation link is clicked
-            navLinks.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    navToggle.classList.remove('active');
-                    navLinks.classList.remove('active');
-                });
+            // Escape key handler for all overlays & dropdowns
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeDrawer();
+                    if (userMenuWrapper) {
+                        userMenuWrapper.classList.remove('open');
+                        if (userMenuBtn) userMenuBtn.setAttribute('aria-expanded', 'false');
+                    }
+                    if (toolsDropdown) {
+                        toolsDropdown.classList.remove('open');
+                        if (toolsDropdownBtn) toolsDropdownBtn.setAttribute('aria-expanded', 'false');
+                    }
+                }
             });
-        }
+        });
     </script>
 </body>
 </html>
