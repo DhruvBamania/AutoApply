@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/constants/app_colors.dart';
 import '../../models/job_model.dart';
 import '../../providers/auth_provider.dart';
@@ -517,6 +518,18 @@ class _JobDiscoveryScreenState extends ConsumerState<JobDiscoveryScreen> {
                 const SizedBox(width: 4),
                 StatusBadge.platform('indeed'),
                 const Spacer(),
+                IconButton(
+                  tooltip: 'Message on WhatsApp',
+                  style: IconButton.styleFrom(
+                    backgroundColor: const Color(0xFF25D366),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.all(8),
+                    minimumSize: const Size(36, 36),
+                  ),
+                  icon: const Icon(Icons.chat, size: 17),
+                  onPressed: () => _openWhatsAppModal(job),
+                ),
+                const SizedBox(width: 8),
                 ElevatedButton.icon(
                   onPressed: () => _openApplyModal(job),
                   icon: const Icon(Icons.send, size: 14),
@@ -531,6 +544,205 @@ class _JobDiscoveryScreenState extends ConsumerState<JobDiscoveryScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  void _openWhatsAppModal(JobModel job) {
+    final user = ref.read(authProvider).user;
+    final nameController = TextEditingController(text: user?.name ?? '');
+    final phoneController = TextEditingController();
+    final emailController = TextEditingController(text: user?.email ?? '');
+    final messageController = TextEditingController();
+    bool isSending = false;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 20,
+                bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF25D366).withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(Icons.chat, color: Color(0xFF25D366), size: 22),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Message on WhatsApp',
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              Text(
+                                '${job.companyName ?? "Hiring Team"} • ${job.title}',
+                                style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () => Navigator.pop(ctx),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+
+                    // Quick suggestion chips
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          ActionChip(
+                            label: const Text('💰 Salary Range?', style: TextStyle(fontSize: 11)),
+                            onPressed: () {
+                              messageController.text = 'Hi, could you share more details about the salary range and perks for this role?';
+                            },
+                          ),
+                          const SizedBox(width: 6),
+                          ActionChip(
+                            label: const Text('🏡 Remote flexibility?', style: TextStyle(fontSize: 11)),
+                            onPressed: () {
+                              messageController.text = 'Hello, is this position open to fully remote or hybrid candidates?';
+                            },
+                          ),
+                          const SizedBox(width: 6),
+                          ActionChip(
+                            label: const Text('⏱️ Interview timeline?', style: TextStyle(fontSize: 11)),
+                            onPressed: () {
+                              messageController.text = 'Hi team, what is the interview process and timeline for this role?';
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+
+                    CustomTextField(
+                      label: 'Your Full Name',
+                      hint: 'Alex Johnson',
+                      controller: nameController,
+                    ),
+                    const SizedBox(height: 10),
+
+                    CustomTextField(
+                      label: 'Your WhatsApp Phone (with Country Code)',
+                      hint: '+91 98765 43210',
+                      controller: phoneController,
+                      keyboardType: TextInputType.phone,
+                    ),
+                    const SizedBox(height: 10),
+
+                    CustomTextField(
+                      label: 'Email Address (Optional)',
+                      hint: 'alex@example.com',
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    const SizedBox(height: 10),
+
+                    CustomTextField(
+                      label: 'Your Message',
+                      hint: 'Ask questions about role requirements, tech stack, culture...',
+                      controller: messageController,
+                      maxLines: 3,
+                    ),
+                    const SizedBox(height: 16),
+
+                    CustomButton(
+                      text: isSending ? 'Sending WhatsApp Message...' : 'Send WhatsApp Message',
+                      icon: Icons.send,
+                      backgroundColor: const Color(0xFF25D366),
+                      isLoading: isSending,
+                      onPressed: isSending
+                          ? null
+                          : () async {
+                              final name = nameController.text.trim();
+                              final phone = phoneController.text.trim();
+                              final msg = messageController.text.trim();
+
+                              if (name.isEmpty || phone.isEmpty || msg.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Name, Phone number, and Message are required!')),
+                                );
+                                return;
+                              }
+
+                              setModalState(() => isSending = true);
+
+                              final ok = await ref.read(candidateProvider.notifier).sendWhatsAppInquiry(
+                                    jobId: job.id,
+                                    name: name,
+                                    phone: phone,
+                                    email: emailController.text.trim().isEmpty ? null : emailController.text.trim(),
+                                    message: msg,
+                                  );
+
+                              setModalState(() => isSending = false);
+
+                              if (context.mounted) {
+                                Navigator.pop(ctx);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(ok
+                                        ? '✅ WhatsApp message delivered to ${job.companyName ?? "employer"}!'
+                                        : 'Failed to deliver WhatsApp message.'),
+                                    backgroundColor: ok ? const Color(0xFF15803d) : AppColors.error,
+                                  ),
+                                );
+                              }
+                            },
+                    ),
+                    const SizedBox(height: 10),
+
+                    // Direct App Launcher fallback
+                    Center(
+                      child: TextButton.icon(
+                        icon: const Icon(Icons.open_in_new, size: 14, color: Color(0xFF128C7E)),
+                        label: const Text(
+                          'Or chat in WhatsApp App directly',
+                          style: TextStyle(fontSize: 12, color: Color(0xFF128C7E), fontWeight: FontWeight.w600),
+                        ),
+                        onPressed: () async {
+                          final cleanNumber = (job.whatsappNumber ?? '919876543210').replaceAll(RegExp(r'[^0-9]'), '');
+                          final text = Uri.encodeComponent('Hi, I am inquiring about the ${job.title} opening on AI Looping.');
+                          final uri = Uri.parse('https://wa.me/$cleanNumber?text=$text');
+                          if (await canLaunchUrl(uri)) {
+                            await launchUrl(uri, mode: LaunchMode.externalApplication);
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

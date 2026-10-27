@@ -18,6 +18,7 @@ class JobModel {
   final String? lastAiMatchAt;
   final String? createdAt;
   final String? companyName;
+  final String? whatsappNumber;
 
   JobModel({
     required this.id,
@@ -39,6 +40,7 @@ class JobModel {
     this.lastAiMatchAt,
     this.createdAt,
     this.companyName,
+    this.whatsappNumber,
   });
 
   String get experienceLevel => experienceRequired ?? 'All Levels';
@@ -70,6 +72,7 @@ class JobModel {
       lastAiMatchAt: json['last_ai_match_at'] as String?,
       createdAt: json['created_at'] as String?,
       companyName: compProfile?['company_name'] as String? ?? user?['name'] as String? ?? json['company_name'] as String?,
+      whatsappNumber: json['whatsapp_number'] as String? ?? compProfile?['whatsapp_number'] as String?,
     );
   }
 }

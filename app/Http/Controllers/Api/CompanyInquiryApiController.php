@@ -258,4 +258,55 @@ class CompanyInquiryApiController extends Controller
             'inquiry' => $inquiry,
         ], 201);
     }
+
+    /**
+     * Send employer WhatsApp reply to candidate via Twilio API.
+     */
+    public function replyWhatsApp(Request $request, $id, \App\Services\TwilioWhatsAppService $whatsAppService)
+    {
+        $user = $request->user();
+        if (!$user->isCompany()) {
+            return response()->json(['error' => 'Forbidden. Company role required.'], 403);
+        }
+
+        $inquiry = JobInquiry::whereHas('jobPosting', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        })->with('jobPosting.user.companyProfile')->findOrFail($id);
+
+        $replyContent = $request->input('company_reply', $request->input('reply_message'));
+        if (empty($replyContent)) {
+            return response()->json([
+                'success' => false,
+                'error' => 'The company reply field is required.',
+            ], 422);
+        }
+
+        if ($request->filled('candidate_phone')) {
+            $inquiry->candidate_phone = $request->candidate_phone;
+            $inquiry->save();
+        }
+
+        if (empty($inquiry->candidate_phone)) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Candidate has not provided a phone number to message via WhatsApp.',
+            ], 422);
+        }
+
+        $result = $whatsAppService->sendCompanyReply($inquiry, $replyContent, $user);
+
+        if (!$result['success']) {
+            return response()->json([
+                'success' => false,
+                'error' => $result['error'] ?? 'WhatsApp dispatch failed.',
+            ], 400);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => "WhatsApp reply sent to {$inquiry->candidate_name}!",
+            'inquiry' => $inquiry->fresh(),
+            'status' => $result['status'] ?? 'sent',
+        ]);
+    }
 }

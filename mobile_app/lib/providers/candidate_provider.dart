@@ -179,7 +179,13 @@ class CandidateNotifier extends StateNotifier<CandidateState> {
           response.statusCode == 200;
 
       if (isSuccess) {
-        final list = (response.data['jobs'] ?? response.data['data']?['jobs'] ?? []) as List;
+        dynamic rawJobs = response.data['jobs'] ?? response.data['data']?['jobs'];
+        List list = [];
+        if (rawJobs is List) {
+          list = rawJobs;
+        } else if (rawJobs is Map && rawJobs['data'] is List) {
+          list = rawJobs['data'] as List;
+        }
         final jobs = list.map((e) => JobModel.fromJson(Map<String, dynamic>.from(e))).toList();
         state = state.copyWith(publicJobs: jobs, isLoadingJobs: false);
       } else {
@@ -254,6 +260,52 @@ class CandidateNotifier extends StateNotifier<CandidateState> {
         state = state.copyWith(
           isSubmittingApplication: false,
           errorMessage: response.data['message'] ?? 'Failed to submit application.',
+        );
+        return false;
+      }
+    } catch (e) {
+      state = state.copyWith(
+        isSubmittingApplication: false,
+        errorMessage: ApiClient.formatError(e),
+      );
+      return false;
+    }
+  }
+
+  /// Candidate sends direct WhatsApp message via Twilio API
+  Future<bool> sendWhatsAppInquiry({
+    required int jobId,
+    required String name,
+    required String phone,
+    String? email,
+    String? headline,
+    required String message,
+  }) async {
+    state = state.copyWith(isSubmittingApplication: true, clearMessages: true);
+    try {
+      final response = await _api.dio.post(
+        ApiEndpoints.jobWhatsAppMessage(jobId),
+        data: {
+          'candidate_name': name,
+          'candidate_phone': phone,
+          'candidate_email': email,
+          'candidate_headline': headline,
+          'message': message,
+        },
+      );
+
+      final isSuccess = response.data['success'] == true || response.statusCode == 201;
+
+      if (isSuccess) {
+        state = state.copyWith(
+          isSubmittingApplication: false,
+          successMessage: 'WhatsApp message sent to hiring team!',
+        );
+        return true;
+      } else {
+        state = state.copyWith(
+          isSubmittingApplication: false,
+          errorMessage: response.data['error'] ?? response.data['message'] ?? 'Failed to send WhatsApp message.',
         );
         return false;
       }

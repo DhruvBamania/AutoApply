@@ -58,4 +58,10 @@ return [
         'key' => env('HUNTER_API_KEY'),
     ],
 
+    'twilio' => [
+        'sid' => env('TWILIO_ACCOUNT_SID'),
+        'token' => env('TWILIO_AUTH_TOKEN'),
+        'whatsapp_from' => env('TWILIO_WHATSAPP_NUMBER', '+14155238886'),
+    ],
+
 ];

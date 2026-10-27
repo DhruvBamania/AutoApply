@@ -65,9 +65,22 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Key Required Skills / Tech Stack</label>
-                    <input type="text" name="skills" class="form-control" value="{{ old('skills') }}" placeholder="e.g. PHP, Laravel, MySQL, REST API, Redis, Git">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;" class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Key Required Skills / Tech Stack</label>
+                        <input type="text" name="skills" class="form-control" value="{{ old('skills') }}" placeholder="e.g. PHP, Laravel, MySQL, REST API, Redis, Git">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" style="display: flex; align-items: center; justify-content: space-between;">
+                            <span style="display: flex; align-items: center; gap: 0.35rem; color: #15803d; font-weight: 700;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="#25D366"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.772.82 2.791.82 3.181 0 5.767-2.586 5.768-5.766 0-3.18-2.586-5.766-5.768-5.766zm9.969 5.828c0 5.514-4.486 10-10 10-1.802 0-3.486-.481-4.945-1.321l-5.055 1.321 1.353-4.939c-.896-1.492-1.353-3.21-1.353-5.061 0-5.514 4.486-10 10-10s10 4.486 10 10z"/></svg>
+                                WhatsApp Contact Line
+                            </span>
+                            <span style="font-size: 0.75rem; color: #6b7280; font-weight: normal;">(WhatsApp)</span>
+                        </label>
+                        <input type="tel" name="whatsapp_number" class="form-control" value="{{ old('whatsapp_number', $company->whatsapp_number ?? '') }}" placeholder="e.g. +91 98765 43210">
+                    </div>
                 </div>
 
                 <div class="form-group">

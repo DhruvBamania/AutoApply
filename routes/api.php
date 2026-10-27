@@ -32,6 +32,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/jobs', [PublicJobApiController::class, 'index']);
     Route::get('/jobs/{id}', [PublicJobApiController::class, 'show']);
     Route::post('/jobs/{id}/apply', [PublicJobApiController::class, 'apply']);
+    Route::post('/jobs/{id}/whatsapp-message', [PublicJobApiController::class, 'whatsappMessage']);
 
     // ==========================================
     // 3. Public Inbound Contact & Inquiries
@@ -49,6 +50,9 @@ Route::prefix('v1')->group(function () {
 
         // --- COMPANY ENDPOINTS ---
         Route::prefix('company')->group(function () {
+            // Profile & WhatsApp Settings
+            Route::put('/profile/whatsapp', [\App\Http\Controllers\CompanyDashboardController::class, 'updateWhatsApp']);
+
             // 1-Click Multi-Platform Job Postings
             Route::get('/jobs', [CompanyJobApiController::class, 'index']);
             Route::post('/jobs', [CompanyJobApiController::class, 'store']);
@@ -61,6 +65,7 @@ Route::prefix('v1')->group(function () {
             Route::post('/inquiries/{id}/pin', [CompanyInquiryApiController::class, 'togglePin']);
             Route::patch('/inquiries/{id}/status', [CompanyInquiryApiController::class, 'updateStatus']);
             Route::post('/inquiries/{id}/reply', [CompanyInquiryApiController::class, 'reply']);
+            Route::post('/inquiries/{id}/whatsapp-reply', [CompanyInquiryApiController::class, 'replyWhatsApp']);
             Route::post('/inquiries/sync', [CompanyInquiryApiController::class, 'sync']);
             Route::post('/inquiries/manual', [CompanyInquiryApiController::class, 'storeManual']);
 
@@ -73,6 +78,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/jobs/{id}/headhunter', [\App\Http\Controllers\Api\HeadhunterApiController::class, 'jobMatches']);
             Route::post('/jobs/{id}/headhunter/scout', [\App\Http\Controllers\Api\HeadhunterApiController::class, 'scout']);
             Route::post('/headhunter/{id}/invite', [\App\Http\Controllers\Api\HeadhunterApiController::class, 'invite']);
+            Route::post('/headhunter/{id}/whatsapp-outreach', [\App\Http\Controllers\Api\HeadhunterApiController::class, 'whatsAppOutreach']);
             Route::post('/jobs/{id}/headhunter/batch-invite', [\App\Http\Controllers\Api\HeadhunterApiController::class, 'batchInvite']);
         });
 

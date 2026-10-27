@@ -65,7 +65,107 @@ class CompanyProfileScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
+
+            // WhatsApp Business Line Card
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFF25D366).withValues(alpha: 0.3)),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF25D366).withValues(alpha: 0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF25D366).withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(Icons.chat_bubble_rounded, color: Color(0xFF25D366), size: 20),
+                      ),
+                      const SizedBox(width: 12),
+                      const Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'WhatsApp Inquiries',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
+                            Text(
+                              'Candidate inquiries route directly to this WhatsApp line',
+                              style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 14),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF0FDF4),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: const Color(0xFFBBF7D0)),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.phone_android, size: 16, color: Color(0xFF16A34A)),
+                            const SizedBox(width: 8),
+                            Text(
+                              user?.whatsappNumber?.isNotEmpty == true
+                                  ? user!.whatsappNumber!
+                                  : 'No WhatsApp number set',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: user?.whatsappNumber?.isNotEmpty == true
+                                    ? const Color(0xFF166534)
+                                    : Colors.grey.shade600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        TextButton.icon(
+                          onPressed: () => _showEditWhatsAppDialog(context, ref, user?.whatsappNumber),
+                          icon: const Icon(Icons.edit, size: 14, color: Color(0xFF16A34A)),
+                          label: Text(
+                            user?.whatsappNumber?.isNotEmpty == true ? 'Edit' : 'Set Up',
+                            style: const TextStyle(
+                              color: Color(0xFF16A34A),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
 
             // Connected Platform Integrations Status
             Container(
@@ -79,10 +179,17 @@ class CompanyProfileScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Multi-Posting Channels',
+                    'Multi-Posting & Messaging Channels',
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
+                  _buildChannelItem(
+                    name: 'WhatsApp Candidate Hotline',
+                    icon: Icons.chat_bubble_outline_rounded,
+                    color: const Color(0xFF25D366),
+                    status: user?.whatsappNumber != null ? 'Connected' : 'Active (Direct)',
+                  ),
+                  const Divider(),
                   _buildChannelItem(
                     name: 'LinkedIn Jobs & Comments',
                     icon: Icons.business_center,
@@ -166,6 +273,85 @@ class CompanyProfileScreen extends ConsumerWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showEditWhatsAppDialog(BuildContext context, WidgetRef ref, String? currentNumber) {
+    final controller = TextEditingController(text: currentNumber ?? '');
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF25D366).withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(Icons.chat_bubble_rounded, color: Color(0xFF25D366), size: 20),
+            ),
+            const SizedBox(width: 10),
+            const Text('WhatsApp Business', style: TextStyle(fontSize: 16)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Enter your official WhatsApp contact number with country code. Candidates will route direct inquiries to this line.',
+              style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: controller,
+              keyboardType: TextInputType.phone,
+              decoration: InputDecoration(
+                labelText: 'WhatsApp Number (E.164)',
+                hintText: '+1 555 123 4567 or +91 9876543210',
+                prefixIcon: const Icon(Icons.phone, size: 18),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF25D366),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            onPressed: () async {
+              final newNumber = controller.text.trim();
+              Navigator.pop(ctx);
+              final success = await ref.read(authProvider.notifier).updateCompanyWhatsApp(
+                    newNumber.isEmpty ? null : newNumber,
+                  );
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      success
+                          ? '✅ WhatsApp number updated successfully!'
+                          : 'Failed to update WhatsApp number.',
+                    ),
+                    backgroundColor: success ? AppColors.success : AppColors.error,
+                  ),
+                );
+              }
+            },
+            child: const Text('Save Number', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           ),
         ],
       ),

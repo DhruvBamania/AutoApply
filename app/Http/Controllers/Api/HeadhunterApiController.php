@@ -252,4 +252,50 @@ class HeadhunterApiController extends Controller
             'invitation' => $freshMatch,
         ]);
     }
+
+    /**
+     * Send WhatsApp outreach message to a specific scouted candidate via Twilio API.
+     */
+    public function whatsAppOutreach(Request $request, $id, \App\Services\TwilioWhatsAppService $whatsAppService)
+    {
+        $user = $request->user();
+        if (!$user->isCompany()) {
+            return response()->json(['error' => 'Forbidden. Company role required.'], 403);
+        }
+
+        $match = HeadhunterMatch::whereHas('jobPosting', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        })->with('jobPosting.user.companyProfile')->findOrFail($id);
+
+        $phone = $request->input('candidate_phone', $request->input('recipient_phone'));
+        $message = $request->input('outreach_message', $request->input('message'));
+
+        if (!$phone || !$message) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Candidate phone number and message are required.',
+            ], 422);
+        }
+
+        $result = $whatsAppService->sendHeadhunterOutreach(
+            $match,
+            $message,
+            $user,
+            $phone
+        );
+
+        if (!$result['success']) {
+            return response()->json([
+                'success' => false,
+                'error' => $result['error'] ?? 'WhatsApp dispatch failed.',
+            ], 400);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => "WhatsApp outreach message delivered to {$match->candidate_name}!",
+            'match' => $match->fresh(),
+            'status' => $result['status'] ?? 'sent',
+        ]);
+    }
 }

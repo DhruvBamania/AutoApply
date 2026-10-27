@@ -238,6 +238,39 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
+  /// 5. Update Company WhatsApp contact number
+  Future<bool> updateCompanyWhatsApp(String? number) async {
+    state = state.copyWith(isLoading: true, errorMessage: null);
+    try {
+      final response = await _api.dio.put(
+        ApiEndpoints.updateCompanyWhatsApp,
+        data: {'whatsapp_number': number},
+      );
+
+      final isSuccess = response.data['success'] == true || response.statusCode == 200;
+      if (isSuccess && state.user != null) {
+        final updatedUser = state.user!.copyWith(whatsappNumber: number);
+        await StorageService.saveAuthData(
+          token: StorageService.cachedToken ?? '',
+          role: updatedUser.role,
+          userDataJson: jsonEncode(updatedUser.toJson()),
+        );
+        state = state.copyWith(isLoading: false, user: updatedUser);
+        return true;
+      } else {
+        state = state.copyWith(
+          isLoading: false,
+          errorMessage: response.data['message'] ?? 'Failed to update WhatsApp number',
+        );
+        return false;
+      }
+    } catch (e) {
+      final errorMsg = ApiClient.formatError(e);
+      state = state.copyWith(isLoading: false, errorMessage: errorMsg);
+      return false;
+    }
+  }
+
   /// Clear any error message banner
   void clearError() {
     state = state.copyWith(errorMessage: null);

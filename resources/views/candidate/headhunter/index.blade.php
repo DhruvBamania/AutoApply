@@ -162,6 +162,13 @@
                             </div>
 
                             <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                                @if($job)
+                                    <a href="{{ route('jobs.public.show', $job->id) }}" target="_blank" class="btn" style="background: #f0fdf4; border: 1.5px solid #25D366; color: #15803d; font-size: 0.85rem; font-weight: 700; padding: 0.5rem 0.9rem; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="#25D366"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.772.82 2.791.82 3.181 0 5.767-2.586 5.768-5.766 0-3.18-2.586-5.766-5.768-5.766zm9.969 5.828c0 5.514-4.486 10-10 10-1.802 0-3.486-.481-4.945-1.321l-5.055 1.321 1.353-4.939c-.896-1.492-1.353-3.21-1.353-5.061 0-5.514 4.486-10 10-10s10 4.486 10 10z"/></svg>
+                                        <span>Message on WhatsApp</span>
+                                    </a>
+                                @endif
+
                                 <!-- Decline Form -->
                                 <form action="{{ route('candidate.headhunter.respond', $match->id) }}" method="POST" style="margin: 0;" onsubmit="return confirm('Are you sure you want to decline this invitation?');">
                                     @csrf

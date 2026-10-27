@@ -99,4 +99,31 @@ class PublicJobApiController extends Controller
             'inquiry' => $inquiry,
         ], 201);
     }
+
+    /**
+     * Candidate sends direct WhatsApp message via Twilio API.
+     */
+    public function whatsappMessage(Request $request, $id, \App\Services\TwilioWhatsAppService $whatsAppService)
+    {
+        $job = JobPosting::with('user.companyProfile')->where('status', 'active')->findOrFail($id);
+
+        $request->validate([
+            'candidate_name' => 'required|string|max:255',
+            'candidate_phone' => 'required|string|max:25',
+            'candidate_email' => 'nullable|email|max:255',
+            'candidate_headline' => 'nullable|string|max:255',
+            'message' => 'required|string|max:3000',
+        ]);
+
+        $result = $whatsAppService->sendCandidateInquiry($job, $request->all());
+
+        $companyName = $job->user->companyProfile->company_name ?? $job->user->name;
+
+        return response()->json([
+            'success' => true,
+            'message' => "WhatsApp message successfully sent to {$companyName}!",
+            'inquiry' => $result['inquiry'] ?? null,
+            'status' => $result['status'] ?? 'sent',
+        ], 201);
+    }
 }

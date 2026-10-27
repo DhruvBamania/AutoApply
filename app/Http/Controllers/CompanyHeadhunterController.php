@@ -82,4 +82,46 @@ class CompanyHeadhunterController extends Controller
         return redirect()->to(route('company.jobs.show', $job->id) . '#headhunter-section')
             ->with('success', "🚀 Successfully dispatched invitations to {$count} top candidate(s) (Match Score ≥ {$minScore}%)!");
     }
+
+    /**
+     * Send WhatsApp outreach message to a specific scouted candidate via Twilio.
+     */
+    public function whatsAppOutreach(Request $request, $id, \App\Services\TwilioWhatsAppService $whatsAppService)
+    {
+        $user = Auth::user();
+
+        $match = HeadhunterMatch::whereHas('jobPosting', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        })->with('jobPosting.user.companyProfile')->findOrFail($id);
+
+        $request->validate([
+            'candidate_phone' => 'required|string|max:25',
+            'outreach_message' => 'required|string|max:2000',
+        ]);
+
+        $result = $whatsAppService->sendHeadhunterOutreach(
+            $match,
+            $request->input('outreach_message'),
+            $user,
+            $request->input('candidate_phone')
+        );
+
+        if (!$result['success']) {
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'error' => $result['error'] ?? 'WhatsApp dispatch failed.'], 400);
+            }
+            return back()->with('error', $result['error'] ?? 'WhatsApp dispatch failed.');
+        }
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => "WhatsApp outreach message delivered to {$match->candidate_name}!",
+                'match' => $match->fresh(),
+            ]);
+        }
+
+        return redirect()->to(route('company.jobs.show', $match->job_posting_id) . '#headhunter-section')
+            ->with('success', "💬 WhatsApp invitation dispatched to {$match->candidate_name}!");
+    }
 }

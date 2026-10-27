@@ -38,6 +38,11 @@ class StatusBadge extends StatelessWidget {
         text = AppColors.indeed;
         name = 'Indeed';
         break;
+      case 'whatsapp':
+        bg = const Color(0xFF25D366).withValues(alpha: 0.15);
+        text = const Color(0xFF15803d);
+        name = 'WhatsApp';
+        break;
       default:
         bg = AppColors.primary.withValues(alpha: 0.1);
         text = AppColors.primary;

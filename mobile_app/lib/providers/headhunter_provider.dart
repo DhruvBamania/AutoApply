@@ -158,7 +158,59 @@ class HeadhunterNotifier extends StateNotifier<HeadhunterState> {
     }
   }
 
-  /// 4. Batch Invite Top Sourced Candidates
+  /// 4. Send WhatsApp Outreach Pitch via Twilio
+  Future<bool> sendWhatsAppOutreach(
+    int matchId, {
+    required String candidatePhone,
+    required String message,
+  }) async {
+    state = state.copyWith(isInviting: true, clearMessages: true);
+    try {
+      final response = await _api.dio.post(
+        ApiEndpoints.headhunterWhatsAppOutreach(matchId),
+        data: {
+          'candidate_phone': candidatePhone,
+          'outreach_message': message,
+        },
+      );
+
+      if (response.data['success'] == true || response.statusCode == 200) {
+        final updatedData = response.data['data'] ?? response.data['match'];
+        if (updatedData != null) {
+          final updatedMatch = HeadhunterMatchModel.fromJson(Map<String, dynamic>.from(updatedData));
+          final updatedList = state.companyMatches.map((m) {
+            return m.id == matchId ? updatedMatch : m;
+          }).toList();
+
+          state = state.copyWith(
+            isInviting: false,
+            companyMatches: updatedList,
+            successMessage: '💬 WhatsApp invitation dispatched to candidate!',
+          );
+        } else {
+          state = state.copyWith(
+            isInviting: false,
+            successMessage: '💬 WhatsApp invitation dispatched to candidate!',
+          );
+        }
+        return true;
+      } else {
+        state = state.copyWith(
+          isInviting: false,
+          errorMessage: response.data['message'] ?? response.data['error'] ?? 'Failed to send WhatsApp outreach',
+        );
+        return false;
+      }
+    } catch (e) {
+      state = state.copyWith(
+        isInviting: false,
+        errorMessage: 'Error sending WhatsApp outreach: $e',
+      );
+      return false;
+    }
+  }
+
+  /// 5. Batch Invite Top Sourced Candidates
   Future<bool> batchInvite(int jobId, {int minScore = 80}) async {
     state = state.copyWith(isInviting: true, clearMessages: true);
     try {

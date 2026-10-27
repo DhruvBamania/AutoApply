@@ -110,4 +110,10 @@ class ApiEndpoints {
 
   // --- Public Inbound Contact Form Endpoint ---
   static const String contact = '/contact';
+
+  // --- Twilio WhatsApp Messaging Endpoints ---
+  static String jobWhatsAppMessage(int id) => '/jobs/$id/whatsapp-message';
+  static String inquiryWhatsAppReply(int id) => '/company/inquiries/$id/whatsapp-reply';
+  static String headhunterWhatsAppOutreach(int id) => '/company/headhunter/$id/whatsapp-outreach';
+  static const String updateCompanyWhatsApp = '/company/profile/whatsapp';
 }

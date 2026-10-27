@@ -45,6 +45,7 @@ class CompanyJobController extends Controller
             'salary_range' => 'nullable|string|max:255',
             'experience_required' => 'nullable|string|max:255',
             'skills' => 'nullable|string|max:500',
+            'whatsapp_number' => 'nullable|string|max:25',
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif|max:5120',
             'platforms' => 'nullable|array',
@@ -70,6 +71,15 @@ class CompanyJobController extends Controller
                 ->with('success', "Job '{$recentDuplicate->title}' is already being processed.");
         }
 
+        $companyProfile = Auth::user()->companyProfile;
+        $whatsappNumber = $request->input('whatsapp_number') ?: ($companyProfile->whatsapp_number ?? null);
+
+        // If company profile didn't have WhatsApp number yet, save it as default
+        if ($request->filled('whatsapp_number') && $companyProfile && empty($companyProfile->whatsapp_number)) {
+            $companyProfile->whatsapp_number = $request->input('whatsapp_number');
+            $companyProfile->save();
+        }
+
         $job = Auth::user()->jobPostings()->create([
             'title' => $request->title,
             'job_type' => $request->job_type,
@@ -79,6 +89,7 @@ class CompanyJobController extends Controller
             'skills' => $request->skills,
             'description' => $request->description,
             'image_path' => $imagePath,
+            'whatsapp_number' => $whatsappNumber,
             'status' => 'active',
         ]);
 

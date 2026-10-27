@@ -209,6 +209,46 @@ class CompanyInquiriesNotifier extends StateNotifier<CompanyInquiriesState> {
     }
   }
 
+  /// Send WhatsApp reply to candidate via Twilio API
+  Future<bool> replyWhatsApp(int inquiryId, String message, {String? candidatePhone}) async {
+    try {
+      final payload = <String, dynamic>{
+        'company_reply': message,
+      };
+      if (candidatePhone != null && candidatePhone.isNotEmpty) {
+        payload['candidate_phone'] = candidatePhone;
+      }
+
+      final response = await _api.dio.post(
+        ApiEndpoints.inquiryWhatsAppReply(inquiryId),
+        data: payload,
+      );
+
+      final isSuccess = response.data['success'] == true || response.statusCode == 200;
+
+      if (isSuccess) {
+        final rawInquiry = response.data['inquiry'] ?? response.data['data']?['inquiry'];
+        if (rawInquiry != null) {
+          final updatedInq = InquiryModel.fromJson(Map<String, dynamic>.from(rawInquiry));
+          final updated = state.inquiries.map((inq) {
+            return inq.id == inquiryId ? updatedInq : inq;
+          }).toList();
+
+          state = state.copyWith(
+            inquiries: updated,
+            successMessage: 'WhatsApp message sent to candidate!',
+          );
+          return true;
+        }
+      }
+      state = state.copyWith(errorMessage: response.data['error'] ?? 'WhatsApp dispatch failed.');
+      return false;
+    } catch (e) {
+      state = state.copyWith(errorMessage: ApiClient.formatError(e));
+      return false;
+    }
+  }
+
   /// Update candidate status (shortlisted, reviewed, rejected) with optimistic UI & optional interview schedule
   Future<bool> updateStatus(
     int inquiryId,

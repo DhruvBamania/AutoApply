@@ -4,7 +4,6 @@ import '../../core/constants/app_colors.dart';
 import '../../models/inquiry_model.dart';
 import '../../providers/company_inquiries_provider.dart';
 import '../../providers/company_jobs_provider.dart';
-import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/status_badge.dart';
 import '../../widgets/shortlist_interview_sheet.dart';
@@ -42,6 +41,9 @@ class _CompanyInquiriesScreenState extends ConsumerState<CompanyInquiriesScreen>
 
   void _openReplyModal(InquiryModel inquiry) {
     final replyController = TextEditingController(text: inquiry.employerReply);
+    final phoneController = TextEditingController(text: inquiry.candidatePhone ?? '');
+    bool isWhatsApp = inquiry.platform == 'whatsapp' || (inquiry.candidatePhone != null && inquiry.candidatePhone!.isNotEmpty);
+    bool isSending = false;
 
     showModalBottomSheet(
       context: context,
@@ -50,68 +52,147 @@ class _CompanyInquiriesScreenState extends ConsumerState<CompanyInquiriesScreen>
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (ctx) {
-        return Padding(
-          padding: EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 20,
-            bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                children: [
-                  const Text(
-                    'Reply to Candidate Query',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.pop(ctx),
-                  ),
-                ],
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 20,
+                bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
               ),
-              const SizedBox(height: 8),
-              Text(
-                'Replying to ${inquiry.candidateName} (${inquiry.platform.toUpperCase()})',
-                style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
-              ),
-              const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(8),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          isWhatsApp ? 'Reply via WhatsApp' : 'Reply to Candidate Query',
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () => Navigator.pop(ctx),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Candidate: ${inquiry.candidateName} • Channel: ${inquiry.platform.toUpperCase()}',
+                      style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
+                    ),
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        '"${inquiry.message}"',
+                        style: const TextStyle(fontSize: 13, fontStyle: FontStyle.italic),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+
+                    // Phone input for WhatsApp
+                    CustomTextField(
+                      label: 'Candidate Phone / WhatsApp Number',
+                      hint: '+91 98765 43210',
+                      controller: phoneController,
+                      keyboardType: TextInputType.phone,
+                    ),
+                    const SizedBox(height: 10),
+
+                    CustomTextField(
+                      label: 'Employer Response',
+                      hint: 'Write your message to the candidate...',
+                      controller: replyController,
+                      maxLines: 3,
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Dual Actions: WhatsApp vs Standard
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: isSending
+                                ? null
+                                : () async {
+                                    if (replyController.text.trim().isEmpty) return;
+                                    setModalState(() => isSending = true);
+                                    Navigator.pop(ctx);
+                                    await ref
+                                        .read(companyInquiriesProvider.notifier)
+                                        .replyToInquiry(inquiry.id, replyController.text.trim());
+                                  },
+                            icon: const Icon(Icons.send, size: 14),
+                            label: const Text('Email Reply', style: TextStyle(fontSize: 12)),
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: isSending
+                                ? null
+                                : () async {
+                                    final text = replyController.text.trim();
+                                    final phone = phoneController.text.trim();
+                                    if (text.isEmpty) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text('Please write a reply message!')),
+                                      );
+                                      return;
+                                    }
+                                    if (phone.isEmpty) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(content: Text('Candidate phone number is required for WhatsApp!')),
+                                      );
+                                      return;
+                                    }
+
+                                    setModalState(() => isSending = true);
+                                    final ok = await ref
+                                        .read(companyInquiriesProvider.notifier)
+                                        .replyWhatsApp(inquiry.id, text, candidatePhone: phone);
+                                    setModalState(() => isSending = false);
+
+                                    if (context.mounted) {
+                                      Navigator.pop(ctx);
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text(ok
+                                              ? '✅ WhatsApp reply delivered to candidate!'
+                                              : 'Could not send WhatsApp message.'),
+                                          backgroundColor: ok ? const Color(0xFF15803d) : AppColors.error,
+                                        ),
+                                      );
+                                    }
+                                  },
+                            icon: const Icon(Icons.chat, size: 14, color: Colors.white),
+                            label: const Text('WhatsApp', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white)),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF25D366),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                child: Text(
-                  '"${inquiry.message}"',
-                  style: const TextStyle(fontSize: 13, fontStyle: FontStyle.italic),
-                ),
               ),
-              const SizedBox(height: 14),
-              CustomTextField(
-                label: 'Employer Response',
-                hint: 'Write your message to the candidate...',
-                controller: replyController,
-                maxLines: 4,
-              ),
-              const SizedBox(height: 16),
-              CustomButton(
-                text: 'Send Reply',
-                icon: Icons.send,
-                onPressed: () async {
-                  if (replyController.text.trim().isEmpty) return;
-                  Navigator.pop(ctx);
-                  await ref
-                      .read(companyInquiriesProvider.notifier)
-                      .replyToInquiry(inquiry.id, replyController.text.trim());
-                },
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
@@ -483,8 +564,20 @@ class _CompanyInquiriesScreenState extends ConsumerState<CompanyInquiriesScreen>
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 6),
                 ],
+                IconButton(
+                  tooltip: 'Reply on WhatsApp',
+                  style: IconButton.styleFrom(
+                    backgroundColor: const Color(0xFF25D366).withValues(alpha: 0.15),
+                    foregroundColor: const Color(0xFF15803d),
+                    padding: const EdgeInsets.all(6),
+                    minimumSize: const Size(32, 32),
+                  ),
+                  icon: const Icon(Icons.chat, size: 16),
+                  onPressed: () => _openReplyModal(inquiry),
+                ),
+                const SizedBox(width: 6),
                 OutlinedButton.icon(
                   onPressed: () => _openReplyModal(inquiry),
                   icon: const Icon(Icons.reply, size: 14),
@@ -493,7 +586,7 @@ class _CompanyInquiriesScreenState extends ConsumerState<CompanyInquiriesScreen>
                     style: const TextStyle(fontSize: 12),
                   ),
                   style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     side: const BorderSide(color: AppColors.primary),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),

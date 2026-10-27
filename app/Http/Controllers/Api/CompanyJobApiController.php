@@ -91,6 +91,14 @@ class CompanyJobApiController extends Controller
             ], 200);
         }
 
+        $companyProfile = $user->companyProfile;
+        $whatsappNumber = $request->input('whatsapp_number') ?: ($companyProfile->whatsapp_number ?? null);
+
+        if ($request->filled('whatsapp_number') && $companyProfile && empty($companyProfile->whatsapp_number)) {
+            $companyProfile->whatsapp_number = $request->input('whatsapp_number');
+            $companyProfile->save();
+        }
+
         $job = JobPosting::create([
             'user_id' => $user->id,
             'title' => $request->title,
@@ -101,6 +109,7 @@ class CompanyJobApiController extends Controller
             'skills' => $request->skills,
             'description' => $request->description,
             'image_path' => $imagePath,
+            'whatsapp_number' => $whatsappNumber,
             'status' => 'active',
         ]);
 

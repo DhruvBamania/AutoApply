@@ -13,6 +13,7 @@ class CompanyProfile extends Model
         'user_id',
         'company_name',
         'website',
+        'whatsapp_number',
         'location',
         'description',
     ];

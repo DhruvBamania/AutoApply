@@ -5,6 +5,7 @@ class UserModel {
   final String role; // 'company' or 'user'
   final String? companyName;
   final String? companyWebsite;
+  final String? whatsappNumber;
   final String? resumeText;
 
   UserModel({
@@ -14,11 +15,34 @@ class UserModel {
     required this.role,
     this.companyName,
     this.companyWebsite,
+    this.whatsappNumber,
     this.resumeText,
   });
 
   bool get isCompany => role == 'company';
   bool get isCandidate => role == 'user';
+
+  UserModel copyWith({
+    int? id,
+    String? name,
+    String? email,
+    String? role,
+    String? companyName,
+    String? companyWebsite,
+    String? whatsappNumber,
+    String? resumeText,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      role: role ?? this.role,
+      companyName: companyName ?? this.companyName,
+      companyWebsite: companyWebsite ?? this.companyWebsite,
+      whatsappNumber: whatsappNumber ?? this.whatsappNumber,
+      resumeText: resumeText ?? this.resumeText,
+    );
+  }
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     final comp = json['company_profile'] as Map<String, dynamic>?;
@@ -30,6 +54,7 @@ class UserModel {
       role: json['role'] as String? ?? 'user',
       companyName: comp?['company_name'] as String?,
       companyWebsite: comp?['website'] as String?,
+      whatsappNumber: (comp?['whatsapp_number'] ?? json['whatsapp_number']) as String?,
       resumeText: json['resume_text'] as String?,
     );
   }
@@ -41,6 +66,8 @@ class UserModel {
     'role': role,
     'company_name': companyName,
     'website': companyWebsite,
+    'whatsapp_number': whatsappNumber,
     'resume_text': resumeText,
   };
 }
+

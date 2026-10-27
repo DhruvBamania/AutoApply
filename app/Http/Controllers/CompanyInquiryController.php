@@ -299,4 +299,54 @@ class CompanyInquiryController extends Controller
 
         return back()->with('success', $statusMsg);
     }
+
+    /**
+     * Send employer reply to the candidate inquiry via Twilio WhatsApp.
+     */
+    public function replyWhatsApp(Request $request, $id, \App\Services\TwilioWhatsAppService $whatsAppService)
+    {
+        $user = Auth::user();
+        $inquiry = JobInquiry::whereHas('jobPosting', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        })->with('jobPosting.user.companyProfile')->findOrFail($id);
+
+        $replyContent = $request->input('company_reply', $request->input('reply_message'));
+        if (empty($replyContent)) {
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'error' => 'The company reply field is required.'], 422);
+            }
+            return back()->with('error', 'The company reply field is required.');
+        }
+
+        if ($request->filled('candidate_phone')) {
+            $inquiry->candidate_phone = $request->candidate_phone;
+            $inquiry->save();
+        }
+
+        if (empty($inquiry->candidate_phone)) {
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'error' => 'Candidate has not provided a phone number for WhatsApp messaging.'], 422);
+            }
+            return back()->with('error', 'Candidate has not provided a phone number for WhatsApp messaging.');
+        }
+
+        $result = $whatsAppService->sendCompanyReply($inquiry, $replyContent, $user);
+
+        if (!$result['success']) {
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'error' => $result['error'] ?? 'Failed to send WhatsApp message.'], 400);
+            }
+            return back()->with('error', $result['error'] ?? 'Failed to send WhatsApp message.');
+        }
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => "WhatsApp message successfully delivered to {$inquiry->candidate_name}!",
+                'inquiry' => $inquiry->fresh(),
+            ]);
+        }
+
+        return back()->with('success', "💬 WhatsApp reply successfully delivered to {$inquiry->candidate_name}!");
+    }
 }

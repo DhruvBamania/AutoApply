@@ -55,16 +55,17 @@
         
         .navbar {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 0.75rem 1.25rem;
-            background: rgba(255, 255, 255, 0.85);
+            justify-content: space-between;
+            gap: 1.25rem;
+            padding: 0.6rem 1.25rem;
+            background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 18px;
             margin-bottom: 2rem;
-            box-shadow: 0 10px 30px -10px rgba(79, 70, 229, 0.08), 0 4px 15px -3px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 10px 30px -10px rgba(79, 70, 229, 0.08), 0 4px 16px -2px rgba(15, 23, 42, 0.04);
             position: sticky;
             top: 0.75rem;
             z-index: 1000;
@@ -78,11 +79,12 @@
         .header-brand {
             display: inline-flex;
             align-items: center;
-            gap: 0.65rem;
+            gap: 0.7rem;
             text-decoration: none;
             color: #1e1b4b;
             flex-shrink: 0;
             transition: transform 0.2s ease;
+            margin-right: 0.5rem;
         }
         .header-brand:hover {
             transform: translateY(-1px);
@@ -132,88 +134,62 @@
             color: #64748b;
             text-transform: uppercase;
         }
-        .brand-live-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.25);
-            color: #059669;
-            padding: 0.2rem 0.5rem;
-            border-radius: 9999px;
-            font-size: 0.68rem;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            margin-left: 0.15rem;
-        }
-        .live-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #10b981;
-            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-            animation: pulseLiveDot 2s infinite;
-        }
-        @keyframes pulseLiveDot {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-        }
 
         /* Center Nav Links (Desktop) */
         .header-nav-center {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 0.35rem;
+            flex: 1;
+            min-width: 0;
         }
         .header-nav-link {
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
-            padding: 0.45rem 0.75rem;
+            gap: 0.35rem;
+            padding: 0.42rem 0.7rem;
             color: #475569;
             text-decoration: none;
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             font-weight: 500;
             border-radius: 10px;
-            transition: all 0.2s ease;
+            transition: all 0.18s ease;
             white-space: nowrap;
             background: transparent;
             border: 1px solid transparent;
             cursor: pointer;
+            line-height: 1.2;
+            box-sizing: border-box;
+            height: 38px;
         }
         .header-nav-link:hover {
             color: #4f46e5;
-            background: rgba(99, 102, 241, 0.08);
+            background: rgba(99, 102, 241, 0.06);
             transform: translateY(-1px);
         }
         .header-nav-link.active {
             color: #4338ca;
-            background: rgba(99, 102, 241, 0.12);
+            background: rgba(99, 102, 241, 0.1);
             font-weight: 600;
-            border-color: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.18);
         }
         .nav-link-icon {
             font-size: 0.95rem;
             line-height: 1;
-        }
-        .highlight-pill {
-            background: rgba(2, 132, 199, 0.08);
-            color: #0369a1;
-            font-weight: 600;
-        }
-        .highlight-pill:hover {
-            background: rgba(2, 132, 199, 0.15);
-            color: #0284c7;
+            display: inline-flex;
+            align-items: center;
         }
         .pill-sparkle {
-            background: linear-gradient(135deg, #0284c7, #6366f1);
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
             color: white;
-            font-size: 0.62rem;
+            font-size: 0.6rem;
             font-weight: 700;
-            padding: 0.1rem 0.35rem;
+            padding: 0.12rem 0.4rem;
             border-radius: 6px;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.04em;
+            line-height: 1;
+            margin-left: 0.1rem;
         }
 
         /* Dropdown Trigger & Menus */
@@ -317,72 +293,79 @@
             display: flex;
             align-items: center;
             gap: 0.65rem;
+            flex-shrink: 0;
+            margin-left: 0.5rem;
         }
         .header-cta-btn {
             display: inline-flex;
             align-items: center;
             gap: 0.4rem;
-            padding: 0.45rem 1rem;
-            border-radius: 12px;
-            font-size: 0.86rem;
+            padding: 0.42rem 0.9rem;
+            border-radius: 10px;
+            font-size: 0.82rem;
             font-weight: 600;
             text-decoration: none;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.2s ease;
             white-space: nowrap;
-            min-height: 38px;
+            height: 38px;
+            box-sizing: border-box;
+            flex-shrink: 0;
         }
         .header-cta-btn.primary-cta {
             background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
             color: white;
-            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
             border: none;
         }
         .header-cta-btn.primary-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.5);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(79, 70, 229, 0.45);
             color: white;
         }
         .header-cta-btn.secondary-cta {
-            background: rgba(99, 102, 241, 0.08);
-            color: #4338ca;
-            border: 1px solid rgba(99, 102, 241, 0.2);
+            background: rgba(99, 102, 241, 0.06);
+            color: #4f46e5;
+            border: 1px solid rgba(99, 102, 241, 0.22);
         }
         .header-cta-btn.secondary-cta:hover {
-            background: rgba(99, 102, 241, 0.15);
-            transform: translateY(-2px);
+            background: rgba(99, 102, 241, 0.12);
+            transform: translateY(-1px);
             color: #3730a3;
+            border-color: rgba(99, 102, 241, 0.35);
         }
 
         /* User Profile Button & Dropdown */
         .user-profile-trigger {
             display: inline-flex;
             align-items: center;
-            gap: 0.55rem;
-            padding: 0.35rem 0.65rem 0.35rem 0.4rem;
-            background: rgba(255, 255, 255, 0.85);
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem 0.25rem 0.35rem;
+            background: rgba(255, 255, 255, 0.95);
             border: 1px solid rgba(226, 232, 240, 0.9);
             border-radius: 9999px;
             cursor: pointer;
             transition: all 0.2s ease;
+            height: 38px;
+            box-sizing: border-box;
         }
         .user-profile-trigger:hover {
             background: white;
             border-color: #cbd5e1;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
         }
         .user-avatar-circle {
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
             color: white;
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 6px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 2px 6px rgba(99, 102, 241, 0.25);
             flex-shrink: 0;
         }
         .user-info-text {
@@ -390,10 +373,10 @@
             flex-direction: column;
             text-align: left;
             line-height: 1.15;
-            max-width: 110px;
+            max-width: 120px;
         }
         .user-name-line {
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             font-weight: 600;
             color: #1e293b;
             white-space: nowrap;
@@ -401,10 +384,10 @@
             text-overflow: ellipsis;
         }
         .user-role-badge {
-            font-size: 0.62rem;
+            font-size: 0.58rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.03em;
+            letter-spacing: 0.05em;
         }
         .badge-role-company {
             color: #0284c7;
@@ -860,21 +843,32 @@
 
         /* --- RESPONSIVE MEDIA QUERIES --- */
         
-        /* Laptops & Desktops (<= 1150px) */
-        @media (max-width: 1150px) {
+        /* Laptops & Standard Desktops (<= 1260px) */
+        @media (max-width: 1260px) {
             .app-layout { padding-left: 1.25rem; padding-right: 1.25rem; }
-            .user-info-text { display: none; } /* Show avatar only to preserve horizontal room */
-            .header-nav-link { padding: 0.4rem 0.6rem; font-size: 0.84rem; }
+            .navbar { gap: 0.75rem; padding: 0.55rem 1rem; }
+            .header-nav-link { padding: 0.38rem 0.55rem; font-size: 0.82rem; gap: 0.25rem; }
+            .header-brand { margin-right: 0.25rem; }
+            .header-actions { margin-left: 0.25rem; }
+            .user-role-badge { display: none; } /* Hide role text on laptops to prevent horizontal crowding */
+            .user-info-text { max-width: 90px; }
         }
 
-        /* Tablets & Mobile Navigation (<= 960px) */
-        @media (max-width: 960px) {
-            .grid-2 { grid-template-columns: 1fr; }
+        /* Compact Laptops, Tablets Landscape & Split Screen (<= 1120px) */
+        @media (max-width: 1120px) {
             .header-nav-center { display: none; } /* Seamlessly collapse center links into mobile drawer */
             .hamburger-btn { display: flex; }
-            .navbar { padding: 0.65rem 1rem; margin-bottom: 1.5rem; }
-            .header-brand .brand-live-pill { display: none; }
-            .user-profile-trigger { display: none; } /* Integrated into mobile drawer hero */
+            .navbar { padding: 0.55rem 1rem; margin-bottom: 1.5rem; }
+            .user-role-badge { display: inline-block; } /* Center collapsed, ample room restored */
+            .user-info-text { max-width: 120px; }
+        }
+
+        /* Tablets & Mobile Navigation (<= 860px) */
+        @media (max-width: 860px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .user-info-text { display: none; } /* Show avatar circle only */
+            .user-profile-trigger { padding: 0.25rem 0.35rem; }
+            .user-profile-trigger .dropdown-chevron { display: none; }
             
             /* Editor Layout Stack */
             .editor-layout { flex-direction: column !important; height: auto !important; }
@@ -888,8 +882,11 @@
             body { padding: 0.75rem 0 2rem 0; }
             .app-layout { padding-left: 0.85rem; padding-right: 0.85rem; }
             .container { gap: 1.25rem; }
-            .navbar { padding: 0.75rem 1rem; border-radius: 16px; margin-bottom: 1.25rem; }
+            .navbar { padding: 0.5rem 0.85rem; border-radius: 14px; margin-bottom: 1.25rem; }
             .logo { font-size: 1.25rem; }
+            .header-cta-btn { display: none; } /* Accessible inside mobile drawer */
+            .user-profile-trigger { display: none; } /* Accessible inside mobile drawer header */
+            .brand-subtitle { display: none; }
             
             .glass-card, .card {
                 padding: 1.25rem 1rem !important;
@@ -978,7 +975,7 @@
 
     <div class="app-layout">
         <header class="navbar" id="mainHeader">
-            <!-- Brand Logo & Live Status -->
+            <!-- Brand Logo -->
             <a href="/" class="header-brand" title="{{ config('app.name', 'AI Looping') }}">
                 <div class="brand-icon-box">
                     <svg class="brand-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
@@ -988,10 +985,6 @@
                 <div class="brand-text-group">
                     <span class="brand-title">Auto<span class="brand-title-accent">Apply</span></span>
                     <span class="brand-subtitle">AI LOOPING</span>
-                </div>
-                <div class="brand-live-pill" title="Production Cluster Active">
-                    <span class="live-dot"></span>
-                    <span>LIVE</span>
                 </div>
             </a>
 
@@ -1015,7 +1008,10 @@
                             <span class="nav-link-icon">🎧</span> Support
                         </a>
                     @else
-                        <a href="{{ route('candidate.headhunter.index') }}" class="header-nav-link highlight-pill {{ request()->routeIs('candidate.headhunter.*') ? 'active' : '' }}">
+                        <a href="{{ route('jobs.index') }}" class="header-nav-link {{ request()->routeIs('jobs.*') ? 'active' : '' }}">
+                            <span class="nav-link-icon">💼</span> Explore Jobs
+                        </a>
+                        <a href="{{ route('candidate.headhunter.index') }}" class="header-nav-link {{ request()->routeIs('candidate.headhunter.*') ? 'active' : '' }}">
                             <span class="nav-link-icon">🎯</span> Scouted Jobs
                             <span class="pill-sparkle">AI</span>
                         </a>
@@ -1079,6 +1075,9 @@
                         </div>
                     @endif
                 @else
+                    <a href="{{ route('jobs.index') }}" class="header-nav-link {{ request()->routeIs('jobs.*') ? 'active' : '' }}">
+                        <span class="nav-link-icon">💼</span> Browse Jobs
+                    </a>
                     <a href="{{ route('contact') }}" class="header-nav-link {{ request()->routeIs('contact*') ? 'active' : '' }}">
                         <span class="nav-link-icon">💬</span> Contact Us
                     </a>
@@ -1098,14 +1097,6 @@
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
                             </svg>
                             <span>Post Job</span>
-                        </a>
-                    @else
-                        <a href="{{ route('app.download.page') }}" class="header-cta-btn secondary-cta" title="Download Android APK">
-                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-                                <line x1="12" y1="18" x2="12.01" y2="18"></line>
-                            </svg>
-                            <span>Get App</span>
                         </a>
                     @endif
 
@@ -1174,6 +1165,13 @@
                                         </div>
                                     </a>
                                 @else
+                                    <a href="{{ route('jobs.index') }}" class="dropdown-menu-item">
+                                        <span class="item-icon-box">💼</span>
+                                        <div class="item-text-group">
+                                            <span class="item-title">Explore Company Jobs</span>
+                                            <span class="item-desc">Browse active openings & WhatsApp chat</span>
+                                        </div>
+                                    </a>
                                     <a href="{{ route('candidate.headhunter.index') }}" class="dropdown-menu-item">
                                         <span class="item-icon-box">🎯</span>
                                         <div class="item-text-group">
@@ -1307,6 +1305,10 @@
                         </div>
                     @else
                         <div class="drawer-section-title">CORE NAVIGATION</div>
+                        <a href="{{ route('jobs.index') }}" class="drawer-link {{ request()->routeIs('jobs.*') ? 'active' : '' }}">
+                            <span><span class="drawer-link-icon">💼</span> Explore Jobs</span>
+                            <span class="drawer-badge" style="background: #e0e7ff; color: #4338ca;">LIVE</span>
+                        </a>
                         <a href="{{ route('candidate.headhunter.index') }}" class="drawer-link highlight {{ request()->routeIs('candidate.headhunter.*') ? 'active' : '' }}">
                             <span><span class="drawer-link-icon">🎯</span> Scouted Jobs</span>
                             <span class="drawer-badge">AI MATCH</span>
@@ -1358,7 +1360,10 @@
                         </form>
                     </div>
                 @else
-                    <div class="drawer-section-title">GET STARTED</div>
+                    <div class="drawer-section-title">EXPLORE & DISCOVER</div>
+                    <a href="{{ route('jobs.index') }}" class="drawer-link {{ request()->routeIs('jobs.*') ? 'active' : '' }}">
+                        <span><span class="drawer-link-icon">💼</span> Browse Job Openings</span>
+                    </a>
                     <a href="{{ route('contact') }}" class="drawer-link {{ request()->routeIs('contact*') ? 'active' : '' }}">
                         <span><span class="drawer-link-icon">💬</span> Contact & Support</span>
                     </a>

@@ -50,17 +50,24 @@ Route::middleware(['auth', 'role:company'])->group(function () {
     Route::post('/company/inquiries/seed-demo', [\App\Http\Controllers\CompanyInquiryController::class, 'seedDemo'])->name('company.inquiries.seed');
     Route::patch('/company/inquiries/{id}/status', [\App\Http\Controllers\CompanyInquiryController::class, 'updateStatus'])->name('company.inquiries.status');
     Route::post('/company/inquiries/{id}/reply', [\App\Http\Controllers\CompanyInquiryController::class, 'reply'])->name('company.inquiries.reply');
+    Route::post('/company/inquiries/{id}/whatsapp-reply', [\App\Http\Controllers\CompanyInquiryController::class, 'replyWhatsApp'])->name('company.inquiries.whatsapp_reply');
     Route::post('/company/inquiries/{id}/pin', [\App\Http\Controllers\CompanyInquiryController::class, 'togglePin'])->name('company.inquiries.pin');
+
+    // Twilio WhatsApp Profile Configuration
+    Route::match(['post', 'put'], '/company/profile/whatsapp', [\App\Http\Controllers\CompanyDashboardController::class, 'updateWhatsApp'])->name('company.profile.whatsapp');
 
     // AI Headhunter Agent (Autonomous Talent Scout & Outreach)
     Route::post('/company/jobs/{id}/headhunter/scout', [\App\Http\Controllers\CompanyHeadhunterController::class, 'scout'])->name('company.headhunter.scout');
     Route::post('/company/headhunter/{id}/invite', [\App\Http\Controllers\CompanyHeadhunterController::class, 'invite'])->name('company.headhunter.invite');
+    Route::post('/company/headhunter/{id}/whatsapp-outreach', [\App\Http\Controllers\CompanyHeadhunterController::class, 'whatsAppOutreach'])->name('company.headhunter.whatsapp_outreach');
     Route::post('/company/jobs/{id}/headhunter/batch-invite', [\App\Http\Controllers\CompanyHeadhunterController::class, 'batchInvite'])->name('company.headhunter.batch_invite');
 });
 
 // Public Candidate Job Opening & Inquiry/Apply Routes
+Route::get('/jobs', [\App\Http\Controllers\PublicJobController::class, 'index'])->name('jobs.index');
 Route::get('/jobs/{id}', [\App\Http\Controllers\PublicJobController::class, 'show'])->name('jobs.public.show');
 Route::post('/jobs/{id}/inquire', [\App\Http\Controllers\PublicJobController::class, 'inquire'])->name('jobs.public.inquire');
+Route::post('/jobs/{id}/whatsapp-message', [\App\Http\Controllers\PublicJobController::class, 'sendWhatsAppMessage'])->name('jobs.public.whatsapp');
 
 // Shared Authenticated Routes (Available to both Candidates and Companies)
 Route::middleware('auth')->group(function () {

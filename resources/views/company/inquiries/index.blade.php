@@ -16,6 +16,11 @@
         </div>
         
         <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <button type="button" onclick="document.getElementById('companyWhatsappModal').style.display='flex'" class="btn" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.2rem; font-size: 0.9rem; border: 1.5px solid #25D366; color: #15803d; background: #f0fdf4; font-weight: 700; cursor: pointer; border-radius: 8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.772.82 2.791.82 3.181 0 5.767-2.586 5.768-5.766 0-3.18-2.586-5.766-5.768-5.766zm9.969 5.828c0 5.514-4.486 10-10 10-1.802 0-3.486-.481-4.945-1.321l-5.055 1.321 1.353-4.939c-.896-1.492-1.353-3.21-1.353-5.061 0-5.514 4.486-10 10-10s10 4.486 10 10z"/></svg>
+                <span>WhatsApp: {{ Auth::user()->companyProfile->whatsapp_number ?? 'Not Set' }}</span>
+            </button>
+
             <button type="button" onclick="toggleManualLogForm()" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.2rem; font-size: 0.9rem; border: 1px solid #0a66c2; color: #0a66c2; background: white; font-weight: 600; cursor: pointer; border-radius: 8px;">
                 <span>➕</span> Log LinkedIn Comment
             </button>
@@ -76,6 +81,7 @@
                     <label class="form-label" style="font-size: 0.85rem;">Source Platform *</label>
                     <select name="platform" class="form-control" required>
                         <option value="linkedin">💼 LinkedIn Post Comment</option>
+                        <option value="whatsapp">📱 WhatsApp Candidate Message</option>
                         <option value="naukri">🔵 Naukri Recruiter Message</option>
                         <option value="indeed">🔷 Indeed Candidate Query</option>
                         <option value="direct">✉️ Direct Candidate Message</option>
@@ -84,6 +90,10 @@
                 <div class="form-group" style="margin: 0;">
                     <label class="form-label" style="font-size: 0.85rem;">Commenter / Candidate Name *</label>
                     <input type="text" name="candidate_name" class="form-control" placeholder="e.g. Dhruv Bamania" required>
+                </div>
+                <div class="form-group" style="margin: 0;">
+                    <label class="form-label" style="font-size: 0.85rem;">Candidate Phone / WhatsApp (Optional)</label>
+                    <input type="tel" name="candidate_phone" class="form-control" placeholder="+91 98765 43210">
                 </div>
                 <div class="form-group" style="margin: 0;">
                     <label class="form-label" style="font-size: 0.85rem;">Candidate Headline / Title (Optional)</label>
@@ -312,10 +322,21 @@
                                                         </span>
                                                     @endif
 
+                                                    @if($inquiry->candidate_phone)
+                                                        <span class="badge" style="background: #f0fdf4; color: #166534; border: 1px solid #86efac; font-size: 0.72rem; display: inline-flex; align-items: center; gap: 0.25rem;">
+                                                            📱 {{ $inquiry->candidate_phone }}
+                                                        </span>
+                                                    @endif
+
                                                     <!-- Platform Pill -->
                                                     @if($inquiry->platform === 'linkedin')
                                                         <span class="badge" style="background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; font-size: 0.72rem;">
                                                             💼 LinkedIn
+                                                        </span>
+                                                    @elseif($inquiry->platform === 'whatsapp')
+                                                        <span class="badge" style="background: #dcfce7; color: #15803d; border: 1px solid #86efac; font-size: 0.72rem; display: inline-flex; align-items: center; gap: 0.25rem; font-weight: 700;">
+                                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.772.82 2.791.82 3.181 0 5.767-2.586 5.768-5.766 0-3.18-2.586-5.766-5.768-5.766zm9.969 5.828c0 5.514-4.486 10-10 10-1.802 0-3.486-.481-4.945-1.321l-5.055 1.321 1.353-4.939c-.896-1.492-1.353-3.21-1.353-5.061 0-5.514 4.486-10 10-10s10 4.486 10 10z"/></svg>
+                                                            WhatsApp
                                                         </span>
                                                     @elseif($inquiry->platform === 'naukri')
                                                         <span class="badge" style="background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; font-size: 0.72rem;">
@@ -432,10 +453,10 @@
                                         @endif
 
                                         <!-- Reply Form Accordion / Box -->
-                                        <div style="margin-top: 0.75rem;">
+                                        <div style="margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem;">
                                             <details style="font-size: 0.85rem;">
                                                 <summary style="cursor: pointer; color: #4c51bf; font-weight: 600; padding: 0.25rem 0;">
-                                                    {{ $inquiry->company_reply ? '✏️ Edit / Send Another Reply' : '↩️ Reply to Candidate' }}
+                                                    {{ $inquiry->company_reply ? '✏️ Edit / Send Standard Reply' : '↩️ Reply to Candidate (Standard / Email)' }}
                                                 </summary>
                                                 <form action="{{ route('company.inquiries.reply', $inquiry->id) }}" method="POST" style="margin-top: 0.75rem;">
                                                     @csrf
@@ -445,6 +466,33 @@
                                                     <div style="display: flex; justify-content: flex-end;">
                                                         <button type="submit" class="btn-primary" style="font-size: 0.8rem; padding: 0.4rem 1rem;">
                                                             Send Reply
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </details>
+
+                                            <!-- WhatsApp Direct Reply Box -->
+                                            <details style="font-size: 0.85rem;">
+                                                <summary style="cursor: pointer; color: #15803d; font-weight: 700; padding: 0.25rem 0; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="#25D366"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.772.82 2.791.82 3.181 0 5.767-2.586 5.768-5.766 0-3.18-2.586-5.766-5.768-5.766zm9.969 5.828c0 5.514-4.486 10-10 10-1.802 0-3.486-.481-4.945-1.321l-5.055 1.321 1.353-4.939c-.896-1.492-1.353-3.21-1.353-5.061 0-5.514 4.486-10 10-10s10 4.486 10 10z"/></svg>
+                                                    <span>Reply directly via WhatsApp</span>
+                                                </summary>
+                                                <form action="{{ route('company.inquiries.whatsapp_reply', $inquiry->id) }}" method="POST" style="margin-top: 0.5rem; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 10px; padding: 1rem;">
+                                                    @csrf
+                                                    <div style="font-size: 0.82rem; color: #166534; font-weight: 600; margin-bottom: 0.5rem;">
+                                                        Deliver an instant WhatsApp reply directly to candidate's mobile number:
+                                                    </div>
+                                                    <div style="margin-bottom: 0.6rem;">
+                                                        <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #15803d; margin-bottom: 0.25rem;">Candidate Phone Number *</label>
+                                                        <input type="tel" name="candidate_phone" value="{{ $inquiry->candidate_phone }}" required placeholder="+91 98765 43210" class="form-control" style="font-size: 0.85rem; padding: 0.45rem 0.65rem; background: white;">
+                                                    </div>
+                                                    <div style="margin-bottom: 0.6rem;">
+                                                        <label style="display: block; font-size: 0.75rem; font-weight: 700; color: #15803d; margin-bottom: 0.25rem;">WhatsApp Message Content *</label>
+                                                        <textarea name="company_reply" rows="2" class="form-control" placeholder="Hi {{ $inquiry->candidate_name }}, thanks for your interest in our {{ $jobRole->title }} opening..." required style="font-size: 0.85rem; background: white;"></textarea>
+                                                    </div>
+                                                    <div style="display: flex; justify-content: flex-end;">
+                                                        <button type="submit" style="background: #25D366; color: white; border: none; font-size: 0.82rem; font-weight: 700; padding: 0.45rem 1.1rem; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem; box-shadow: 0 2px 8px rgba(37,211,102,0.3);">
+                                                            <span>🚀</span> Send WhatsApp 
                                                         </button>
                                                     </div>
                                                 </form>
@@ -477,4 +525,31 @@
 </script>
 
 @include('company.partials.shortlist_modal')
+
+<!-- Company WhatsApp Configuration Modal -->
+<div id="companyWhatsappModal" style="display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(5px); align-items: center; justify-content: center; padding: 1.5rem;">
+    <div style="background: white; border-radius: 18px; max-width: 480px; width: 100%; box-shadow: 0 20px 40px rgba(0,0,0,0.25); overflow: hidden;">
+        <div style="background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); padding: 1.25rem 1.5rem; color: white; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 0.6rem;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.772.82 2.791.82 3.181 0 5.767-2.586 5.768-5.766 0-3.18-2.586-5.766-5.768-5.766zm9.969 5.828c0 5.514-4.486 10-10 10-1.802 0-3.486-.481-4.945-1.321l-5.055 1.321 1.353-4.939c-.896-1.492-1.353-3.21-1.353-5.061 0-5.514 4.486-10 10-10s10 4.486 10 10z"/></svg>
+                <h3 style="margin: 0; font-size: 1.15rem; font-weight: 700;">Company WhatsApp Line</h3>
+            </div>
+            <button type="button" onclick="document.getElementById('companyWhatsappModal').style.display='none'" style="background: rgba(255,255,255,0.2); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 1.1rem; line-height: 1;">&times;</button>
+        </div>
+        <form action="{{ route('company.profile.whatsapp') }}" method="POST" style="padding: 1.5rem;">
+            @csrf
+            <p style="font-size: 0.88rem; color: #4b5563; margin-top: 0; margin-bottom: 1rem; line-height: 1.45;">
+                Specify your company's official WhatsApp phone number where candidate inquiries from job postings will be forwarded.
+            </p>
+            <div class="form-group" style="margin-bottom: 1.25rem;">
+                <label class="form-label" style="font-size: 0.85rem; font-weight: 700;">WhatsApp Number (with country code) *</label>
+                <input type="tel" name="whatsapp_number" value="{{ Auth::user()->companyProfile->whatsapp_number ?? '' }}" required placeholder="e.g. +91 98765 43210" class="form-control" style="font-size: 0.95rem; padding: 0.65rem 0.85rem;">
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+                <button type="button" onclick="document.getElementById('companyWhatsappModal').style.display='none'" class="btn-secondary" style="padding: 0.55rem 1rem;">Cancel</button>
+                <button type="submit" style="background: #25D366; color: white; border: none; font-weight: 700; padding: 0.55rem 1.2rem; border-radius: 8px; cursor: pointer;">Save Number</button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection

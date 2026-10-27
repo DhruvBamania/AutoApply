@@ -10,7 +10,14 @@ class DashboardController extends Controller
     public function index()
     {
         $campaigns = \App\Models\Campaign::where('user_id', auth()->id())->get(); 
-        return view('dashboard', compact('campaigns'));
+        $latestJobs = \App\Models\JobPosting::with('user.companyProfile')
+            ->where('status', 'active')
+            ->latest()
+            ->take(6)
+            ->get();
+        $totalActiveJobs = \App\Models\JobPosting::where('status', 'active')->count();
+
+        return view('dashboard', compact('campaigns', 'latestJobs', 'totalActiveJobs'));
     }
 
     public function uploadResume(Request $request, \App\Services\ResumeParserService $parser)

@@ -15,6 +15,7 @@ class JobInquiry extends Model
         'type',
         'candidate_name',
         'candidate_email',
+        'candidate_phone',
         'candidate_headline',
         'message',
         'resume_path',

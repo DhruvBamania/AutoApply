@@ -70,11 +70,34 @@
                 </div>
             </div>
 
+            <!-- Channel Selector: Email vs WhatsApp -->
+            <div style="margin-bottom: 1.15rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0.6rem 0.85rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                <span style="font-weight: 700; font-size: 0.82rem; color: #334155;">Outreach Channel:</span>
+                <div style="display: flex; gap: 0.5rem;">
+                    <label style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.82rem; font-weight: 600; cursor: pointer; padding: 0.25rem 0.6rem; border-radius: 6px; background: white; border: 1px solid #cbd5e1;">
+                        <input type="radio" name="outreach_channel" value="email" checked onchange="toggleOutreachChannel('email')" style="accent-color: #2563eb;">
+                        <span>✉️ Email</span>
+                    </label>
+                    <label style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.82rem; font-weight: 700; cursor: pointer; padding: 0.25rem 0.6rem; border-radius: 6px; background: #f0fdf4; border: 1px solid #86efac; color: #15803d;">
+                        <input type="radio" name="outreach_channel" value="whatsapp" onchange="toggleOutreachChannel('whatsapp')" style="accent-color: #25D366;">
+                        <span>💬 WhatsApp</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- WhatsApp Phone Field (Shown when WhatsApp selected) -->
+            <div id="hhPhoneContainer" style="display: none; margin-bottom: 1.15rem;">
+                <label style="display: block; font-weight: 700; font-size: 0.85rem; color: #15803d; margin-bottom: 0.35rem;">
+                    📱 Candidate WhatsApp Phone <span style="color: #ef4444;">*</span>
+                </label>
+                <input type="tel" name="candidate_phone" id="hhModalCandidatePhone" placeholder="+91 98765 43210" style="width: 100%; box-sizing: border-box; padding: 0.65rem 0.85rem; border: 1.5px solid #86efac; border-radius: 8px; font-size: 0.92rem; font-family: inherit; color: #0f172a;">
+            </div>
+
             <!-- Notice Callout -->
             <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 0.75rem 0.9rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 0.6rem;">
                 <span style="font-size: 1.1rem; line-height: 1;">⚡</span>
                 <div style="font-size: 0.8rem; color: #166534; line-height: 1.4;">
-                    <strong>Seamless Automation:</strong> When the candidate clicks "Accept & Connect" from their email or mobile app, they will instantly appear in your <strong>Job Shortlist</strong> tab ready for interview scheduling.
+                    <strong>Seamless Automation:</strong> When the candidate responds or accepts from email or WhatsApp, they will instantly appear in your <strong>Job Shortlist</strong> tab ready for interview scheduling.
                 </div>
             </div>
 
@@ -92,11 +115,40 @@
 </div>
 
 <script>
+    let currentMatchId = null;
+
+    function toggleOutreachChannel(channel) {
+        const form = document.getElementById('headhunterInviteForm');
+        const phoneContainer = document.getElementById('hhPhoneContainer');
+        const phoneInput = document.getElementById('hhModalCandidatePhone');
+        const submitBtn = document.getElementById('hhSubmitBtn');
+
+        if (channel === 'whatsapp') {
+            form.action = "{{ url('company/headhunter') }}/" + currentMatchId + "/whatsapp-outreach";
+            phoneContainer.style.display = 'block';
+            phoneInput.required = true;
+            submitBtn.style.background = '#25D366';
+            submitBtn.innerHTML = '<span>💬</span> Dispatch via WhatsApp';
+        } else {
+            form.action = "{{ url('company/headhunter') }}/" + currentMatchId + "/invite";
+            phoneContainer.style.display = 'none';
+            phoneInput.required = false;
+            submitBtn.style.background = 'linear-gradient(135deg, #0284c7 0%, #2563eb 100%)';
+            submitBtn.innerHTML = '<span>✉️</span> Dispatch Invitation Email';
+        }
+    }
+
     function openHeadhunterModal(matchId, candidateName, candidateEmail, matchScore, poolSource, defaultSubject, defaultMessage) {
+        currentMatchId = matchId;
         const modal = document.getElementById('headhunterOutreachModal');
         const form = document.getElementById('headhunterInviteForm');
         
-        form.action = "{{ url('company/headhunter') }}/" + matchId + "/invite";
+        // Reset to email by default
+        const emailRadio = document.querySelector('input[name="outreach_channel"][value="email"]');
+        if (emailRadio) {
+            emailRadio.checked = true;
+            toggleOutreachChannel('email');
+        }
         
         document.getElementById('hhModalCandidateName').innerText = candidateName || 'Candidate';
         document.getElementById('hhModalCandidateEmail').value = candidateEmail || 'Simulated External Contact';

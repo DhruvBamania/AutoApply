@@ -19,6 +19,7 @@ class JobPosting extends Model
         'skills',
         'description',
         'image_path',
+        'whatsapp_number',
         'status',
         'linkedin_status',
         'linkedin_post_id',

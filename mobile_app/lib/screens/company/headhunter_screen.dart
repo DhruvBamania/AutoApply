@@ -29,7 +29,7 @@ class _HeadhunterScreenState extends ConsumerState<HeadhunterScreen> {
     });
   }
 
-  void _showOutreachBottomSheet(BuildContext context, HeadhunterMatchModel match) {
+  void _showOutreachBottomSheet(BuildContext context, HeadhunterMatchModel match, {String initialChannel = 'email'}) {
     final subjectCtrl = TextEditingController(
       text: match.outreachSubject ?? 'Career Opportunity: ${widget.jobTitle}',
     );
@@ -37,206 +37,350 @@ class _HeadhunterScreenState extends ConsumerState<HeadhunterScreen> {
       text: match.personalizedPitch ??
           'Hi ${match.candidateName},\n\nOur team was impressed by your tech background and we believe you would be an exceptional fit for our ${widget.jobTitle} position.',
     );
+    final phoneCtrl = TextEditingController();
+    String activeChannel = initialChannel;
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (ctx) => Consumer(
-        builder: (context, ref, _) {
-          final state = ref.watch(headhunterProvider);
-          return Container(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
-              top: 20,
-              left: 20,
-              right: 20,
-            ),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Container(
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF0284C7).withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Icon(Icons.gps_fixed, color: Color(0xFF0284C7), size: 22),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Review AI Headhunter Outreach',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              'Personalized invitation for ${match.candidateName}',
-                              style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setModalState) => Consumer(
+          builder: (context, ref, _) {
+            final state = ref.watch(headhunterProvider);
+            final isWhatsApp = activeChannel == 'whatsapp';
 
-                  // Candidate & Score Summary
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF8FAFC),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFFE2E8F0)),
+            return Container(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
+                top: 20,
+                left: 20,
+                right: 20,
+              ),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Container(
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    const SizedBox(height: 16),
+                    Row(
                       children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: (isWhatsApp ? const Color(0xFF25D366) : const Color(0xFF0284C7)).withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            isWhatsApp ? Icons.chat_bubble_rounded : Icons.gps_fixed,
+                            color: isWhatsApp ? const Color(0xFF25D366) : const Color(0xFF0284C7),
+                            size: 22,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                match.candidateName,
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                                isWhatsApp ? 'WhatsApp Outreach' : 'Review AI Headhunter Outreach',
+                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                match.candidateEmail ?? 'Simulated Developer Contact',
-                                style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                                'Personalized pitch for ${match.candidateName}',
+                                style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
                               ),
                             ],
                           ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFDCFCE7),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: const Color(0xFF86EFAC)),
-                          ),
-                          child: Text(
-                            '${match.aiMatchScore}% Match',
-                            style: const TextStyle(
-                              color: Color(0xFF15803D),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Channel Selector Tabs
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => setModalState(() => activeChannel = 'email'),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: !isWhatsApp ? Colors.white : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(8),
+                                  boxShadow: !isWhatsApp
+                                      ? [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4)]
+                                      : null,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.email_outlined,
+                                      size: 16,
+                                      color: !isWhatsApp ? const Color(0xFF0284C7) : AppColors.textSecondary,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      'Email Invitation',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: !isWhatsApp ? FontWeight.bold : FontWeight.normal,
+                                        color: !isWhatsApp ? const Color(0xFF0284C7) : AppColors.textSecondary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Subject Input
-                  const Text('Subject', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                  const SizedBox(height: 6),
-                  TextField(
-                    controller: subjectCtrl,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.grey.shade50,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.grey.shade300),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => setModalState(() => activeChannel = 'whatsapp'),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: isWhatsApp ? Colors.white : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(8),
+                                  boxShadow: isWhatsApp
+                                      ? [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4)]
+                                      : null,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.chat_bubble_rounded,
+                                      size: 16,
+                                      color: isWhatsApp ? const Color(0xFF25D366) : AppColors.textSecondary,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      'WhatsApp',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: isWhatsApp ? FontWeight.bold : FontWeight.normal,
+                                        color: isWhatsApp ? const Color(0xFF16A34A) : AppColors.textSecondary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    style: const TextStyle(fontSize: 13),
-                  ),
-                  const SizedBox(height: 14),
+                    const SizedBox(height: 16),
 
-                  // Message Textarea
-                  const Text('Personalized Pitch', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                  const SizedBox(height: 6),
-                  TextField(
-                    controller: messageCtrl,
-                    maxLines: 6,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.grey.shade50,
-                      contentPadding: const EdgeInsets.all(12),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.grey.shade300),
+                    // Candidate & Score Summary
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF8FAFC),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: const Color(0xFFE2E8F0)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  match.candidateName,
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                                ),
+                                Text(
+                                  match.candidateEmail ?? 'Simulated Developer Contact',
+                                  style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFDCFCE7),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: const Color(0xFF86EFAC)),
+                            ),
+                            child: Text(
+                              '${match.aiMatchScore}% Match',
+                              style: const TextStyle(
+                                color: Color(0xFF15803D),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    style: const TextStyle(fontSize: 13, height: 1.4),
-                  ),
-                  const SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
-                  // Info Notice
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF0FDF4),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: const Color(0xFFBBF7D0)),
-                    ),
-                    child: const Row(
-                      children: [
-                        Icon(Icons.bolt, color: Color(0xFF16A34A), size: 18),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            'Automated Pipeline: When accepted, candidate automatically appears in your Job Shortlist.',
-                            style: TextStyle(fontSize: 11, color: Color(0xFF166534)),
+                    // Conditional Field: Subject (Email) OR Phone (WhatsApp)
+                    if (!isWhatsApp) ...[
+                      const Text('Subject', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                      const SizedBox(height: 6),
+                      TextField(
+                        controller: subjectCtrl,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.grey.shade50,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Dispatch Button
-                  CustomButton(
-                    text: 'Send Invitation Email',
-                    icon: Icons.send_rounded,
-                    isLoading: state.isInviting,
-                    backgroundColor: const Color(0xFF0284C7),
-                    onPressed: () async {
-                      final success = await ref.read(headhunterProvider.notifier).sendInvitation(
-                            match.id,
-                            subject: subjectCtrl.text.trim(),
-                            message: messageCtrl.text.trim(),
-                          );
-                      if (context.mounted && success) {
-                        Navigator.pop(ctx);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('✉️ Invitation sent to ${match.candidateName}!'),
-                            backgroundColor: AppColors.success,
+                        style: const TextStyle(fontSize: 13),
+                      ),
+                      const SizedBox(height: 14),
+                    ] else ...[
+                      const Text("Candidate WhatsApp Number (E.164)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                      const SizedBox(height: 6),
+                      TextField(
+                        controller: phoneCtrl,
+                        keyboardType: TextInputType.phone,
+                        decoration: InputDecoration(
+                          hintText: '+1 555 123 4567 or +91 9876543210',
+                          filled: true,
+                          fillColor: Colors.grey.shade50,
+                          prefixIcon: const Icon(Icons.phone, size: 18, color: Color(0xFF25D366)),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
                           ),
-                        );
-                      }
-                    },
-                  ),
-                ],
+                        ),
+                        style: const TextStyle(fontSize: 13),
+                      ),
+                      const SizedBox(height: 14),
+                    ],
+
+                    // Message Textarea
+                    const Text('Personalized Pitch', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    const SizedBox(height: 6),
+                    TextField(
+                      controller: messageCtrl,
+                      maxLines: 5,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey.shade50,
+                        contentPadding: const EdgeInsets.all(12),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                      ),
+                      style: const TextStyle(fontSize: 13, height: 1.4),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Info Notice
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF0FDF4),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: const Color(0xFFBBF7D0)),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(isWhatsApp ? Icons.chat_bubble_outline_rounded : Icons.bolt,
+                              color: const Color(0xFF16A34A), size: 18),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              isWhatsApp
+                                  ? 'WhatsApp Service: Candidate receives this pitch on WhatsApp with immediate two-way reply capability.'
+                                  : 'Automated Pipeline: When accepted, candidate automatically appears in your Job Shortlist.',
+                              style: const TextStyle(fontSize: 11, color: Color(0xFF166534)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Dispatch Button
+                    CustomButton(
+                      text: isWhatsApp ? 'Send WhatsApp Pitch' : 'Send Invitation Email',
+                      icon: isWhatsApp ? Icons.chat_bubble_rounded : Icons.send_rounded,
+                      isLoading: state.isInviting,
+                      backgroundColor: isWhatsApp ? const Color(0xFF25D366) : const Color(0xFF0284C7),
+                      onPressed: () async {
+                        if (isWhatsApp) {
+                          final phone = phoneCtrl.text.trim();
+                          if (phone.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Please enter candidate WhatsApp phone number.'),
+                                backgroundColor: AppColors.error,
+                              ),
+                            );
+                            return;
+                          }
+                          final success = await ref.read(headhunterProvider.notifier).sendWhatsAppOutreach(
+                                match.id,
+                                candidatePhone: phone,
+                                message: messageCtrl.text.trim(),
+                              );
+                          if (context.mounted && success) {
+                            Navigator.pop(ctx);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('💬 WhatsApp pitch sent to ${match.candidateName}!'),
+                                backgroundColor: AppColors.success,
+                              ),
+                            );
+                          }
+                        } else {
+                          final success = await ref.read(headhunterProvider.notifier).sendInvitation(
+                                match.id,
+                                subject: subjectCtrl.text.trim(),
+                                message: messageCtrl.text.trim(),
+                              );
+                          if (context.mounted && success) {
+                            Navigator.pop(ctx);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('✉️ Invitation sent to ${match.candidateName}!'),
+                                backgroundColor: AppColors.success,
+                              ),
+                            );
+                          }
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -749,24 +893,40 @@ class _HeadhunterScreenState extends ConsumerState<HeadhunterScreen> {
                     style: TextStyle(fontSize: 11, color: AppColors.textLight),
                   ),
 
-                // Button
+                // Outreach Actions
                 if (match.status == 'sourced' || match.status == 'invited')
-                  OutlinedButton.icon(
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: const Color(0xFF0284C7),
-                      side: const BorderSide(color: Color(0xFF0284C7)),
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    ),
-                    icon: Icon(
-                      match.status == 'invited' ? Icons.refresh : Icons.mail_outline,
-                      size: 14,
-                    ),
-                    label: Text(
-                      match.status == 'invited' ? 'Resend' : 'Review & Invite',
-                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
-                    ),
-                    onPressed: () => _showOutreachBottomSheet(context, match),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        tooltip: 'Send WhatsApp Pitch',
+                        style: IconButton.styleFrom(
+                          backgroundColor: const Color(0xFF25D366).withValues(alpha: 0.12),
+                          padding: const EdgeInsets.all(6),
+                          minimumSize: const Size(32, 32),
+                        ),
+                        icon: const Icon(Icons.chat_bubble_rounded, size: 16, color: Color(0xFF16A34A)),
+                        onPressed: () => _showOutreachBottomSheet(context, match, initialChannel: 'whatsapp'),
+                      ),
+                      const SizedBox(width: 8),
+                      OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: const Color(0xFF0284C7),
+                          side: const BorderSide(color: Color(0xFF0284C7)),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        ),
+                        icon: Icon(
+                          match.status == 'invited' ? Icons.refresh : Icons.mail_outline,
+                          size: 14,
+                        ),
+                        label: Text(
+                          match.status == 'invited' ? 'Resend' : 'Invite',
+                          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                        ),
+                        onPressed: () => _showOutreachBottomSheet(context, match, initialChannel: 'email'),
+                      ),
+                    ],
                   ),
               ],
             ),
