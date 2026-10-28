@@ -425,7 +425,18 @@
                                 <form action="{{ route('company.inquiries.status', $candidate->id) }}" method="POST" style="margin: 0;">
                                     @csrf
                                     @method('PATCH')
-                                    <select name="status" data-prev-status="{{ $candidate->status }}" onchange="handleStatusChange(this, {{ $candidate->id }}, '{{ addslashes($candidate->candidate_name) }}', '{{ addslashes($candidate->candidate_email ?? '') }}', '{{ addslashes($job->title) }}', '{{ $candidate->interview_scheduled_at ? $candidate->interview_scheduled_at->format('Y-m-d\TH:i') : '' }}', '{{ $candidate->meeting_type ?? 'google_meet' }}', '{{ addslashes($candidate->meeting_link_or_location ?? '') }}', '{{ addslashes($candidate->interview_notes ?? '') }}')" style="font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.65rem; border-radius: 8px; border: 1px solid #cbd5e1; background: 
+                                    <select name="status" 
+                                        data-prev-status="{{ $candidate->status }}"
+                                        data-inquiry-id="{{ $candidate->id }}"
+                                        data-candidate-name="{{ $candidate->candidate_name }}"
+                                        data-candidate-email="{{ $candidate->candidate_email ?? '' }}"
+                                        data-job-title="{{ $job->title }}"
+                                        data-scheduled-at="{{ $candidate->interview_scheduled_at ? $candidate->interview_scheduled_at->format('Y-m-d\TH:i') : '' }}"
+                                        data-meeting-type="{{ $candidate->meeting_type ?? 'google_meet' }}"
+                                        data-meeting-link="{{ $candidate->meeting_link_or_location ?? '' }}"
+                                        data-notes="{{ $candidate->interview_notes ?? '' }}"
+                                        onchange="handleStatusChange(this)" 
+                                        style="font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.65rem; border-radius: 8px; border: 1px solid #cbd5e1; background: 
                                         {{ $candidate->status === 'new' ? '#fef3c7' : ($candidate->status === 'replied' ? '#dcfce7' : ($candidate->status === 'shortlisted' ? '#fef9c3' : '#f1f5f9')) }};">
                                         <option value="new" {{ $candidate->status === 'new' ? 'selected' : '' }}>🟡 New</option>
                                         <option value="under_review" {{ $candidate->status === 'under_review' ? 'selected' : '' }}>🔵 Under Review</option>
@@ -436,11 +447,27 @@
                                 </form>
 
                                 @if($candidate->status !== 'shortlisted')
-                                    <button type="button" onclick="openShortlistModal({{ $candidate->id }}, '{{ addslashes($candidate->candidate_name) }}', '{{ addslashes($candidate->candidate_email ?? '') }}', '{{ addslashes($job->title) }}')" class="btn" style="background: #fef08a; color: #854d0e; border: 1px solid #fde047; font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.75rem; border-radius: 8px; cursor: pointer;">
+                                    <button type="button" 
+                                        onclick="openShortlistModal(this)"
+                                        data-inquiry-id="{{ $candidate->id }}"
+                                        data-candidate-name="{{ $candidate->candidate_name }}"
+                                        data-candidate-email="{{ $candidate->candidate_email ?? '' }}"
+                                        data-job-title="{{ $job->title }}"
+                                        class="btn" style="background: #fef08a; color: #854d0e; border: 1px solid #fde047; font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.75rem; border-radius: 8px; cursor: pointer;">
                                         ⭐ Shortlist
                                     </button>
                                 @else
-                                    <button type="button" onclick="openShortlistModal({{ $candidate->id }}, '{{ addslashes($candidate->candidate_name) }}', '{{ addslashes($candidate->candidate_email ?? '') }}', '{{ addslashes($job->title) }}', '{{ $candidate->interview_scheduled_at ? $candidate->interview_scheduled_at->format('Y-m-d\TH:i') : '' }}', '{{ $candidate->meeting_type ?? 'google_meet' }}', '{{ addslashes($candidate->meeting_link_or_location ?? '') }}', '{{ addslashes($candidate->interview_notes ?? '') }}')" class="btn" style="background: #ede9fe; color: #6d28d9; border: 1px solid #c4b5fd; font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.75rem; border-radius: 8px; cursor: pointer;">
+                                    <button type="button" 
+                                        onclick="openShortlistModal(this)"
+                                        data-inquiry-id="{{ $candidate->id }}"
+                                        data-candidate-name="{{ $candidate->candidate_name }}"
+                                        data-candidate-email="{{ $candidate->candidate_email ?? '' }}"
+                                        data-job-title="{{ $job->title }}"
+                                        data-scheduled-at="{{ $candidate->interview_scheduled_at ? $candidate->interview_scheduled_at->format('Y-m-d\TH:i') : '' }}"
+                                        data-meeting-type="{{ $candidate->meeting_type ?? 'google_meet' }}"
+                                        data-meeting-link="{{ $candidate->meeting_link_or_location ?? '' }}"
+                                        data-notes="{{ $candidate->interview_notes ?? '' }}"
+                                        class="btn" style="background: #ede9fe; color: #6d28d9; border: 1px solid #c4b5fd; font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.75rem; border-radius: 8px; cursor: pointer;">
                                         📅 Interview Info
                                     </button>
                                 @endif
@@ -468,7 +495,17 @@
                                         </span>
                                     @endif
                                 </div>
-                                <button type="button" onclick="openShortlistModal({{ $candidate->id }}, '{{ addslashes($candidate->candidate_name) }}', '{{ addslashes($candidate->candidate_email ?? '') }}', '{{ addslashes($job->title) }}', '{{ $candidate->interview_scheduled_at ? $candidate->interview_scheduled_at->format('Y-m-d\TH:i') : '' }}', '{{ $candidate->meeting_type ?? 'google_meet' }}', '{{ addslashes($candidate->meeting_link_or_location ?? '') }}', '{{ addslashes($candidate->interview_notes ?? '') }}')" style="background: #ffffff; border: 1px solid #eab308; color: #854d0e; font-size: 0.72rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 6px; cursor: pointer;">
+                                <button type="button" 
+                                    onclick="openShortlistModal(this)"
+                                    data-inquiry-id="{{ $candidate->id }}"
+                                    data-candidate-name="{{ $candidate->candidate_name }}"
+                                    data-candidate-email="{{ $candidate->candidate_email ?? '' }}"
+                                    data-job-title="{{ $job->title }}"
+                                    data-scheduled-at="{{ $candidate->interview_scheduled_at ? $candidate->interview_scheduled_at->format('Y-m-d\TH:i') : '' }}"
+                                    data-meeting-type="{{ $candidate->meeting_type ?? 'google_meet' }}"
+                                    data-meeting-link="{{ $candidate->meeting_link_or_location ?? '' }}"
+                                    data-notes="{{ $candidate->interview_notes ?? '' }}"
+                                    style="background: #ffffff; border: 1px solid #eab308; color: #854d0e; font-size: 0.72rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 6px; cursor: pointer;">
                                     ✏️ Reschedule
                                 </button>
                             </div>
@@ -690,11 +727,29 @@
                                         ⭐ View in Job Shortlist →
                                     </a>
                                 @elseif($match->status === 'invited')
-                                    <button type="button" onclick="openHeadhunterModal({{ $match->id }}, '{{ addslashes($match->candidate_name) }}', '{{ addslashes($match->candidate_email ?? '') }}', {{ $match->ai_match_score }}, '{{ $match->pool_source }}', '{{ addslashes($match->outreach_subject ?? ('Career Opportunity: ' . $job->title)) }}', '{{ addslashes($match->personalized_pitch ?? '') }}')" class="btn-secondary" style="font-size: 0.8rem; padding: 0.4rem 0.85rem;">
+                                    <button type="button" 
+                                        onclick="openHeadhunterModal(this)"
+                                        data-match-id="{{ $match->id }}"
+                                        data-candidate-name="{{ $match->candidate_name }}"
+                                        data-candidate-email="{{ $match->candidate_email ?? '' }}"
+                                        data-match-score="{{ $match->ai_match_score }}"
+                                        data-pool-source="{{ $match->pool_source }}"
+                                        data-outreach-subject="{{ $match->outreach_subject ?? ('Career Opportunity: ' . $job->title) }}"
+                                        data-personalized-pitch="{{ $match->personalized_pitch ?? '' }}"
+                                        class="btn-secondary" style="font-size: 0.8rem; padding: 0.4rem 0.85rem;">
                                         🔄 Re-send Invitation
                                     </button>
                                 @else
-                                    <button type="button" onclick="openHeadhunterModal({{ $match->id }}, '{{ addslashes($match->candidate_name) }}', '{{ addslashes($match->candidate_email ?? '') }}', {{ $match->ai_match_score }}, '{{ $match->pool_source }}', '{{ addslashes($match->outreach_subject ?? ('Career Opportunity: ' . $job->title)) }}', '{{ addslashes($match->personalized_pitch ?? '') }}')" class="btn-primary" style="background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%); font-size: 0.82rem; font-weight: 700; padding: 0.45rem 1rem; border: none; box-shadow: 0 2px 8px rgba(2,132,199,0.3); border-radius: 6px; cursor: pointer;">
+                                    <button type="button" 
+                                        onclick="openHeadhunterModal(this)"
+                                        data-match-id="{{ $match->id }}"
+                                        data-candidate-name="{{ $match->candidate_name }}"
+                                        data-candidate-email="{{ $match->candidate_email ?? '' }}"
+                                        data-match-score="{{ $match->ai_match_score }}"
+                                        data-pool-source="{{ $match->pool_source }}"
+                                        data-outreach-subject="{{ $match->outreach_subject ?? ('Career Opportunity: ' . $job->title) }}"
+                                        data-personalized-pitch="{{ $match->personalized_pitch ?? '' }}"
+                                        class="btn-primary" style="background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%); font-size: 0.82rem; font-weight: 700; padding: 0.45rem 1rem; border: none; box-shadow: 0 2px 8px rgba(2,132,199,0.3); border-radius: 6px; cursor: pointer;">
                                         ✉️ Review & Send Invite
                                     </button>
                                 @endif
@@ -806,7 +861,18 @@
                                 <form action="{{ route('company.inquiries.status', $inquiry->id) }}" method="POST" style="margin: 0;">
                                     @csrf
                                     @method('PATCH')
-                                    <select name="status" data-prev-status="{{ $inquiry->status }}" onchange="handleStatusChange(this, {{ $inquiry->id }}, '{{ addslashes($inquiry->candidate_name) }}', '{{ addslashes($inquiry->candidate_email ?? '') }}', '{{ addslashes($job->title) }}', '{{ $inquiry->interview_scheduled_at ? $inquiry->interview_scheduled_at->format('Y-m-d\TH:i') : '' }}', '{{ $inquiry->meeting_type ?? 'google_meet' }}', '{{ addslashes($inquiry->meeting_link_or_location ?? '') }}', '{{ addslashes($inquiry->interview_notes ?? '') }}')" style="font-size: 0.72rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid #cbd5e1; background: 
+                                    <select name="status" 
+                                        data-prev-status="{{ $inquiry->status }}"
+                                        data-inquiry-id="{{ $inquiry->id }}"
+                                        data-candidate-name="{{ $inquiry->candidate_name }}"
+                                        data-candidate-email="{{ $inquiry->candidate_email ?? '' }}"
+                                        data-job-title="{{ $job->title }}"
+                                        data-scheduled-at="{{ $inquiry->interview_scheduled_at ? $inquiry->interview_scheduled_at->format('Y-m-d\TH:i') : '' }}"
+                                        data-meeting-type="{{ $inquiry->meeting_type ?? 'google_meet' }}"
+                                        data-meeting-link="{{ $inquiry->meeting_link_or_location ?? '' }}"
+                                        data-notes="{{ $inquiry->interview_notes ?? '' }}"
+                                        onchange="handleStatusChange(this)" 
+                                        style="font-size: 0.72rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid #cbd5e1; background: 
                                         {{ $inquiry->status === 'new' ? '#fef3c7' : ($inquiry->status === 'replied' ? '#dcfce7' : ($inquiry->status === 'shortlisted' ? '#fef9c3' : '#f1f5f9')) }};">
                                         <option value="new" {{ $inquiry->status === 'new' ? 'selected' : '' }}>🟡 New</option>
                                         <option value="under_review" {{ $inquiry->status === 'under_review' ? 'selected' : '' }}>🔵 Under Review</option>
@@ -835,7 +901,17 @@
                                         </span>
                                     @endif
                                 </div>
-                                <button type="button" onclick="openShortlistModal({{ $inquiry->id }}, '{{ addslashes($inquiry->candidate_name) }}', '{{ addslashes($inquiry->candidate_email ?? '') }}', '{{ addslashes($job->title) }}', '{{ $inquiry->interview_scheduled_at ? $inquiry->interview_scheduled_at->format('Y-m-d\TH:i') : '' }}', '{{ $inquiry->meeting_type ?? 'google_meet' }}', '{{ addslashes($inquiry->meeting_link_or_location ?? '') }}', '{{ addslashes($inquiry->interview_notes ?? '') }}')" style="background: #ffffff; border: 1px solid #eab308; color: #854d0e; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px; cursor: pointer;">
+                                <button type="button" 
+                                    onclick="openShortlistModal(this)"
+                                    data-inquiry-id="{{ $inquiry->id }}"
+                                    data-candidate-name="{{ $inquiry->candidate_name }}"
+                                    data-candidate-email="{{ $inquiry->candidate_email ?? '' }}"
+                                    data-job-title="{{ $job->title }}"
+                                    data-scheduled-at="{{ $inquiry->interview_scheduled_at ? $inquiry->interview_scheduled_at->format('Y-m-d\TH:i') : '' }}"
+                                    data-meeting-type="{{ $inquiry->meeting_type ?? 'google_meet' }}"
+                                    data-meeting-link="{{ $inquiry->meeting_link_or_location ?? '' }}"
+                                    data-notes="{{ $inquiry->interview_notes ?? '' }}"
+                                    style="background: #ffffff; border: 1px solid #eab308; color: #854d0e; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px; cursor: pointer;">
                                     ✏️ Reschedule
                                 </button>
                             </div>

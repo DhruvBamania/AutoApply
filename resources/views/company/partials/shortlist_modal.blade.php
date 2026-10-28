@@ -126,7 +126,22 @@
 <script>
 let currentTriggerSelect = null;
 
-function openShortlistModal(inquiryId, candidateName, candidateEmail, jobTitle, scheduledAt = '', meetingType = 'google_meet', meetingLink = '', notes = '') {
+function openShortlistModal(inquiryIdOrElement, candidateName, candidateEmail, jobTitle, scheduledAt = '', meetingType = 'google_meet', meetingLink = '', notes = '') {
+    let inquiryId = inquiryIdOrElement;
+
+    // If invoked passing a DOM element (e.g. openShortlistModal(this)), read safely from data-* attributes
+    if (inquiryIdOrElement && (inquiryIdOrElement instanceof HTMLElement || inquiryIdOrElement.dataset)) {
+        const el = inquiryIdOrElement;
+        inquiryId = el.dataset.inquiryId;
+        candidateName = el.dataset.candidateName;
+        candidateEmail = el.dataset.candidateEmail;
+        jobTitle = el.dataset.jobTitle;
+        scheduledAt = el.dataset.scheduledAt || '';
+        meetingType = el.dataset.meetingType || 'google_meet';
+        meetingLink = el.dataset.meetingLink || '';
+        notes = el.dataset.notes || '';
+    }
+
     const modal = document.getElementById('shortlistModal');
     const form = document.getElementById('shortlistForm');
 
@@ -202,6 +217,17 @@ function closeShortlistModal() {
 }
 
 function handleStatusChange(selectElement, inquiryId, candidateName, candidateEmail, jobTitle, scheduledAt = '', meetingType = 'google_meet', meetingLink = '', notes = '') {
+    if (selectElement && selectElement.dataset) {
+        inquiryId = inquiryId || selectElement.dataset.inquiryId;
+        candidateName = candidateName || selectElement.dataset.candidateName;
+        candidateEmail = candidateEmail || selectElement.dataset.candidateEmail;
+        jobTitle = jobTitle || selectElement.dataset.jobTitle;
+        scheduledAt = scheduledAt || selectElement.dataset.scheduledAt || '';
+        meetingType = meetingType || selectElement.dataset.meetingType || 'google_meet';
+        meetingLink = meetingLink || selectElement.dataset.meetingLink || '';
+        notes = notes || selectElement.dataset.notes || '';
+    }
+
     if (selectElement.value === 'shortlisted') {
         currentTriggerSelect = selectElement;
         openShortlistModal(inquiryId, candidateName, candidateEmail, jobTitle, scheduledAt, meetingType, meetingLink, notes);

@@ -392,4 +392,41 @@ class HeadhunterFeatureTest extends TestCase
         $response->assertSee('DevOps & SRE Specialist');
         $response->assertSee('92%');
     }
+
+    public function test_headhunter_multiline_pitch_renders_safely_in_html(): void
+    {
+        $company = User::factory()->create(['role' => 'company']);
+
+        $job = JobPosting::create([
+            'user_id' => $company->id,
+            'title' => 'Senior Backend Engineer',
+            'job_type' => 'Full-time',
+            'location' => 'Remote',
+            'experience_required' => '5+ Years',
+            'skills' => 'PHP, Laravel',
+            'description' => 'Backend development.',
+            'status' => 'active',
+        ]);
+
+        $multilinePitch = "Hi Alex,\n\nWe noticed your strong background in \"distributed architecture\" & PHP.\nIt's a great match for our team!\n\nBest,\nRecruiting Team";
+
+        HeadhunterMatch::create([
+            'job_posting_id' => $job->id,
+            'candidate_name' => "O'Connor & Alex",
+            'candidate_email' => 'alex.oconnor@example.com',
+            'current_title' => 'Senior Backend Engineer',
+            'pool_source' => 'external',
+            'ai_match_score' => 95,
+            'outreach_subject' => "Opportunity: Lead Backend Role at AI Looping",
+            'personalized_pitch' => $multilinePitch,
+            'status' => 'scouted',
+        ]);
+
+        $response = $this->actingAs($company)->get(route('company.jobs.show', $job->id));
+
+        $response->assertStatus(200);
+        $response->assertSee('openHeadhunterModal(this)', false);
+        $response->assertSee('data-personalized-pitch=', false);
+        $response->assertSee('data-match-id=', false);
+    }
 }

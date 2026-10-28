@@ -383,7 +383,18 @@
                                                 <form action="{{ route('company.inquiries.status', $inquiry->id) }}" method="POST" style="margin: 0;">
                                                     @csrf
                                                     @method('PATCH')
-                                                    <select name="status" data-prev-status="{{ $inquiry->status }}" onchange="handleStatusChange(this, {{ $inquiry->id }}, '{{ addslashes($inquiry->candidate_name) }}', '{{ addslashes($inquiry->candidate_email ?? '') }}', '{{ addslashes($inquiry->jobPosting->title ?? 'Position') }}', '{{ $inquiry->interview_scheduled_at ? $inquiry->interview_scheduled_at->format('Y-m-d\TH:i') : '' }}', '{{ $inquiry->meeting_type ?? 'google_meet' }}', '{{ addslashes($inquiry->meeting_link_or_location ?? '') }}', '{{ addslashes($inquiry->interview_notes ?? '') }}')" style="font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.6rem; border-radius: 8px; border: 1px solid #cbd5e1; background: 
+                                                    <select name="status" 
+                                                        data-prev-status="{{ $inquiry->status }}"
+                                                        data-inquiry-id="{{ $inquiry->id }}"
+                                                        data-candidate-name="{{ $inquiry->candidate_name }}"
+                                                        data-candidate-email="{{ $inquiry->candidate_email ?? '' }}"
+                                                        data-job-title="{{ $inquiry->jobPosting->title ?? 'Position' }}"
+                                                        data-scheduled-at="{{ $inquiry->interview_scheduled_at ? $inquiry->interview_scheduled_at->format('Y-m-d\TH:i') : '' }}"
+                                                        data-meeting-type="{{ $inquiry->meeting_type ?? 'google_meet' }}"
+                                                        data-meeting-link="{{ $inquiry->meeting_link_or_location ?? '' }}"
+                                                        data-notes="{{ $inquiry->interview_notes ?? '' }}"
+                                                        onchange="handleStatusChange(this)" 
+                                                        style="font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.6rem; border-radius: 8px; border: 1px solid #cbd5e1; background: 
                                                         {{ $inquiry->status === 'new' ? '#fef3c7' : ($inquiry->status === 'replied' ? '#dcfce7' : ($inquiry->status === 'shortlisted' ? '#fef9c3' : '#f1f5f9')) }}; 
                                                         color: {{ $inquiry->status === 'new' ? '#92400e' : ($inquiry->status === 'replied' ? '#166534' : ($inquiry->status === 'shortlisted' ? '#854d0e' : '#334155')) }};">
                                                         <option value="new" {{ $inquiry->status === 'new' ? 'selected' : '' }}>🟡 New</option>
@@ -417,7 +428,17 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                                <button type="button" onclick="openShortlistModal({{ $inquiry->id }}, '{{ addslashes($inquiry->candidate_name) }}', '{{ addslashes($inquiry->candidate_email ?? '') }}', '{{ addslashes($inquiry->jobPosting->title ?? 'Position') }}', '{{ $inquiry->interview_scheduled_at ? $inquiry->interview_scheduled_at->format('Y-m-d\TH:i') : '' }}', '{{ $inquiry->meeting_type ?? 'google_meet' }}', '{{ addslashes($inquiry->meeting_link_or_location ?? '') }}', '{{ addslashes($inquiry->interview_notes ?? '') }}')" style="background: #ffffff; border: 1px solid #eab308; color: #854d0e; font-size: 0.72rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 6px; cursor: pointer;">
+                                                <button type="button" 
+                                                    onclick="openShortlistModal(this)"
+                                                    data-inquiry-id="{{ $inquiry->id }}"
+                                                    data-candidate-name="{{ $inquiry->candidate_name }}"
+                                                    data-candidate-email="{{ $inquiry->candidate_email ?? '' }}"
+                                                    data-job-title="{{ $inquiry->jobPosting->title ?? 'Position' }}"
+                                                    data-scheduled-at="{{ $inquiry->interview_scheduled_at ? $inquiry->interview_scheduled_at->format('Y-m-d\TH:i') : '' }}"
+                                                    data-meeting-type="{{ $inquiry->meeting_type ?? 'google_meet' }}"
+                                                    data-meeting-link="{{ $inquiry->meeting_link_or_location ?? '' }}"
+                                                    data-notes="{{ $inquiry->interview_notes ?? '' }}"
+                                                    style="background: #ffffff; border: 1px solid #eab308; color: #854d0e; font-size: 0.72rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 6px; cursor: pointer;">
                                                     ✏️ Reschedule
                                                 </button>
                                             </div>

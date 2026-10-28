@@ -205,7 +205,13 @@
 
                         <div style="display: flex; align-items: center; gap: 0.4rem;">
                             <!-- Direct WhatsApp Trigger Button -->
-                            <button type="button" onclick="openJobWhatsAppModal({{ $job->id }}, '{{ addslashes($job->title) }}', '{{ addslashes($companyName) }}', '{{ addslashes($targetPhone) }}')" title="Message hiring team on WhatsApp" style="background: #25D366; color: white; border: none; padding: 0.5rem 0.75rem; border-radius: 9px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem; transition: transform 0.15s ease;">
+                            <button type="button" 
+                                onclick="openJobWhatsAppModal(this)"
+                                data-job-id="{{ $job->id }}"
+                                data-job-title="{{ $job->title }}"
+                                data-company-name="{{ $companyName }}"
+                                data-company-phone="{{ $targetPhone }}"
+                                title="Message hiring team on WhatsApp" style="background: #25D366; color: white; border: none; padding: 0.5rem 0.75rem; border-radius: 9px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem; transition: transform 0.15s ease;">
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                                     <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.06-1.11-.06-.415-.121-.926-.298-1.574-.582-1.378-.601-2.278-1.996-2.348-2.09-.07-.094-.564-.75-.564-1.429 0-.679.352-1.013.477-1.152.125-.139.272-.174.363-.174.09 0 .182.001.261.005.084.004.195-.032.304.232.114.275.39 1.013.424 1.083.034.07.057.152.011.243-.045.09-.068.147-.136.226-.068.079-.144.175-.205.236-.07.07-.142.146-.061.285.08.139.357.59.767.954.526.467.971.612 1.11.681.139.07.22.06.302-.034.082-.094.351-.409.444-.549.094-.14.188-.117.316-.07.128.047.813.383.953.453.14.07.233.105.267.163.035.059.035.342-.109.747z"/>
                                 </svg>
@@ -305,7 +311,15 @@
 <script>
     let currentJobPhone = '';
 
-    function openJobWhatsAppModal(jobId, jobTitle, companyName, companyPhone) {
+    function openJobWhatsAppModal(jobIdOrElement, jobTitle, companyName, companyPhone) {
+        let jobId = jobIdOrElement;
+        if (jobIdOrElement && (jobIdOrElement instanceof HTMLElement || jobIdOrElement.dataset)) {
+            jobId = jobIdOrElement.dataset.jobId;
+            jobTitle = jobIdOrElement.dataset.jobTitle;
+            companyName = jobIdOrElement.dataset.companyName;
+            companyPhone = jobIdOrElement.dataset.companyPhone;
+        }
+
         document.getElementById('modalJobId').value = jobId;
         document.getElementById('modalJobTitle').innerText = jobTitle;
         document.getElementById('modalCompanyName').innerText = companyName;

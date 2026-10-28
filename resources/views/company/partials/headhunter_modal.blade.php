@@ -138,7 +138,21 @@
         }
     }
 
-    function openHeadhunterModal(matchId, candidateName, candidateEmail, matchScore, poolSource, defaultSubject, defaultMessage) {
+    function openHeadhunterModal(matchIdOrElement, candidateName, candidateEmail, matchScore, poolSource, defaultSubject, defaultMessage) {
+        let matchId = matchIdOrElement;
+
+        // If invoked passing a DOM element (e.g. openHeadhunterModal(this)), read safely from data-* attributes
+        if (matchIdOrElement && (matchIdOrElement instanceof HTMLElement || matchIdOrElement.dataset)) {
+            const el = matchIdOrElement;
+            matchId = el.dataset.matchId;
+            candidateName = el.dataset.candidateName;
+            candidateEmail = el.dataset.candidateEmail;
+            matchScore = el.dataset.matchScore;
+            poolSource = el.dataset.poolSource;
+            defaultSubject = el.dataset.outreachSubject;
+            defaultMessage = el.dataset.personalizedPitch;
+        }
+
         currentMatchId = matchId;
         const modal = document.getElementById('headhunterOutreachModal');
         const form = document.getElementById('headhunterInviteForm');
@@ -170,7 +184,8 @@
         const sourceLabel = poolSource === 'platform' ? '👤 Registered Platform Candidate' : '🌐 External Tech Talent Pool';
         document.getElementById('hhModalPoolSource').innerText = sourceLabel;
 
-        document.getElementById('hhModalSubject').value = defaultSubject || ('Career Opportunity: ' + "{{ addslashes($job->title) }}");
+        const fallbackSubject = @json(isset($job) ? ('Career Opportunity: ' . $job->title) : 'Career Opportunity');
+        document.getElementById('hhModalSubject').value = defaultSubject || fallbackSubject;
         document.getElementById('hhModalMessage').value = defaultMessage || '';
 
         modal.style.display = 'flex';
