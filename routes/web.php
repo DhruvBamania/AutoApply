@@ -69,6 +69,10 @@ Route::get('/jobs/{id}', [\App\Http\Controllers\PublicJobController::class, 'sho
 Route::post('/jobs/{id}/inquire', [\App\Http\Controllers\PublicJobController::class, 'inquire'])->name('jobs.public.inquire');
 Route::post('/jobs/{id}/whatsapp-message', [\App\Http\Controllers\PublicJobController::class, 'sendWhatsAppMessage'])->name('jobs.public.whatsapp');
 
+// Global AI Chat Assistant Routes (Accessible by Guests, Candidates, and Companies)
+Route::get('/ai-chat/context', [\App\Http\Controllers\AiChatController::class, 'context'])->name('ai_chat.context');
+Route::post('/ai-chat/send', [\App\Http\Controllers\AiChatController::class, 'sendMessage'])->name('ai_chat.send');
+
 // Shared Authenticated Routes (Available to both Candidates and Companies)
 Route::middleware('auth')->group(function () {
     // Integrations

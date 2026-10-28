@@ -1592,5 +1592,8 @@
             });
         });
     </script>
+
+    {{-- Global AI Chat Assistant --}}
+    @include('partials.ai_chat_widget')
 </body>
 </html>
