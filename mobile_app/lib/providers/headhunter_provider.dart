@@ -158,7 +158,7 @@ class HeadhunterNotifier extends StateNotifier<HeadhunterState> {
     }
   }
 
-  /// 4. Send WhatsApp Outreach Pitch via Twilio
+  /// 4. Send WhatsApp Outreach Pitch
   Future<bool> sendWhatsAppOutreach(
     int matchId, {
     required String candidatePhone,

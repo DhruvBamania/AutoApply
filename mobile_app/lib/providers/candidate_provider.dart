@@ -272,7 +272,7 @@ class CandidateNotifier extends StateNotifier<CandidateState> {
     }
   }
 
-  /// Candidate sends direct WhatsApp message via Twilio API
+  /// Candidate sends direct WhatsApp message via WhatsApp API
   Future<bool> sendWhatsAppInquiry({
     required int jobId,
     required String name,

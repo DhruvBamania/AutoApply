@@ -209,7 +209,7 @@ class CompanyInquiriesNotifier extends StateNotifier<CompanyInquiriesState> {
     }
   }
 
-  /// Send WhatsApp reply to candidate via Twilio API
+  /// Send WhatsApp reply to candidate via WhatsApp API
   Future<bool> replyWhatsApp(int inquiryId, String message, {String? candidatePhone}) async {
     try {
       final payload = <String, dynamic>{
