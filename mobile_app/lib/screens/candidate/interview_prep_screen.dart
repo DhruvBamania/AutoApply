@@ -5,6 +5,7 @@ import '../../core/constants/app_colors.dart';
 import '../../models/interview_prep_model.dart';
 import '../../providers/interview_prep_provider.dart';
 import '../../widgets/custom_button.dart';
+import 'mock_interview_screen.dart';
 
 class InterviewPrepScreen extends ConsumerStatefulWidget {
   const InterviewPrepScreen({super.key});
@@ -123,6 +124,29 @@ class _InterviewPrepScreenState extends ConsumerState<InterviewPrepScreen> {
         ),
       );
     }
+  }
+
+  void _launchMockInterview([InterviewPrepModel? prep]) {
+    final role = _roleController.text.trim().isNotEmpty
+        ? _roleController.text.trim()
+        : (prep?.roleTitle ?? 'Full Stack Software Engineer');
+    final exp = _selectedExperience.isNotEmpty
+        ? _selectedExperience
+        : (prep?.experienceLevel ?? 'Mid-Level Engineer (3-5 yrs)');
+    final tech = _techController.text.trim().isNotEmpty
+        ? _techController.text.trim()
+        : (prep?.techStack ?? 'PHP, Laravel, MySQL, REST APIs');
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => MockInterviewScreen(
+          roleTitle: role,
+          experienceLevel: exp,
+          techStack: tech,
+          prepId: prep?.id,
+        ),
+      ),
+    );
   }
 
   void _openSavedGuidesSheet() {
@@ -270,7 +294,7 @@ class _InterviewPrepScreenState extends ConsumerState<InterviewPrepScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     // Top Hero Banner
-                    _buildHeroBanner(),
+                    _buildHeroBanner(activePrep),
 
                     const SizedBox(height: 14),
 
@@ -382,7 +406,7 @@ class _InterviewPrepScreenState extends ConsumerState<InterviewPrepScreen> {
     );
   }
 
-  Widget _buildHeroBanner() {
+  Widget _buildHeroBanner(InterviewPrepModel? activePrep) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -434,6 +458,47 @@ class _InterviewPrepScreenState extends ConsumerState<InterviewPrepScreen> {
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 14),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.white24),
+            ),
+            child: Row(
+              children: [
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '🎙️ AI Mock Interviewer',
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        '5 turn-by-turn technical questions with real-time feedback & scorecard',
+                        style: TextStyle(color: Colors.white70, fontSize: 11),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: const Color(0xFF4F46E5),
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  onPressed: () => _launchMockInterview(activePrep),
+                  child: const Text('Start Now', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -650,6 +715,21 @@ class _InterviewPrepScreenState extends ConsumerState<InterviewPrepScreen> {
           Text(
             'Tech Stack: ${prep.techStack}',
             style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              style: OutlinedButton.styleFrom(
+                foregroundColor: const Color(0xFF4F46E5),
+                side: const BorderSide(color: Color(0xFF6366F1)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              ),
+              icon: const Icon(Icons.psychology, size: 18),
+              label: const Text('Practice in Mock Simulator', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+              onPressed: () => _launchMockInterview(prep),
+            ),
           ),
         ],
       ),

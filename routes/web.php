@@ -90,6 +90,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/interview-prep/{id}/bookmark', [\App\Http\Controllers\InterviewPrepController::class, 'toggleBookmark'])->name('interview_prep.bookmark');
     Route::delete('/interview-prep/{id}', [\App\Http\Controllers\InterviewPrepController::class, 'destroy'])->name('interview_prep.destroy');
     Route::get('/interview-prep/profile', [\App\Http\Controllers\InterviewPrepController::class, 'resumeProfile'])->name('interview_prep.profile');
+
+    // Interactive Turn-by-Turn AI Mock Interview Simulator
+    Route::post('/interview-prep/mock/start', [\App\Http\Controllers\MockInterviewController::class, 'start'])->name('mock_interview.start');
+    Route::post('/interview-prep/mock/{id}/answer', [\App\Http\Controllers\MockInterviewController::class, 'submitAnswer'])->name('mock_interview.answer');
+    Route::get('/interview-prep/mock/{id}', [\App\Http\Controllers\MockInterviewController::class, 'show'])->name('mock_interview.show');
+    Route::get('/interview-prep/mock-history', [\App\Http\Controllers\MockInterviewController::class, 'history'])->name('mock_interview.history');
 });
 
 // Public ATS Feeds
@@ -722,7 +728,9 @@ Route::get('/download-apk', function () {
 })->name('apk.download');
 
 Route::get('/app-download', function () {
-    $apkPath = public_path('app-debug.apk');
+    $apkPath = file_exists(public_path('app-release.apk'))
+        ? public_path('app-release.apk')
+        : public_path('app-debug.apk');
     $fileSizeMb = file_exists($apkPath) ? round(filesize($apkPath) / (1024 * 1024), 1) : 0;
     $downloadUrl = env('APK_DOWNLOAD_URL') ?: route('apk.download');
     $currentHost = request()->getHttpHost();

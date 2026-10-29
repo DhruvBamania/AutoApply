@@ -11,7 +11,7 @@ class ApiEndpoints {
   static const bool isProduction = true;
 
   /// Local development IP for Android physical devices on Wi-Fi
-  static const String pcLanIp = '192.168.1.7';
+  static const String pcLanIp = '192.168.1.8';
 
   /// Dynamically resolves the API base URL:
   /// 1. Uses --dart-define=API_BASE_URL=... if passed at compile time
@@ -92,6 +92,12 @@ class ApiEndpoints {
   static String toggleBookmarkPrep(int id) => '/candidate/interview-prep/$id/bookmark';
   static String deleteInterviewPrep(int id) => '/candidate/interview-prep/$id';
 
+  // --- AI Turn-by-Turn Mock Interview Simulator Endpoints ---
+  static const String mockInterviewStart = '/candidate/interview-prep/mock/start';
+  static String mockInterviewAnswer(int id) => '/candidate/interview-prep/mock/$id/answer';
+  static String mockInterviewDetail(int id) => '/candidate/interview-prep/mock/$id';
+  static const String mockInterviewHistory = '/candidate/interview-prep/mock-history';
+
   // --- AI Headhunter Agent Endpoints ---
   // Company Sourcing & Outreach
   static String jobHeadhunterMatches(int id) => '/company/jobs/$id/headhunter';
@@ -111,7 +117,7 @@ class ApiEndpoints {
   // --- Public Inbound Contact Form Endpoint ---
   static const String contact = '/contact';
 
-  // --- Twilio WhatsApp Messaging Endpoints ---
+  // --- WhatsApp Messaging Endpoints ---
   static String jobWhatsAppMessage(int id) => '/jobs/$id/whatsapp-message';
   static String inquiryWhatsAppReply(int id) => '/company/inquiries/$id/whatsapp-reply';
   static String headhunterWhatsAppOutreach(int id) => '/company/headhunter/$id/whatsapp-outreach';

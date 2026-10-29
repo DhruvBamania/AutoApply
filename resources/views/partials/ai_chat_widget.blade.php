@@ -1078,9 +1078,9 @@
             };
         });
 
-        const csrfToken = document.querySelector('meta[name="csrf-token"]') 
-            ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') 
-            : (document.querySelector('input[name="_token"]') ? document.querySelector('input[name="_token"]').value : '');
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') 
+            || document.querySelector('input[name="_token"]')?.value 
+            || '{{ csrf_token() }}';
 
         fetch('{{ route("ai_chat.send") }}', {
             method: 'POST',
@@ -1090,6 +1090,7 @@
                 'X-CSRF-TOKEN': csrfToken
             },
             body: JSON.stringify({
+                _token: csrfToken,
                 message: message,
                 history: historyPayload
             })

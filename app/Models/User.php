@@ -91,6 +91,11 @@ class User extends Authenticatable
         return $this->hasMany(InterviewPreparation::class);
     }
 
+    public function mockInterviewSessions()
+    {
+        return $this->hasMany(MockInterviewSession::class)->latest('id');
+    }
+
     public function headhunterInvitations()
     {
         return $this->hasMany(HeadhunterMatch::class, 'candidate_user_id')->latest('id');

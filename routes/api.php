@@ -109,6 +109,12 @@ Route::prefix('v1')->group(function () {
             Route::post('/interview-prep/{id}/bookmark', [\App\Http\Controllers\Api\InterviewPrepApiController::class, 'toggleBookmark']);
             Route::delete('/interview-prep/{id}', [\App\Http\Controllers\Api\InterviewPrepApiController::class, 'destroy']);
 
+            // AI Turn-by-Turn Mock Interview Simulator
+            Route::post('/interview-prep/mock/start', [\App\Http\Controllers\MockInterviewController::class, 'start']);
+            Route::post('/interview-prep/mock/{id}/answer', [\App\Http\Controllers\MockInterviewController::class, 'submitAnswer']);
+            Route::get('/interview-prep/mock-history', [\App\Http\Controllers\MockInterviewController::class, 'history']);
+            Route::get('/interview-prep/mock/{id}', [\App\Http\Controllers\MockInterviewController::class, 'show']);
+
             // AI Headhunter Scouted Opportunities
             Route::get('/headhunter/invitations', [\App\Http\Controllers\Api\HeadhunterApiController::class, 'candidateInvitations']);
             Route::post('/headhunter/invitations/{id}/respond', [\App\Http\Controllers\Api\HeadhunterApiController::class, 'respondInvitation']);

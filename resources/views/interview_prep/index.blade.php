@@ -548,6 +548,40 @@
                     @endforeach
                 </div>
             @endif
+
+            <!-- Past Mock Interviews Card -->
+            @if(isset($mockSessions) && $mockSessions->isNotEmpty())
+                <div class="history-card" style="margin-top: 1.25rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+                        <span style="font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">
+                            🎙️ Past Mock Interviews ({{ $mockSessions->count() }})
+                        </span>
+                    </div>
+                    @foreach($mockSessions as $session)
+                        <div class="history-item" style="cursor: pointer;" onclick="loadPastMockInterview({{ $session->id }})">
+                            <div style="flex: 1; overflow: hidden;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px;">
+                                    <span style="font-weight: 700; font-size: 0.86rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                        {{ $session->role_title }}
+                                    </span>
+                                    @if($session->evaluation_report && isset($session->evaluation_report['overall_score']))
+                                        <span style="font-size: 0.72rem; font-weight: 800; padding: 1px 6px; border-radius: 4px; background: rgba(16, 185, 129, 0.15); color: #059669;">
+                                            {{ $session->evaluation_report['overall_score'] }}%
+                                        </span>
+                                    @else
+                                        <span style="font-size: 0.72rem; font-weight: 700; padding: 1px 6px; border-radius: 4px; background: #fef3c7; color: #b45309;">
+                                            In Progress
+                                        </span>
+                                    @endif
+                                </div>
+                                <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px;">
+                                    {{ $session->created_at->diffForHumans() }} &bull; {{ $session->evaluation_report['verdict'] ?? 'Scorecard' }}
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
         </div>
     </div>
 
@@ -583,6 +617,39 @@
                         </button>
                         <button type="button" class="btn-primary btn-sm" onclick="window.print()">
                             🖨️ Print / PDF
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live AI Mock Interview Simulator Launch Banner -->
+                <div class="mock-simulator-banner" style="background: linear-gradient(135deg, rgba(79, 70, 229, 0.08) 0%, rgba(124, 58, 237, 0.08) 100%); border: 1.5px solid rgba(99, 102, 241, 0.3); border-radius: 16px; padding: 1.25rem 1.4rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.35); flex-shrink: 0;">
+                            🎙️
+                        </div>
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #4f46e5; background: rgba(79, 70, 229, 0.12); padding: 2px 8px; border-radius: 999px;">
+                                    Interactive Simulator
+                                </span>
+                                <span style="font-size: 0.75rem; font-weight: 700; color: #dc2626;">
+                                    ● 5-Question Strict Mode
+                                </span>
+                            </div>
+                            <h4 style="margin: 3px 0 2px 0; font-size: 1.05rem; font-weight: 800; color: var(--text-dark);">
+                                Live AI Mock Interviewer
+                            </h4>
+                            <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
+                                Experience a realistic technical interview. Answer by voice or text. Get scored on architecture, problem solving, and behavioral STAR criteria.
+                            </p>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="button" 
+                                onclick="launchMockInterview('{{ addslashes($activePrep->role_title) }}', '{{ addslashes($activePrep->experience_level) }}', '{{ addslashes($activePrep->tech_stack) }}', {{ $activePrep->id }})" 
+                                class="btn-primary" 
+                                style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); padding: 0.65rem 1.4rem; font-size: 0.9rem; font-weight: 700; border-radius: 12px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.35); display: inline-flex; align-items: center; gap: 8px; cursor: pointer; white-space: nowrap;">
+                            <span>🚀 Launch AI Mock Interview</span>
                         </button>
                     </div>
                 </div>
@@ -680,6 +747,14 @@
                     <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto 1.5rem auto; font-size: 0.95rem; line-height: 1.5;">
                         Fill in your target role and tech stack on the left or tap <strong>Auto-fill from My Resume</strong> to generate customized, high-yield interview questions instantly.
                     </p>
+                    <div style="margin-top: 1.5rem;">
+                        <button type="button" 
+                                onclick="launchMockInterview()" 
+                                class="btn-primary" 
+                                style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); padding: 0.75rem 1.6rem; font-size: 0.95rem; font-weight: 700; border-radius: 12px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.35); display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <span>🎙️ Launch Live AI Mock Interview</span>
+                        </button>
+                    </div>
                 </div>
             @endif
         </div>
@@ -839,4 +914,7 @@
         });
     }
 </script>
+
+{{-- Interactive Turn-by-Turn AI Mock Interview Simulator Modal --}}
+@include('interview_prep.partials.mock_interview_modal')
 @endsection

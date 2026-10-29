@@ -37,7 +37,10 @@ class InterviewPrepController extends Controller
         // Parse candidate resume profile for quick auto-fill recommendations
         $resumeProfile = $this->extractProfileFromResume($user);
 
-        return view('interview_prep.index', compact('history', 'activePrep', 'resumeProfile'));
+        // Fetch recent mock interview sessions
+        $mockSessions = $user->mockInterviewSessions()->latest('id')->take(6)->get();
+
+        return view('interview_prep.index', compact('history', 'activePrep', 'resumeProfile', 'mockSessions'));
     }
 
     /**
