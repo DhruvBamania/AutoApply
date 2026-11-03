@@ -2,10 +2,8 @@ import 'package:flutter/foundation.dart';
 
 class ApiEndpoints {
   /// Live Production Base URL:
-  /// Once your Vercel site is deployed, paste your live URL here:
-  /// e.g. 'https://ai-looping.vercel.app/api/v1'
-  /// Or compile with: flutter build apk --dart-define=API_BASE_URL=https://your-domain.vercel.app/api/v1
-  static const String liveBaseUrl = 'https://auto-apply-two-phi.vercel.app/api/v1';
+  /// Direct v1 endpoint without /api prefix to prevent Vercel serverless /api folder interception
+  static const String liveBaseUrl = 'https://auto-apply-two-phi.vercel.app/v1';
 
   /// Set to true to connect mobile app directly to live Vercel backend
   static const bool isProduction = true;
