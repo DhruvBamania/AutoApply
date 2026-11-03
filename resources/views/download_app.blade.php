@@ -26,12 +26,15 @@
         </div>
 
         <!-- Primary Download Buttons -->
-        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-            <a href="{{ $downloadUrl }}" class="btn-primary" style="padding: 0.85rem 2rem; font-size: 1rem; font-weight: 700; border-radius: 14px; box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);">
-                <span>📥</span> Download Android APK
+        <div style="display: flex; justify-content: center; gap: 0.85rem; flex-wrap: wrap;">
+            <a href="{{ $downloadUrl }}" class="btn-primary" style="padding: 0.85rem 1.8rem; font-size: 1rem; font-weight: 700; border-radius: 14px; box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4); text-decoration: none;">
+                <span>📥</span> Download Android APK (Fast CDN)
             </a>
-            <a href="{{ route('apk.download') }}" class="btn-secondary" style="padding: 0.85rem 1.5rem; font-size: 0.92rem; font-weight: 600; border-radius: 14px;">
-                <span>💻</span> Direct Server Download
+            <a href="{{ route('apk.download') }}" class="btn-secondary" style="padding: 0.85rem 1.4rem; font-size: 0.92rem; font-weight: 600; border-radius: 14px; text-decoration: none;">
+                <span>🌐</span> Direct Mirror
+            </a>
+            <a href="{{ $githubReleasePage ?? 'https://github.com/DhruvBamania/AutoApply/releases' }}" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="padding: 0.85rem 1.2rem; font-size: 0.92rem; font-weight: 600; border-radius: 14px; text-decoration: none;">
+                <span>🐙</span> GitHub Release Assets
             </a>
         </div>
     </div>
@@ -51,7 +54,7 @@
 
             <div style="display: flex; flex-direction: column; gap: 0.5rem; width: 100%;">
                 <div style="font-size: 0.82rem; color: #475569; font-family: monospace; word-break: break-all; background: #f8fafc; padding: 6px 12px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                    🔗 Link: <strong>{{ $downloadUrl }}</strong>
+                    🔗 Direct Link: <a href="{{ $downloadUrl }}" style="color: #4f46e5; text-decoration: underline;"><strong>{{ $downloadUrl }}</strong></a>
                 </div>
                 <div style="font-size: 0.78rem; color: #64748b;">
                     Server Host: <strong>{{ $currentHost }}</strong>
@@ -61,14 +64,14 @@
 
         <!-- Installation Instructions -->
         <div class="card">
-            <div class="card-title" style="margin-bottom: 1rem;">🛠️ Quick Installation Guide</div>
+            <div class="card-title" style="margin-bottom: 1rem;">🛠️ Android Installation Guide</div>
             
             <div style="display: flex; flex-direction: column; gap: 1.2rem; font-size: 0.92rem;">
                 <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
                     <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 28px; height: 28px; border-radius: 50%; background: #e0e7ff; color: #4338ca; font-weight: 700; font-size: 0.85rem;">1</span>
                     <div>
-                        <strong style="color: #1e1b4b; display: block; margin-bottom: 2px;">Download the APK</strong>
-                        <span style="color: #64748b; line-height: 1.45;">Tap the download button above or scan the QR code with your mobile camera.</span>
+                        <strong style="color: #1e1b4b; display: block; margin-bottom: 2px;">Download APK & Confirm Prompt</strong>
+                        <span style="color: #64748b; line-height: 1.45;">Tap the download button. When Android Chrome prompts <em>"File might be harmful. Do you want to download app-release.apk anyway?"</em>, tap <strong style="color: #1e1b4b;">Download anyway</strong>.</span>
                     </div>
                 </div>
 
@@ -76,7 +79,7 @@
                     <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 28px; height: 28px; border-radius: 50%; background: #e0e7ff; color: #4338ca; font-weight: 700; font-size: 0.85rem;">2</span>
                     <div>
                         <strong style="color: #1e1b4b; display: block; margin-bottom: 2px;">Allow Unknown Apps</strong>
-                        <span style="color: #64748b; line-height: 1.45;">When prompted by Android, tap <em>Settings</em> and toggle <em>Allow from this source</em> for your browser or file manager.</span>
+                        <span style="color: #64748b; line-height: 1.45;">When opening the APK, if Android says <em>"For your security, your phone is not allowed to install unknown apps"</em>, tap <strong style="color: #1e1b4b;">Settings</strong> and switch ON <strong style="color: #1e1b4b;">Allow from this source</strong>.</span>
                     </div>
                 </div>
 
@@ -84,7 +87,7 @@
                     <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 28px; height: 28px; border-radius: 50%; background: #e0e7ff; color: #4338ca; font-weight: 700; font-size: 0.85rem;">3</span>
                     <div>
                         <strong style="color: #1e1b4b; display: block; margin-bottom: 2px;">Install & Open</strong>
-                        <span style="color: #64748b; line-height: 1.45;">Tap <em>Install</em>, launch AI Looping, and sign in to sync with your web account.</span>
+                        <span style="color: #64748b; line-height: 1.45;">Tap <strong style="color: #1e1b4b;">Install</strong>, then launch AI Looping and log in to sync all candidate & recruiter data.</span>
                     </div>
                 </div>
 

@@ -708,40 +708,67 @@ Route::middleware(['web', 'auth', 'role:user'])->group(function () {
 
 // --- Android Mobile Application Remote Download Routes ---
 Route::get('/download-apk', function () {
-    // If an external APK URL is configured (e.g., GitHub Releases, Cloudflare R2, Google Drive), redirect to it
-    if ($externalUrl = env('APK_DOWNLOAD_URL')) {
+    $defaultGithubReleaseUrl = 'https://github.com/DhruvBamania/AutoApply/releases/latest/download/app-release.apk';
+
+    // 1. Resolve external APK URL from environment or configuration
+    $externalUrl = env('APK_DOWNLOAD_URL') ?: config('services.mobile_app.apk_download_url');
+
+    if ($externalUrl) {
+        // Automatically fix asset name mismatch: GitHub release asset is named 'app-release.apk'
+        if (str_contains($externalUrl, 'github.com') && str_ends_with($externalUrl, '/AI-Looping.apk')) {
+            $externalUrl = str_replace('/AI-Looping.apk', '/app-release.apk', $externalUrl);
+        }
         return redirect()->away($externalUrl);
     }
 
+    // 2. Check if local APK exists in public/
     $apkPath = file_exists(public_path('app-release.apk'))
         ? public_path('app-release.apk')
-        : public_path('app-debug.apk');
+        : (file_exists(public_path('app-debug.apk')) ? public_path('app-debug.apk') : null);
 
-    if (!file_exists($apkPath)) {
-        $sourcePath = file_exists(base_path('mobile_app/build/app/outputs/flutter-apk/app-release.apk'))
-            ? base_path('mobile_app/build/app/outputs/flutter-apk/app-release.apk')
-            : base_path('mobile_app/build/app/outputs/flutter-apk/app-debug.apk');
-
-        if (file_exists($sourcePath)) {
-            copy($sourcePath, $apkPath);
-        } else {
-            return response()->json(['error' => 'APK file not found. Please build the mobile application or configure APK_DOWNLOAD_URL in your environment.'], 404);
-        }
+    if ($apkPath && file_exists($apkPath)) {
+        return response()->download($apkPath, 'AI-Looping.apk', [
+            'Content-Type' => 'application/vnd.android.package-archive',
+            'Cache-Control' => 'no-cache, must-revalidate',
+        ]);
     }
-    return response()->download($apkPath, 'AI-Looping.apk', [
-        'Content-Type' => 'application/vnd.android.package-archive',
-        'Cache-Control' => 'no-cache, must-revalidate',
-    ]);
+
+    // 3. Fallback to compiled local build artifact if on dev environment
+    $sourcePath = file_exists(base_path('mobile_app/build/app/outputs/flutter-apk/app-release.apk'))
+        ? base_path('mobile_app/build/app/outputs/flutter-apk/app-release.apk')
+        : (file_exists(base_path('mobile_app/build/app/outputs/flutter-apk/app-debug.apk'))
+            ? base_path('mobile_app/build/app/outputs/flutter-apk/app-debug.apk')
+            : null);
+
+    if ($sourcePath && file_exists($sourcePath)) {
+        @copy($sourcePath, public_path('app-release.apk'));
+        return response()->download($sourcePath, 'AI-Looping.apk', [
+            'Content-Type' => 'application/vnd.android.package-archive',
+            'Cache-Control' => 'no-cache, must-revalidate',
+        ]);
+    }
+
+    // 4. Fallback for live serverless/cloud hosting (Vercel, Railway, etc.): redirect to GitHub Releases CDN
+    return redirect()->away($defaultGithubReleaseUrl);
 })->name('apk.download');
 
 Route::get('/app-download', function () {
+    $defaultGithubReleaseUrl = 'https://github.com/DhruvBamania/AutoApply/releases/latest/download/app-release.apk';
+    $githubReleasePage = 'https://github.com/DhruvBamania/AutoApply/releases/tag/apk';
+
     $apkPath = file_exists(public_path('app-release.apk'))
         ? public_path('app-release.apk')
-        : public_path('app-debug.apk');
-    $fileSizeMb = file_exists($apkPath) ? round(filesize($apkPath) / (1024 * 1024), 1) : 0;
-    $downloadUrl = env('APK_DOWNLOAD_URL') ?: route('apk.download');
+        : (file_exists(public_path('app-debug.apk')) ? public_path('app-debug.apk') : null);
+
+    $fileSizeMb = ($apkPath && file_exists($apkPath)) ? round(filesize($apkPath) / (1024 * 1024), 1) : 54.0;
+
+    $downloadUrl = env('APK_DOWNLOAD_URL') ?: config('services.mobile_app.apk_download_url', $defaultGithubReleaseUrl);
+    if (str_contains($downloadUrl, 'github.com') && str_ends_with($downloadUrl, '/AI-Looping.apk')) {
+        $downloadUrl = str_replace('/AI-Looping.apk', '/app-release.apk', $downloadUrl);
+    }
+
     $currentHost = request()->getHttpHost();
-    return view('download_app', compact('downloadUrl', 'fileSizeMb', 'currentHost'));
+    return view('download_app', compact('downloadUrl', 'defaultGithubReleaseUrl', 'githubReleasePage', 'fileSizeMb', 'currentHost'));
 })->name('app.download.page');
 
 // --- Contact Us & Inbound Inquiries ---
@@ -853,5 +880,21 @@ Route::match(['get', 'post'], '/migrate', function (\Illuminate\Http\Request $re
         ], 500);
     }
 })->name('artisan.migrate');
+
+// --- Proxy/Vercel Fallback: Support /v1/* direct requests when /api prefix is stripped ---
+Route::any('/v1/{any}', function (\Illuminate\Http\Request $request, $any) {
+    $newUri = '/api/v1/' . $any . ($request->getQueryString() ? '?' . $request->getQueryString() : '');
+    $subRequest = \Illuminate\Http\Request::create(
+        $newUri,
+        $request->getMethod(),
+        $request->all(),
+        $request->cookies->all(),
+        $request->allFiles(),
+        $request->server->all(),
+        $request->getContent()
+    );
+    $subRequest->headers->replace($request->headers->all());
+    return app()->handle($subRequest);
+})->where('any', '.*');
 
 

@@ -16,6 +16,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
         $middleware->authenticateSessions();
         $middleware->validateCsrfTokens(except: [
             'api/*',
+            'v1/*',
         ]);
         $middleware->appendToGroup('web', [
             \App\Http\Middleware\EnforceWeeklySessionExpiration::class,

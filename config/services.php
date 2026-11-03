@@ -49,6 +49,11 @@ return [
         'redirect' => env('LINKEDIN_REDIRECT_URI'),
     ],
 
+    'mobile_app' => [
+        'apk_download_url' => env('APK_DOWNLOAD_URL', 'https://github.com/DhruvBamania/AutoApply/releases/latest/download/app-release.apk'),
+        'github_releases_url' => 'https://github.com/DhruvBamania/AutoApply/releases',
+    ],
+
     'gemini' => [
         'key' => env('GEMINI_API_KEY'),
         'model' => env('GEMINI_MODEL', 'gemini-1.5-flash'),
