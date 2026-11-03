@@ -1019,6 +1019,10 @@
                         <a href="{{ route('resumes.tailor') }}" class="header-nav-link {{ request()->routeIs('resumes.*') ? 'active' : '' }}">
                             <span class="nav-link-icon">📄</span> Resume Studio
                         </a>
+                        <a href="{{ route('multilingual_resumes.index') }}" class="header-nav-link {{ request()->routeIs('multilingual_resumes.*') ? 'active' : '' }}">
+                            <span class="nav-link-icon">🌐</span> Multilingual
+                            <span class="pill-sparkle">AI</span>
+                        </a>
                         <a href="{{ route('templates.index') }}" class="header-nav-link {{ request()->routeIs('templates.*') ? 'active' : '' }}">
                             <span class="nav-link-icon">🎨</span> Templates
                         </a>
@@ -1048,6 +1052,13 @@
                                     <div class="item-text-group">
                                         <span class="item-title">Role-Tailored Resumes</span>
                                         <span class="item-desc">Targeted keywords for ATS</span>
+                                    </div>
+                                </a>
+                                <a href="{{ route('multilingual_resumes.index') }}" class="dropdown-menu-item {{ request()->routeIs('multilingual_resumes.*') ? 'active' : '' }}">
+                                    <span class="item-icon-box">🌐</span>
+                                    <div class="item-text-group">
+                                        <span class="item-title">Multilingual Resumes</span>
+                                        <span class="item-desc">Global languages & ATS formats</span>
                                     </div>
                                 </a>
                                 <a href="{{ route('social_posts.index') }}" class="dropdown-menu-item {{ request()->routeIs('social_posts.*') ? 'active' : '' }}">
@@ -1317,6 +1328,10 @@
                         <a href="{{ route('resumes.tailor') }}" class="drawer-link {{ request()->routeIs('resumes.*') ? 'active' : '' }}">
                             <span><span class="drawer-link-icon">📄</span> Resume Studio</span>
                         </a>
+                        <a href="{{ route('multilingual_resumes.index') }}" class="drawer-link {{ request()->routeIs('multilingual_resumes.*') ? 'active' : '' }}">
+                            <span><span class="drawer-link-icon">🌐</span> Multilingual Resumes</span>
+                            <span class="drawer-badge" style="background: #eef2ff; color: #4338ca;">NEW</span>
+                        </a>
                         <a href="{{ route('templates.index') }}" class="drawer-link {{ request()->routeIs('templates.*') ? 'active' : '' }}">
                             <span><span class="drawer-link-icon">🎨</span> Template Gallery</span>
                         </a>
@@ -1425,6 +1440,7 @@
                     <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.88rem;">
                         <li><a href="{{ route('resumes.tailor') }}" style="color: #475569; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">Dynamic Resume Builder</a></li>
                         <li><a href="{{ route('templates.index') }}" style="color: #475569; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">15 ATS Resume Templates</a></li>
+                        <li><a href="{{ route('multilingual_resumes.index') }}" style="color: #475569; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">🌐 Multilingual Resumes</a></li>
                         <li><a href="{{ route('resume_editor.index') }}" style="color: #475569; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">Dynamic Visual Editor</a></li>
                         <li><a href="{{ route('interview_prep.index') }}" style="color: #475569; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">🎯 AI Interview Prep Studio</a></li>
                         <li><a href="{{ route('candidate.headhunter.index') }}" style="color: #475569; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">🎯 Scouted Jobs Portal</a></li>

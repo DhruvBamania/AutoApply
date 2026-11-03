@@ -4,6 +4,7 @@ import '../../core/constants/app_colors.dart';
 import '../../providers/candidate_provider.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
+import 'multilingual_resume_screen.dart';
 
 /// ResumeBuilderScreen: Gemini AI ATS Resume Tailoring & 15 Templates Gallery
 class ResumeBuilderScreen extends ConsumerStatefulWidget {
@@ -71,6 +72,18 @@ class _ResumeBuilderScreenState extends ConsumerState<ResumeBuilderScreen> with 
       appBar: AppBar(
         title: const Text('AI ATS Resume Studio'),
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.language),
+            tooltip: 'Multilingual Resumes',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const MultilingualResumeScreen()),
+              );
+            },
+          ),
+        ],
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Colors.white,
@@ -112,6 +125,63 @@ class _ResumeBuilderScreenState extends ConsumerState<ResumeBuilderScreen> with 
                         ),
                       ),
                     ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Multilingual Resumes Banner
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const MultilingualResumeScreen()),
+                    );
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF4F46E5), Color(0xFF7C3AED)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        const Text('🌐', style: TextStyle(fontSize: 22)),
+                        const SizedBox(width: 10),
+                        const Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Multilingual ATS Resumes',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
+                              ),
+                              SizedBox(height: 2),
+                              Text(
+                                'Translate to German, Spanish, French, Japanese & more',
+                                style: TextStyle(color: Colors.white70, fontSize: 11),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 12),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),

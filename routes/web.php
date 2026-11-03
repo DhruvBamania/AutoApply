@@ -697,6 +697,13 @@ Route::middleware(['web', 'auth', 'role:user'])->group(function () {
     // Role-based Resume
     Route::get('/role-resume', [\App\Http\Controllers\RoleResumeController::class, 'index'])->name('role_resume.index');
     Route::post('/role-resume/generate', [\App\Http\Controllers\RoleResumeController::class, 'generate'])->name('role_resume.generate');
+
+    // Multilingual AI Resumes
+    Route::get('/multilingual-resumes', [\App\Http\Controllers\MultilingualResumeController::class, 'index'])->name('multilingual_resumes.index');
+    Route::post('/multilingual-resumes/generate', [\App\Http\Controllers\MultilingualResumeController::class, 'generate'])->name('multilingual_resumes.generate');
+    Route::get('/multilingual-resumes/{id}/preview', [\App\Http\Controllers\MultilingualResumeController::class, 'preview'])->name('multilingual_resumes.preview');
+    Route::get('/multilingual-resumes/{id}/download', [\App\Http\Controllers\MultilingualResumeController::class, 'download'])->name('multilingual_resumes.download');
+    Route::delete('/multilingual-resumes/{id}', [\App\Http\Controllers\MultilingualResumeController::class, 'destroy'])->name('multilingual_resumes.destroy');
 });
 
 // --- Android Mobile Application Remote Download Routes ---

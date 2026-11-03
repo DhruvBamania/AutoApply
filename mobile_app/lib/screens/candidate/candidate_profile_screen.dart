@@ -5,6 +5,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/candidate_provider.dart';
 import '../../widgets/custom_button.dart';
 import '../auth/login_screen.dart';
+import 'multilingual_resume_screen.dart';
 
 /// CandidateProfileScreen: Candidate Profile & Saved Resumes
 class CandidateProfileScreen extends ConsumerStatefulWidget {
@@ -144,6 +145,63 @@ class _CandidateProfileScreenState extends ConsumerState<CandidateProfileScreen>
                       );
                     }),
                 ],
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Multilingual Resumes Link Card
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const MultilingualResumeScreen()),
+                );
+              },
+              borderRadius: BorderRadius.circular(16),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppColors.border),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.02),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(Icons.language, color: AppColors.primary, size: 22),
+                    ),
+                    const SizedBox(width: 14),
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Multilingual Resumes Vault',
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                          ),
+                          SizedBox(height: 2),
+                          Text(
+                            'View and create resumes in German, Spanish, French & more',
+                            style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.chevron_right, color: AppColors.textLight),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 32),

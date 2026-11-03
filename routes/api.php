@@ -91,6 +91,12 @@ Route::prefix('v1')->group(function () {
             Route::get('/templates', [CandidateResumeApiController::class, 'templates']);
             Route::post('/resume/export', [CandidateResumeApiController::class, 'export']);
 
+            // AI Multilingual Resumes
+            Route::get('/resumes/multilingual', [\App\Http\Controllers\Api\MultilingualResumeApiController::class, 'index']);
+            Route::post('/resumes/multilingual/translate', [\App\Http\Controllers\Api\MultilingualResumeApiController::class, 'translate']);
+            Route::get('/resumes/multilingual/{id}', [\App\Http\Controllers\Api\MultilingualResumeApiController::class, 'show']);
+            Route::delete('/resumes/multilingual/{id}', [\App\Http\Controllers\Api\MultilingualResumeApiController::class, 'destroy']);
+
             // Outbound Campaigns & Lead Generation
             Route::get('/campaigns', [CandidateCampaignApiController::class, 'campaigns']);
             Route::post('/campaigns', [CandidateCampaignApiController::class, 'storeCampaign']);

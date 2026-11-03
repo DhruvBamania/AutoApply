@@ -78,6 +78,12 @@ class ApiEndpoints {
   static const String candidateTemplates = '/candidate/templates';
   static const String candidateResumeExport = '/candidate/resume/export';
 
+  // --- AI Multilingual Resumes Endpoints ---
+  static const String candidateMultilingualResumes = '/candidate/resumes/multilingual';
+  static const String candidateMultilingualTranslate = '/candidate/resumes/multilingual/translate';
+  static String candidateMultilingualResumeDetail(int id) => '/candidate/resumes/multilingual/$id';
+  static String deleteCandidateMultilingualResume(int id) => '/candidate/resumes/multilingual/$id';
+
   static const String candidateCampaigns = '/candidate/campaigns';
   static String candidateCampaignGenerate(int id) => '/candidate/campaigns/$id/generate';
   static const String candidateSocialPosts = '/candidate/social-posts';
