@@ -1101,6 +1101,46 @@
 
             <!-- Right: Actions & User Dropdown -->
             <div class="header-actions">
+                <!-- Universal Language Switcher Dropdown (Desktop) -->
+                <div class="header-dropdown lang-dropdown-wrapper notranslate" id="langDropdownWrapper">
+                    <button type="button" class="lang-picker-btn notranslate" id="langPickerBtn" aria-label="Translate Website Language" aria-expanded="false" aria-haspopup="true">
+                        <span class="lang-globe-icon" id="currentLangGlobe">🌐</span>
+                        <span class="lang-current-label" id="currentLangLabel">English</span>
+                        <svg class="dropdown-chevron" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+
+                    <!-- Language Dropdown Menu -->
+                    <div class="lang-dropdown-menu notranslate" id="langDropdownMenu" role="menu">
+                        <div class="lang-menu-header">
+                            <div class="lang-menu-title">
+                                <span>🌐</span> Universal Translate
+                            </div>
+                            <button type="button" class="lang-reset-btn" id="langResetBtn" title="Reset to original English text">
+                                ↺ Reset
+                            </button>
+                        </div>
+
+                        <div class="lang-search-wrapper">
+                            <span class="lang-search-icon">🔍</span>
+                            <input type="text" class="lang-search-input" id="langSearchInput" placeholder="Search 70+ languages..." autocomplete="off">
+                        </div>
+
+                        <div class="lang-quick-section">
+                            <div class="lang-quick-title">Popular Languages</div>
+                            <div class="lang-quick-chips" id="langQuickChips">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                        </div>
+
+                        <div class="lang-quick-title">All Languages</div>
+                        <div class="lang-list-container" id="langList">
+                            <!-- Populated dynamically by JS -->
+                        </div>
+                    </div>
+                </div>
+
                 @auth
                     @if(auth()->user()->role === 'company')
                         <a href="{{ route('company.jobs.create') }}" class="header-cta-btn primary-cta">
@@ -1296,6 +1336,20 @@
             @endauth
 
             <div class="drawer-body">
+                <!-- Mobile Universal Translate Switcher -->
+                <div class="drawer-section-title notranslate">🌐 TRANSLATE WEBSITE</div>
+                <div class="mobile-lang-box notranslate">
+                    <div class="mobile-lang-header">
+                        <span class="mobile-lang-indicator">
+                            <span id="mobileCurrentFlag">🌐</span>
+                            <span id="mobileCurrentName">English (Original)</span>
+                        </span>
+                    </div>
+                    <select id="mobileLangSelect" class="mobile-lang-select notranslate" aria-label="Select website language">
+                        <!-- Populated dynamically by JS -->
+                    </select>
+                </div>
+
                 @auth
                     @if(auth()->user()->role === 'company')
                         <div class="drawer-section-title">COMPANY WORKSPACE</div>
@@ -1559,11 +1613,15 @@
                 });
             }
 
+            const langDropdownWrapper = document.getElementById('langDropdownWrapper');
+            const langPickerBtn = document.getElementById('langPickerBtn');
+
             // User Profile Dropdown Toggle
             if (userMenuBtn && userMenuWrapper) {
                 userMenuBtn.addEventListener('click', function(e) {
                     e.stopPropagation();
                     if (toolsDropdown) toolsDropdown.classList.remove('open');
+                    if (langDropdownWrapper) langDropdownWrapper.classList.remove('open');
                     userMenuWrapper.classList.toggle('open');
                     const isOpen = userMenuWrapper.classList.contains('open');
                     userMenuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
@@ -1575,6 +1633,7 @@
                 toolsDropdownBtn.addEventListener('click', function(e) {
                     e.stopPropagation();
                     if (userMenuWrapper) userMenuWrapper.classList.remove('open');
+                    if (langDropdownWrapper) langDropdownWrapper.classList.remove('open');
                     toolsDropdown.classList.toggle('open');
                     const isOpen = toolsDropdown.classList.contains('open');
                     toolsDropdownBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
@@ -1591,6 +1650,10 @@
                     toolsDropdown.classList.remove('open');
                     if (toolsDropdownBtn) toolsDropdownBtn.setAttribute('aria-expanded', 'false');
                 }
+                if (langDropdownWrapper && !langDropdownWrapper.contains(e.target)) {
+                    langDropdownWrapper.classList.remove('open');
+                    if (langPickerBtn) langPickerBtn.setAttribute('aria-expanded', 'false');
+                }
             });
 
             // Escape key handler for all overlays & dropdowns
@@ -1605,6 +1668,10 @@
                         toolsDropdown.classList.remove('open');
                         if (toolsDropdownBtn) toolsDropdownBtn.setAttribute('aria-expanded', 'false');
                     }
+                    if (langDropdownWrapper) {
+                        langDropdownWrapper.classList.remove('open');
+                        if (langPickerBtn) langPickerBtn.setAttribute('aria-expanded', 'false');
+                    }
                 }
             });
         });
@@ -1612,5 +1679,8 @@
 
     {{-- Global AI Chat Assistant --}}
     @include('partials.ai_chat_widget')
+
+    {{-- Global Universal Google Translate Integration --}}
+    @include('partials.language_translator')
 </body>
 </html>
