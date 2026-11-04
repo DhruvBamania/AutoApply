@@ -86,6 +86,7 @@
             flex-shrink: 0;
             transition: transform 0.2s ease;
             margin-right: 0.5rem;
+            z-index: 10;
         }
         .header-brand:hover {
             transform: translateY(-1px);
@@ -222,6 +223,14 @@
             padding: 0.5rem;
             z-index: 1050;
             animation: dropdownFadeIn 0.2s ease-out;
+        }
+        .header-dropdown-menu.align-right {
+            left: auto;
+            right: 0;
+        }
+        .header-dropdown-menu.align-center {
+            left: 50%;
+            transform: translateX(-50%);
         }
         .header-dropdown.open .header-dropdown-menu {
             display: block;
@@ -844,19 +853,20 @@
 
         /* --- RESPONSIVE MEDIA QUERIES --- */
         
-        /* Laptops & Standard Desktops (<= 1260px) */
-        @media (max-width: 1260px) {
+        /* Laptops & Standard Desktops (<= 1280px) */
+        @media (max-width: 1280px) {
             .app-layout { padding-left: 1.25rem; padding-right: 1.25rem; }
-            .navbar { gap: 0.75rem; padding: 0.55rem 1rem; }
+            .navbar { gap: 0.65rem; padding: 0.55rem 0.95rem; }
             .header-nav-link { padding: 0.38rem 0.55rem; font-size: 0.82rem; gap: 0.25rem; }
             .header-brand { margin-right: 0.25rem; }
-            .header-actions { margin-left: 0.25rem; }
+            .header-actions { margin-left: 0.25rem; gap: 0.45rem; }
             .user-role-badge { display: none; } /* Hide role text on laptops to prevent horizontal crowding */
-            .user-info-text { max-width: 90px; }
+            .user-info-text { max-width: 85px; }
+            .lang-current-label { max-width: 70px; }
         }
 
-        /* Compact Laptops, Tablets Landscape & Split Screen (<= 1120px) */
-        @media (max-width: 1120px) {
+        /* Compact Laptops, Tablets Landscape & Split Screen (<= 1040px) */
+        @media (max-width: 1040px) {
             .header-nav-center { display: none; } /* Seamlessly collapse center links into mobile drawer */
             .hamburger-btn { display: flex; }
             .navbar { padding: 0.55rem 1rem; margin-bottom: 1.5rem; }
@@ -996,79 +1006,154 @@
                         <a href="{{ route('company.dashboard') }}" class="header-nav-link {{ request()->routeIs('company.dashboard') ? 'active' : '' }}">
                             <span class="nav-link-icon">🏢</span> Dashboard
                         </a>
-                        <a href="{{ route('company.jobs.index') }}" class="header-nav-link {{ request()->routeIs('company.jobs.*') && !request()->routeIs('company.jobs.create') ? 'active' : '' }}">
-                            <span class="nav-link-icon">💼</span> Jobs
-                        </a>
-                        <a href="{{ route('company.inquiries.index') }}" class="header-nav-link {{ request()->routeIs('company.inquiries.*') ? 'active' : '' }}">
-                            <span class="nav-link-icon">💬</span> Inquiries
-                        </a>
-                        <a href="{{ route('company.integrations') }}" class="header-nav-link {{ request()->routeIs('company.integrations') ? 'active' : '' }}">
-                            <span class="nav-link-icon">🔗</span> Integrations
-                        </a>
-                        <a href="{{ route('contact') }}" class="header-nav-link {{ request()->routeIs('contact*') ? 'active' : '' }}">
-                            <span class="nav-link-icon">🎧</span> Support
-                        </a>
-                    @else
-                        <a href="{{ route('jobs.index') }}" class="header-nav-link {{ request()->routeIs('jobs.*') ? 'active' : '' }}">
-                            <span class="nav-link-icon">💼</span> Explore Jobs
-                        </a>
-                        <a href="{{ route('candidate.headhunter.index') }}" class="header-nav-link {{ request()->routeIs('candidate.headhunter.*') ? 'active' : '' }}">
-                            <span class="nav-link-icon">🎯</span> Scouted Jobs
-                            <span class="pill-sparkle">AI</span>
-                        </a>
-                        <a href="{{ route('resumes.tailor') }}" class="header-nav-link {{ request()->routeIs('resumes.*') ? 'active' : '' }}">
-                            <span class="nav-link-icon">📄</span> Resume Studio
-                        </a>
-                        <a href="{{ route('multilingual_resumes.index') }}" class="header-nav-link {{ request()->routeIs('multilingual_resumes.*') ? 'active' : '' }}">
-                            <span class="nav-link-icon">🌐</span> Multilingual
-                            <span class="pill-sparkle">AI</span>
-                        </a>
-                        <a href="{{ route('templates.index') }}" class="header-nav-link {{ request()->routeIs('templates.*') ? 'active' : '' }}">
-                            <span class="nav-link-icon">🎨</span> Templates
-                        </a>
-                        <a href="{{ route('interview_prep.index') }}" class="header-nav-link {{ request()->routeIs('interview_prep.*') ? 'active' : '' }}">
-                            <span class="nav-link-icon">💡</span> Interview Prep
-                        </a>
-
-                        <!-- Desktop Tools Dropdown -->
-                        <div class="header-dropdown" id="toolsDropdown">
-                            <button type="button" class="header-nav-link {{ request()->routeIs('resume_editor.*', 'role_resume.*', 'social_posts.*', 'integrations.*') ? 'active' : '' }}" id="toolsDropdownBtn" aria-haspopup="true" aria-expanded="false">
-                                <span>Tools</span>
+                        
+                        <!-- Company Recruitment Suite Dropdown -->
+                        <div class="header-dropdown" id="companyJobsDropdown">
+                            <button type="button" class="header-nav-link {{ request()->routeIs('company.jobs.*', 'company.inquiries.*', 'company.integrations') ? 'active' : '' }}" id="companyJobsDropdownBtn" aria-haspopup="true" aria-expanded="false">
+                                <span class="nav-link-icon">💼</span>
+                                <span>Recruitment</span>
                                 <svg class="dropdown-chevron" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
                                 </svg>
                             </button>
-                            <div class="header-dropdown-menu" id="toolsDropdownMenu">
-                                <div class="dropdown-menu-label">AI CAREER TOOLS</div>
+                            <div class="header-dropdown-menu" id="companyJobsDropdownMenu">
+                                <div class="dropdown-menu-label">HIRING OPERATIONS</div>
+                                <a href="{{ route('company.jobs.index') }}" class="dropdown-menu-item {{ request()->routeIs('company.jobs.*') ? 'active' : '' }}">
+                                    <span class="item-icon-box">💼</span>
+                                    <div class="item-text-group">
+                                        <span class="item-title">Job Postings Hub</span>
+                                        <span class="item-desc">Active, draft & closed openings</span>
+                                    </div>
+                                </a>
+                                <a href="{{ route('company.inquiries.index') }}" class="dropdown-menu-item {{ request()->routeIs('company.inquiries.*') ? 'active' : '' }}">
+                                    <span class="item-icon-box">💬</span>
+                                    <div class="item-text-group">
+                                        <span class="item-title">Inquiries & Leads</span>
+                                        <span class="item-desc">Candidate questions & responses</span>
+                                    </div>
+                                </a>
+                                <div class="dropdown-menu-divider"></div>
+                                <a href="{{ route('company.integrations') }}" class="dropdown-menu-item {{ request()->routeIs('company.integrations') ? 'active' : '' }}">
+                                    <span class="item-icon-box">🔗</span>
+                                    <div class="item-text-group">
+                                        <span class="item-title">Platform Integrations</span>
+                                        <span class="item-desc">LinkedIn, Indeed feed & ATS</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <a href="{{ route('contact') }}" class="header-nav-link {{ request()->routeIs('contact*') ? 'active' : '' }}">
+                            <span class="nav-link-icon">🎧</span> Support
+                        </a>
+                    @else
+                        <!-- 1. Jobs & Scouting Dropdown -->
+                        <div class="header-dropdown" id="candidateJobsDropdown">
+                            <button type="button" class="header-nav-link {{ request()->routeIs('jobs.*', 'candidate.headhunter.*') ? 'active' : '' }}" id="candidateJobsDropdownBtn" aria-haspopup="true" aria-expanded="false">
+                                <span class="nav-link-icon">💼</span>
+                                <span>Jobs</span>
+                                <svg class="dropdown-chevron" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+                            <div class="header-dropdown-menu" id="candidateJobsDropdownMenu">
+                                <div class="dropdown-menu-label">DISCOVER & MATCH</div>
+                                <a href="{{ route('jobs.index') }}" class="dropdown-menu-item {{ request()->routeIs('jobs.*') ? 'active' : '' }}">
+                                    <span class="item-icon-box">💼</span>
+                                    <div class="item-text-group">
+                                        <span class="item-title">Explore Jobs</span>
+                                        <span class="item-desc">Browse active openings & WhatsApp apply</span>
+                                    </div>
+                                </a>
+                                <a href="{{ route('candidate.headhunter.index') }}" class="dropdown-menu-item {{ request()->routeIs('candidate.headhunter.*') ? 'active' : '' }}">
+                                    <span class="item-icon-box">🎯</span>
+                                    <div class="item-text-group">
+                                        <div style="display: flex; align-items: center; gap: 0.35rem;">
+                                            <span class="item-title">Scouted Jobs</span>
+                                            <span class="pill-sparkle">AI</span>
+                                        </div>
+                                        <span class="item-desc">Direct invitations from recruiters</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- 2. AI Resume Studio Dropdown -->
+                        <div class="header-dropdown" id="resumeStudioDropdown">
+                            <button type="button" class="header-nav-link {{ request()->routeIs('resumes.*', 'multilingual_resumes.*', 'templates.*', 'resume_editor.*', 'role_resume.*') ? 'active' : '' }}" id="resumeStudioDropdownBtn" aria-haspopup="true" aria-expanded="false">
+                                <span class="nav-link-icon">📄</span>
+                                <span>Resume Studio</span>
+                                <svg class="dropdown-chevron" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+                            <div class="header-dropdown-menu" id="resumeStudioDropdownMenu">
+                                <div class="dropdown-menu-label">AI RESUME SUITE</div>
+                                <a href="{{ route('resumes.tailor') }}" class="dropdown-menu-item {{ request()->routeIs('resumes.tailor') ? 'active' : '' }}">
+                                    <span class="item-icon-box">📄</span>
+                                    <div class="item-text-group">
+                                        <span class="item-title">Resume Studio</span>
+                                        <span class="item-desc">Tailor resumes to any job description</span>
+                                    </div>
+                                </a>
+                                <a href="{{ route('multilingual_resumes.index') }}" class="dropdown-menu-item {{ request()->routeIs('multilingual_resumes.*') ? 'active' : '' }}">
+                                    <span class="item-icon-box">🌐</span>
+                                    <div class="item-text-group">
+                                        <div style="display: flex; align-items: center; gap: 0.35rem;">
+                                            <span class="item-title">Multilingual Resumes</span>
+                                            <span class="pill-sparkle">AI</span>
+                                        </div>
+                                        <span class="item-desc">Translate resumes into 70+ languages</span>
+                                    </div>
+                                </a>
+                                <a href="{{ route('templates.index') }}" class="dropdown-menu-item {{ request()->routeIs('templates.*') ? 'active' : '' }}">
+                                    <span class="item-icon-box">🎨</span>
+                                    <div class="item-text-group">
+                                        <span class="item-title">15 ATS Templates</span>
+                                        <span class="item-desc">Executive, Modern & Tech DOCX templates</span>
+                                    </div>
+                                </a>
+                                <div class="dropdown-menu-divider"></div>
                                 <a href="{{ route('resume_editor.index') }}" class="dropdown-menu-item {{ request()->routeIs('resume_editor.*') ? 'active' : '' }}">
                                     <span class="item-icon-box">⚡</span>
                                     <div class="item-text-group">
-                                        <span class="item-title">Dynamic Editor</span>
-                                        <span class="item-desc">Real-time AI resume tailoring</span>
+                                        <span class="item-title">Dynamic Visual Editor</span>
+                                        <span class="item-desc">Real-time live resume editor</span>
                                     </div>
                                 </a>
                                 <a href="{{ route('role_resume.index') }}" class="dropdown-menu-item {{ request()->routeIs('role_resume.*') ? 'active' : '' }}">
                                     <span class="item-icon-box">🎯</span>
                                     <div class="item-text-group">
                                         <span class="item-title">Role-Tailored Resumes</span>
-                                        <span class="item-desc">Targeted keywords for ATS</span>
+                                        <span class="item-desc">Targeted keywords for ATS passes</span>
                                     </div>
                                 </a>
-                                <a href="{{ route('multilingual_resumes.index') }}" class="dropdown-menu-item {{ request()->routeIs('multilingual_resumes.*') ? 'active' : '' }}">
-                                    <span class="item-icon-box">🌐</span>
-                                    <div class="item-text-group">
-                                        <span class="item-title">Multilingual Resumes</span>
-                                        <span class="item-desc">Global languages & ATS formats</span>
-                                    </div>
-                                </a>
+                            </div>
+                        </div>
+
+                        <!-- 3. AI Interview Prep (Direct link) -->
+                        <a href="{{ route('interview_prep.index') }}" class="header-nav-link {{ request()->routeIs('interview_prep.*') ? 'active' : '' }}">
+                            <span class="nav-link-icon">💡</span>
+                            <span>Interview Prep</span>
+                        </a>
+
+                        <!-- 4. More & Tools Dropdown -->
+                        <div class="header-dropdown" id="moreToolsDropdown">
+                            <button type="button" class="header-nav-link {{ request()->routeIs('social_posts.*', 'integrations.*', 'contact*') ? 'active' : '' }}" id="moreToolsDropdownBtn" aria-haspopup="true" aria-expanded="false">
+                                <span>More</span>
+                                <svg class="dropdown-chevron" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+                            <div class="header-dropdown-menu align-right" id="moreToolsDropdownMenu">
+                                <div class="dropdown-menu-label">ADDITIONAL TOOLS</div>
                                 <a href="{{ route('social_posts.index') }}" class="dropdown-menu-item {{ request()->routeIs('social_posts.*') ? 'active' : '' }}">
                                     <span class="item-icon-box">📣</span>
                                     <div class="item-text-group">
-                                        <span class="item-title">Social Campaign</span>
-                                        <span class="item-desc">LinkedIn & viral posts</span>
+                                        <span class="item-title">Social Campaigns</span>
+                                        <span class="item-desc">LinkedIn & thought leadership posts</span>
                                     </div>
                                 </a>
-                                <div class="dropdown-menu-divider"></div>
                                 <a href="{{ route('integrations.index') }}" class="dropdown-menu-item {{ request()->routeIs('integrations.*') ? 'active' : '' }}">
                                     <span class="item-icon-box">🔗</span>
                                     <div class="item-text-group">
@@ -1076,11 +1161,19 @@
                                         <span class="item-desc">LinkedIn & API keys</span>
                                     </div>
                                 </a>
+                                <div class="dropdown-menu-divider"></div>
                                 <a href="{{ route('contact') }}" class="dropdown-menu-item {{ request()->routeIs('contact*') ? 'active' : '' }}">
                                     <span class="item-icon-box">🎧</span>
                                     <div class="item-text-group">
                                         <span class="item-title">Help & Support</span>
-                                        <span class="item-desc">24/7 dedicated assistance</span>
+                                        <span class="item-desc">24/7 dedicated support assistance</span>
+                                    </div>
+                                </a>
+                                <a href="{{ route('app.download.page') }}" class="dropdown-menu-item {{ request()->routeIs('app.download.*') ? 'active' : '' }}">
+                                    <span class="item-icon-box">📱</span>
+                                    <div class="item-text-group">
+                                        <span class="item-title">Download Mobile App</span>
+                                        <span class="item-desc">Android Release APK (v2.4)</span>
                                     </div>
                                 </a>
                             </div>
@@ -1613,46 +1706,43 @@
                 });
             }
 
-            const langDropdownWrapper = document.getElementById('langDropdownWrapper');
-            const langPickerBtn = document.getElementById('langPickerBtn');
+            // Universal Header Dropdowns Controller
+            const allDropdowns = document.querySelectorAll('.header-dropdown');
 
-            // User Profile Dropdown Toggle
-            if (userMenuBtn && userMenuWrapper) {
-                userMenuBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    if (toolsDropdown) toolsDropdown.classList.remove('open');
-                    if (langDropdownWrapper) langDropdownWrapper.classList.remove('open');
-                    userMenuWrapper.classList.toggle('open');
-                    const isOpen = userMenuWrapper.classList.contains('open');
-                    userMenuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            function closeAllHeaderDropdowns(exceptEl = null) {
+                allDropdowns.forEach(function(dd) {
+                    if (dd !== exceptEl) {
+                        dd.classList.remove('open');
+                        const btn = dd.querySelector('button[aria-expanded]');
+                        if (btn) btn.setAttribute('aria-expanded', 'false');
+                    }
                 });
             }
 
-            // Candidate Tools Dropdown Toggle
-            if (toolsDropdownBtn && toolsDropdown) {
-                toolsDropdownBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    if (userMenuWrapper) userMenuWrapper.classList.remove('open');
-                    if (langDropdownWrapper) langDropdownWrapper.classList.remove('open');
-                    toolsDropdown.classList.toggle('open');
-                    const isOpen = toolsDropdown.classList.contains('open');
-                    toolsDropdownBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-                });
-            }
+            allDropdowns.forEach(function(dd) {
+                const triggerBtn = dd.querySelector('button[aria-haspopup="true"], .user-profile-trigger, .lang-picker-btn');
+                if (triggerBtn) {
+                    triggerBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const isCurrentlyOpen = dd.classList.contains('open');
+                        closeAllHeaderDropdowns(dd);
+                        if (!isCurrentlyOpen) {
+                            dd.classList.add('open');
+                            triggerBtn.setAttribute('aria-expanded', 'true');
+                            const searchInput = dd.querySelector('.lang-search-input');
+                            if (searchInput) setTimeout(() => searchInput.focus(), 80);
+                        } else {
+                            dd.classList.remove('open');
+                            triggerBtn.setAttribute('aria-expanded', 'false');
+                        }
+                    });
+                }
+            });
 
-            // Close dropdowns on outside click
+            // Close all dropdowns on outside click
             document.addEventListener('click', function(e) {
-                if (userMenuWrapper && !userMenuWrapper.contains(e.target)) {
-                    userMenuWrapper.classList.remove('open');
-                    if (userMenuBtn) userMenuBtn.setAttribute('aria-expanded', 'false');
-                }
-                if (toolsDropdown && !toolsDropdown.contains(e.target)) {
-                    toolsDropdown.classList.remove('open');
-                    if (toolsDropdownBtn) toolsDropdownBtn.setAttribute('aria-expanded', 'false');
-                }
-                if (langDropdownWrapper && !langDropdownWrapper.contains(e.target)) {
-                    langDropdownWrapper.classList.remove('open');
-                    if (langPickerBtn) langPickerBtn.setAttribute('aria-expanded', 'false');
+                if (!e.target.closest('.header-dropdown')) {
+                    closeAllHeaderDropdowns();
                 }
             });
 
@@ -1660,18 +1750,7 @@
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     closeDrawer();
-                    if (userMenuWrapper) {
-                        userMenuWrapper.classList.remove('open');
-                        if (userMenuBtn) userMenuBtn.setAttribute('aria-expanded', 'false');
-                    }
-                    if (toolsDropdown) {
-                        toolsDropdown.classList.remove('open');
-                        if (toolsDropdownBtn) toolsDropdownBtn.setAttribute('aria-expanded', 'false');
-                    }
-                    if (langDropdownWrapper) {
-                        langDropdownWrapper.classList.remove('open');
-                        if (langPickerBtn) langPickerBtn.setAttribute('aria-expanded', 'false');
-                    }
+                    closeAllHeaderDropdowns();
                 }
             });
         });
