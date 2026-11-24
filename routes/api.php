@@ -124,6 +124,18 @@ Route::prefix('v1')->group(function () {
             // AI Headhunter Scouted Opportunities
             Route::get('/headhunter/invitations', [\App\Http\Controllers\Api\HeadhunterApiController::class, 'candidateInvitations']);
             Route::post('/headhunter/invitations/{id}/respond', [\App\Http\Controllers\Api\HeadhunterApiController::class, 'respondInvitation']);
+
+            // AI Multi-Platform Chrome Extension Companion Endpoints
+            Route::prefix('extension')->group(function () {
+                Route::get('/status', [\App\Http\Controllers\Api\ChromeExtensionApiController::class, 'status']);
+                Route::post('/analyze', [\App\Http\Controllers\Api\ChromeExtensionApiController::class, 'analyze']);
+                Route::post('/generate-answer', [\App\Http\Controllers\Api\ChromeExtensionApiController::class, 'generateAnswer']);
+                Route::get('/autofill-profile', [\App\Http\Controllers\Api\ChromeExtensionApiController::class, 'autofillProfile']);
+                Route::post('/save-job', [\App\Http\Controllers\Api\ChromeExtensionApiController::class, 'saveJob']);
+                Route::get('/applications', [\App\Http\Controllers\Api\ChromeExtensionApiController::class, 'applications']);
+                Route::patch('/applications/{id}', [\App\Http\Controllers\Api\ChromeExtensionApiController::class, 'updateApplication']);
+                Route::delete('/applications/{id}', [\App\Http\Controllers\Api\ChromeExtensionApiController::class, 'deleteApplication']);
+            });
         });
 
     });

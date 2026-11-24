@@ -1,0 +1,332 @@
+/* ==========================================================================
+   AutoApply AI Companion - In-Page Content Styles (Isolated)
+   ========================================================================== */
+
+#autoapply-floating-companion {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 2147483640;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+#autoapply-floating-companion * {
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+/* Floating Launch Badge */
+.autoapply-badge-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.45), 0 8px 10px -6px rgba(79, 70, 229, 0.3);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.autoapply-badge-trigger:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 16px 32px -6px rgba(79, 70, 229, 0.55);
+}
+
+.autoapply-badge-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.autoapply-badge-pulse {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  animation: autoapply-pulse 1.8s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+
+@keyframes autoapply-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* Companion Drawer Overlay Card */
+.autoapply-companion-panel {
+  position: absolute;
+  bottom: 56px;
+  right: 0;
+  width: 360px;
+  max-width: 92vw;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  padding: 18px;
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+  animation: autoapply-slide-up 0.22s ease-out forwards;
+  color: #1e293b;
+}
+
+.autoapply-companion-panel.open {
+  display: flex;
+}
+
+@keyframes autoapply-slide-up {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Panel Header */
+.autoapply-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 10px;
+}
+
+.autoapply-panel-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.autoapply-panel-brand span {
+  background: linear-gradient(135deg, #4f46e5, #9333ea);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.autoapply-panel-close {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #64748b;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.autoapply-panel-close:hover {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+/* Detected Job Box */
+.autoapply-job-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.autoapply-job-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.autoapply-job-company {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.autoapply-portal-tag {
+  display: inline-block;
+  background: #ede9fe;
+  color: #6d28d9;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+/* Match Score Bar */
+.autoapply-score-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.autoapply-score-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.autoapply-score-badge {
+  font-weight: 800;
+  font-size: 13px;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.autoapply-score-high { background: #dcfce7; color: #15803d; }
+.autoapply-score-mid { background: #fef3c7; color: #b45309; }
+.autoapply-score-low { background: #fee2e2; color: #b91c1c; }
+
+.autoapply-progress-track {
+  width: 100%;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.autoapply-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4f46e5, #10b981);
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
+
+/* Keywords Chips */
+.autoapply-keywords-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.autoapply-keywords-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.autoapply-keywords-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-height: 70px;
+  overflow-y: auto;
+}
+
+.autoapply-chip {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.autoapply-chip-missing {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px dashed #fca5a5;
+}
+
+/* Action Buttons */
+.autoapply-actions-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.autoapply-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  text-decoration: none;
+}
+
+.autoapply-btn-primary {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.autoapply-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.45);
+}
+
+.autoapply-btn-secondary {
+  background: #f8fafc;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+.autoapply-btn-secondary:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+/* Quick Floating AI Answer Trigger near input fields */
+.autoapply-inline-assistant-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 9px;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: white !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(99, 102, 241, 0.35);
+  margin-top: 4px;
+  margin-bottom: 4px;
+  border: none;
+  user-select: none;
+  z-index: 1000;
+  transition: transform 0.15s ease;
+}
+
+.autoapply-inline-assistant-btn:hover {
+  transform: translateY(-1px);
+}
+
+/* Visual Flash on Autofilled Elements */
+.autoapply-field-autofilled {
+  transition: background-color 0.4s ease, border-color 0.4s ease !important;
+  background-color: rgba(16, 185, 129, 0.12) !important;
+  border-color: #10b981 !important;
+}
+

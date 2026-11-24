@@ -76,6 +76,11 @@ class User extends Authenticatable
         return $this->hasMany(MultilingualResume::class)->latest('id');
     }
 
+    public function savedApplications()
+    {
+        return $this->hasMany(SavedApplication::class)->latest('id');
+    }
+
     public function companyProfile()
     {
         return $this->hasOne(CompanyProfile::class);

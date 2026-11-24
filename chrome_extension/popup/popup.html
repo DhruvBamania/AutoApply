@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoApply AI Companion</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    
+    <!-- Top Bar -->
+    <header class="popup-header">
+      <div class="brand-group">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+          </svg>
+        </div>
+        <div class="brand-title">Auto<span>Apply</span></div>
+      </div>
+      <div class="header-status">
+        <span class="status-dot" id="statusDot"></span>
+        <span class="status-label" id="statusLabel">Checking...</span>
+      </div>
+    </header>
+
+    <!-- Login View (When Not Authenticated) -->
+    <div class="view-panel" id="loginView" style="display: none;">
+      <div class="login-card">
+        <div class="login-header">
+          <h3>Connect Your Account</h3>
+          <p>Sign in with your AutoApply candidate account to activate AI matching & 1-click autofill.</p>
+        </div>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="loginEmail">Email Address</label>
+            <input type="email" id="loginEmail" placeholder="you@domain.com" required autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
+          </div>
+
+          <details class="server-config-details">
+            <summary>Advanced: API Server URL</summary>
+            <input type="url" id="loginApiUrl" placeholder="https://auto-apply-two-phi.vercel.app">
+          </details>
+
+          <div class="form-error" id="loginError" style="display: none;"></div>
+
+          <button type="submit" class="btn btn-primary btn-block" id="loginSubmitBtn">
+            Sign In & Connect
+          </button>
+        </form>
+
+        <div class="login-footer">
+          <span>Need an account?</span>
+          <a href="#" id="openWebAppRegister">Register on Web</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Authenticated View -->
+    <div class="view-panel" id="mainView" style="display: none;">
+      
+      <!-- Navigation Tabs -->
+      <nav class="popup-nav">
+        <button type="button" class="nav-tab active" data-tab="tabMatch">
+          <span>🎯</span> Match
+        </button>
+        <button type="button" class="nav-tab" data-tab="tabAnswer">
+          <span>✨</span> AI Answer
+        </button>
+        <button type="button" class="nav-tab" data-tab="tabAutofill">
+          <span>⚡</span> AutoFill
+        </button>
+        <button type="button" class="nav-tab" data-tab="tabSettings">
+          <span>⚙️</span> Settings
+        </button>
+      </nav>
+
+      <!-- Active Page Job Banner -->
+      <div class="current-job-strip" id="currentJobStrip">
+        <div class="job-strip-main">
+          <span class="platform-badge" id="stripPlatform">Universal</span>
+          <div class="strip-title" id="stripTitle">Detecting job on active tab...</div>
+        </div>
+        <div class="strip-company" id="stripCompany">—</div>
+      </div>
+
+      <!-- TAB 1: Match & ATS Analysis -->
+      <section class="tab-content active" id="tabMatch">
+        <div class="match-score-card">
+          <div class="score-circle-wrapper">
+            <div class="score-circle" id="scoreCircle">--%</div>
+          </div>
+          <div class="score-meta">
+            <div class="score-headline" id="scoreHeadline">Analyzing Resume Alignment</div>
+            <div class="score-subtext" id="scoreSubtext">Scanning target job requirements against your profile...</div>
+          </div>
+        </div>
+
+        <!-- Missing Keywords Box -->
+        <div class="content-box">
+          <div class="box-title">
+            <span>🔑 Missing ATS Keywords</span>
+            <span class="box-badge" id="missingCountBadge">0 missing</span>
+          </div>
+          <p class="box-desc">Add these keywords to your resume to increase screening callback rate:</p>
+          <div class="keywords-list" id="keywordsList">
+            <span class="chip-placeholder">Detecting keywords...</span>
+          </div>
+        </div>
+
+        <!-- Recommendations Box -->
+        <div class="content-box" id="recommendationBox" style="display: none;">
+          <div class="box-title">💡 Strategic Recommendation</div>
+          <p class="box-desc" id="recommendationText"></p>
+        </div>
+
+        <!-- Actions Bar -->
+        <div class="actions-grid">
+          <button type="button" class="btn btn-primary" id="saveJobBtn">
+            💾 Save to Tracker
+          </button>
+          <button type="button" class="btn btn-secondary" id="refreshAnalysisBtn" title="Re-scan job from active page">
+            🔄 Re-Scan
+          </button>
+        </div>
+      </section>
+
+      <!-- TAB 2: AI Screening Answer Generator -->
+      <section class="tab-content" id="tabAnswer">
+        <div class="content-box">
+          <div class="box-title">✨ Screening Question Assistant</div>
+          <p class="box-desc">Generate tailored answers based on your experience and this job opening.</p>
+          
+          <div class="form-group">
+            <label for="screeningQuestionInput">Screening Question</label>
+            <textarea id="screeningQuestionInput" rows="3" placeholder="e.g. Why do you want to work for our company? What is your experience with React & Laravel?"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="answerToneSelect">Tone</label>
+              <select id="answerToneSelect">
+                <option value="professional">Professional & Confident</option>
+                <option value="concise">Concise & Direct (100 words)</option>
+                <option value="technical">Technical & Metrics Driven</option>
+              </select>
+            </div>
+            <button type="button" class="btn btn-primary" id="generateAnswerBtn" style="align-self: flex-end; height: 38px;">
+              Generate
+            </button>
+          </div>
+        </div>
+
+        <div class="content-box" id="answerResultBox" style="display: none;">
+          <div class="box-title">
+            <span>Tailored Answer</span>
+            <button type="button" class="btn-text-copy" id="copyAnswerBtn">📋 Copy</button>
+          </div>
+          <div class="answer-output" id="answerOutput"></div>
+          <button type="button" class="btn btn-secondary btn-block" id="insertAnswerBtn" style="margin-top: 8px;">
+            ⚡ Insert into Active Field
+          </button>
+        </div>
+      </section>
+
+      <!-- TAB 3: 1-Click Form AutoFill -->
+      <section class="tab-content" id="tabAutofill">
+        <div class="autofill-hero">
+          <div class="autofill-hero-icon">⚡</div>
+          <h3>1-Click Portal AutoFill</h3>
+          <p>Instantly populate candidate details, links, and contact info into Lever, Greenhouse, Workday, LinkedIn, or Indeed.</p>
+          <button type="button" class="btn btn-primary btn-block btn-lg" id="runAutofillBtn">
+            Fill Application Fields Now
+          </button>
+        </div>
+
+        <div class="content-box">
+          <div class="box-title">Candidate Profile Data</div>
+          <div class="profile-preview-list" id="profilePreviewList">
+            <div class="preview-item"><span>Name:</span> <strong id="pvName">—</strong></div>
+            <div class="preview-item"><span>Email:</span> <strong id="pvEmail">—</strong></div>
+            <div class="preview-item"><span>Phone:</span> <strong id="pvPhone">—</strong></div>
+            <div class="preview-item"><span>LinkedIn:</span> <strong id="pvLinkedin">—</strong></div>
+            <div class="preview-item"><span>GitHub:</span> <strong id="pvGithub">—</strong></div>
+            <div class="preview-item"><span>Current Title:</span> <strong id="pvTitle">—</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: Settings & Account -->
+      <section class="tab-content" id="tabSettings">
+        <div class="content-box">
+          <div class="box-title">Connected Account</div>
+          <div class="user-profile-badge">
+            <div class="user-avatar" id="settingsUserAvatar">D</div>
+            <div class="user-meta">
+              <div class="user-name" id="settingsUserName">User</div>
+              <div class="user-email" id="settingsUserEmail">user@example.com</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-box">
+          <div class="box-title">API Server Configuration</div>
+          <div class="form-group">
+            <label for="settingsApiUrl">Endpoint URL</label>
+            <input type="url" id="settingsApiUrl" placeholder="https://auto-apply-two-phi.vercel.app">
+          </div>
+          <button type="button" class="btn btn-secondary btn-block" id="saveSettingsBtn">
+            Save Server URL
+          </button>
+        </div>
+
+        <div class="settings-links">
+          <a href="#" class="settings-link-btn" id="openWebAppTracker">
+            <span>📊</span> View Application Tracker
+          </a>
+          <a href="#" class="settings-link-btn" id="openWebAppDashboard">
+            <span>🌐</span> Open AutoApply Web App
+          </a>
+        </div>
+
+        <button type="button" class="btn btn-danger btn-block" id="logoutBtn" style="margin-top: 14px;">
+          Sign Out of Extension
+        </button>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
+

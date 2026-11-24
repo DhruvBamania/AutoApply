@@ -123,6 +123,11 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     // AI Headhunter Scouted Opportunities for Candidates
     Route::get('/candidate/headhunter-invitations', [\App\Http\Controllers\CandidateHeadhunterController::class, 'index'])->name('candidate.headhunter.index');
     Route::post('/candidate/headhunter-invitations/{id}/respond', [\App\Http\Controllers\CandidateHeadhunterController::class, 'respond'])->name('candidate.headhunter.respond');
+
+    // AI Multi-Platform Application Tracker (External & Extension Jobs)
+    Route::get('/applications', [\App\Http\Controllers\ChromeExtensionController::class, 'tracker'])->name('candidate.applications.index');
+    Route::patch('/applications/{id}/status', [\App\Http\Controllers\ChromeExtensionController::class, 'updateStatus'])->name('candidate.applications.status');
+    Route::delete('/applications/{id}', [\App\Http\Controllers\ChromeExtensionController::class, 'destroy'])->name('candidate.applications.destroy');
 });
 
 // A dedicated Postman testing route that bypasses CSRF and Auth
@@ -770,6 +775,10 @@ Route::get('/app-download', function () {
     $currentHost = request()->getHttpHost();
     return view('download_app', compact('downloadUrl', 'defaultGithubReleaseUrl', 'githubReleasePage', 'fileSizeMb', 'currentHost'));
 })->name('app.download.page');
+
+// --- AI Multi-Platform Chrome Extension Companion ---
+Route::get('/chrome-extension', [\App\Http\Controllers\ChromeExtensionController::class, 'index'])->name('chrome_extension.index');
+Route::get('/chrome-extension/download', [\App\Http\Controllers\ChromeExtensionController::class, 'downloadZip'])->name('chrome_extension.download');
 
 // --- Contact Us & Inbound Inquiries ---
 Route::get('/contact', [\App\Http\Controllers\ContactController::class, 'show'])->name('contact');

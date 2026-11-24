@@ -58,6 +58,29 @@ class GroqAiService
     }
 
     /**
+     * Check if Groq AI API key is configured.
+     */
+    public function isConfigured(): bool
+    {
+        return !empty(config('services.groq.key'));
+    }
+
+    /**
+     * Generate completion using Groq AI.
+     * Includes retry logic to handle rate limits (HTTP 429).
+     *
+     * @param string $prompt
+     * @param float $temperature
+     * @return string|null
+     */
+    public function generateCompletion(string $prompt, float $temperature = 0.6): ?string
+    {
+        return $this->chat([
+            ['role' => 'user', 'content' => $prompt]
+        ], ['temperature' => $temperature]);
+    }
+
+    /**
      * Generate completion using Groq AI.
      * Includes retry logic to handle rate limits (HTTP 429).
      *

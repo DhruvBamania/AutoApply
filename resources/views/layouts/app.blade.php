@@ -1162,6 +1162,24 @@
                                     </div>
                                 </a>
                                 <div class="dropdown-menu-divider"></div>
+                                <a href="{{ route('chrome_extension.index') }}" class="dropdown-menu-item {{ request()->routeIs('chrome_extension.*') ? 'active' : '' }}">
+                                    <span class="item-icon-box">🧩</span>
+                                    <div class="item-text-group">
+                                        <div style="display: flex; align-items: center; gap: 0.35rem;">
+                                            <span class="item-title">Chrome Extension</span>
+                                            <span class="pill-sparkle">AI</span>
+                                        </div>
+                                        <span class="item-desc">ATS match & autofill on LinkedIn & Indeed</span>
+                                    </div>
+                                </a>
+                                <a href="{{ route('candidate.applications.index') }}" class="dropdown-menu-item {{ request()->routeIs('candidate.applications.*') ? 'active' : '' }}">
+                                    <span class="item-icon-box">📊</span>
+                                    <div class="item-text-group">
+                                        <span class="item-title">Application Tracker</span>
+                                        <span class="item-desc">Track external applications & statuses</span>
+                                    </div>
+                                </a>
+                                <div class="dropdown-menu-divider"></div>
                                 <a href="{{ route('contact') }}" class="dropdown-menu-item {{ request()->routeIs('contact*') ? 'active' : '' }}">
                                     <span class="item-icon-box">🎧</span>
                                     <div class="item-text-group">
@@ -1499,6 +1517,13 @@
                         <a href="{{ route('integrations.index') }}" class="drawer-link {{ request()->routeIs('integrations.*') ? 'active' : '' }}">
                             <span><span class="drawer-link-icon">🔗</span> Integrations & APIs</span>
                         </a>
+                        <a href="{{ route('chrome_extension.index') }}" class="drawer-link {{ request()->routeIs('chrome_extension.*') ? 'active' : '' }}">
+                            <span><span class="drawer-link-icon">🧩</span> Chrome Extension</span>
+                            <span class="drawer-badge" style="background: #eef2ff; color: #4338ca;">AI COMPANION</span>
+                        </a>
+                        <a href="{{ route('candidate.applications.index') }}" class="drawer-link {{ request()->routeIs('candidate.applications.*') ? 'active' : '' }}">
+                            <span><span class="drawer-link-icon">📊</span> Application Tracker</span>
+                        </a>
                     @endif
 
                     <div class="drawer-section-title">HELP & PLATFORM</div>
@@ -1591,6 +1616,8 @@
                         <li><a href="{{ route('resume_editor.index') }}" style="color: #475569; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">Dynamic Visual Editor</a></li>
                         <li><a href="{{ route('interview_prep.index') }}" style="color: #475569; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">🎯 AI Interview Prep Studio</a></li>
                         <li><a href="{{ route('candidate.headhunter.index') }}" style="color: #475569; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">🎯 Scouted Jobs Portal</a></li>
+                        <li><a href="{{ route('chrome_extension.index') }}" style="color: #475569; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">🧩 AI Chrome Extension</a></li>
+                        <li><a href="{{ route('candidate.applications.index') }}" style="color: #475569; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">📊 Application Tracker</a></li>
                         <li><a href="{{ route('social_posts.index') }}" style="color: #475569; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">Social Leadership Campaigns</a></li>
                     </ul>
                 </div>
