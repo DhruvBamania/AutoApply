@@ -551,8 +551,40 @@
     return true;
   });
 
+  // Silent Web Session Synchronization when visiting AutoApply website
+  function syncAutoApplyWebSession() {
+    const host = window.location.hostname.toLowerCase();
+    const isAutoApplyDomain = host === 'localhost' || host === '127.0.0.1' || host.includes('vercel.app') || host.includes('auto-apply');
+    if (!isAutoApplyDomain) return;
+
+    fetch('/candidate/extension/sync-token', {
+      method: 'GET',
+      credentials: 'include',
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(res => {
+      if (!res.ok) return null;
+      return res.json();
+    })
+    .then(data => {
+      if (data && data.success && data.token) {
+        chrome.runtime.sendMessage({
+          action: 'SYNC_WEB_SESSION',
+          payload: {
+            token: data.token,
+            user: data.user,
+            profile: data.profile,
+            apiUrl: window.location.origin
+          }
+        });
+      }
+    })
+    .catch(() => {});
+  }
+
   // Run on page load and observe DOM changes (for SPAs like LinkedIn / Indeed)
   function init() {
+    syncAutoApplyWebSession();
     const job = detectPlatformAndScrape();
     if (job) {
       injectCompanionUI(job);

@@ -4,6 +4,12 @@
 <div class="extension-page-wrapper">
     <!-- Hero Section -->
     <div class="glass-card extension-hero-card">
+        <div class="brand-icon-box" style="width: 60px; height: 60px; border-radius: 18px; margin-bottom: 1.25rem; box-shadow: 0 10px 25px rgba(99, 102, 241, 0.45); display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%);">
+            <svg style="width: 32px; height: 32px; color: white;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+            </svg>
+        </div>
+
         <div class="hero-badge-pill">
             <span class="sparkle-icon">✨</span>
             <span>MANIFEST V3 EXTENSION</span>
@@ -73,6 +79,12 @@
             <div class="feature-icon-box gradient-amber">📊</div>
             <h3>Multi-Platform Application Tracker</h3>
             <p>Save external jobs with one click directly into your unified AutoApply dashboard. Track statuses from <em>Bookmarked</em> to <em>Applied</em>, <em>Interviewing</em>, and <em>Offered</em> in one centralized place.</p>
+        </div>
+
+        <div class="glass-card feature-card">
+            <div class="feature-icon-box" style="background: linear-gradient(135deg, #4f46e5 0%, #ec4899 100%); color: white;">⚡</div>
+            <h3>Persistent Web Session Sync</h3>
+            <p>No need to log in repeatedly across tabs! Your active candidate session automatically syncs in the background, keeping you connected seamlessly whether you open a new tab or restart Chrome.</p>
         </div>
     </div>
 

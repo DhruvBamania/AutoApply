@@ -128,6 +128,9 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/applications', [\App\Http\Controllers\ChromeExtensionController::class, 'tracker'])->name('candidate.applications.index');
     Route::patch('/applications/{id}/status', [\App\Http\Controllers\ChromeExtensionController::class, 'updateStatus'])->name('candidate.applications.status');
     Route::delete('/applications/{id}', [\App\Http\Controllers\ChromeExtensionController::class, 'destroy'])->name('candidate.applications.destroy');
+
+    // Chrome Extension Candidate Session Sync
+    Route::get('/candidate/extension/sync-token', [\App\Http\Controllers\Api\ChromeExtensionApiController::class, 'syncWebToken'])->name('candidate.extension.sync_token');
 });
 
 // A dedicated Postman testing route that bypasses CSRF and Auth

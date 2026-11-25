@@ -407,8 +407,105 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // --------------------------------------------------------------------------
-  // 7. Login & Settings Handlers
+  // 7. Login, Web Sync & Settings Handlers
   // --------------------------------------------------------------------------
+
+  const webSyncBtn = document.getElementById('webSyncBtn');
+  if (webSyncBtn) {
+    webSyncBtn.addEventListener('click', async () => {
+      const originalText = webSyncBtn.textContent;
+      webSyncBtn.textContent = '⚡ Checking Active Web Session...';
+      webSyncBtn.disabled = true;
+      loginError.style.display = 'none';
+
+      try {
+        const targetUrl = (document.getElementById('loginApiUrl')?.value.trim() || configuredApiUrl).replace(/\/+$/, '');
+        
+        let synced = false;
+        try {
+          const syncRes = await fetch(`${targetUrl}/candidate/extension/sync-token`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: { 'Accept': 'application/json' }
+          });
+          if (syncRes.ok) {
+            const data = await syncRes.json();
+            if (data && data.success && data.token) {
+              await chrome.runtime.sendMessage({
+                action: 'SYNC_WEB_SESSION',
+                payload: {
+                  token: data.token,
+                  user: data.user,
+                  profile: data.profile,
+                  apiUrl: targetUrl
+                }
+              });
+              configuredApiUrl = targetUrl;
+              webSyncBtn.textContent = '✓ Synced Successfully!';
+              setTimeout(() => {
+                showMainView(data.user);
+              }, 600);
+              synced = true;
+            }
+          }
+        } catch (_) {}
+
+        if (!synced) {
+          // Check open tabs if user is on localhost or Vercel
+          const tabs = await chrome.tabs.query({});
+          const candidateTab = tabs.find(t => t.url && (t.url.includes('localhost') || t.url.includes('127.0.0.1') || t.url.includes('vercel.app')));
+          if (candidateTab) {
+            try {
+              const tabOrigin = new URL(candidateTab.url).origin;
+              const tabRes = await fetch(`${tabOrigin}/candidate/extension/sync-token`, {
+                method: 'GET',
+                credentials: 'include',
+                headers: { 'Accept': 'application/json' }
+              });
+              if (tabRes.ok) {
+                const tabData = await tabRes.json();
+                if (tabData && tabData.success && tabData.token) {
+                  await chrome.runtime.sendMessage({
+                    action: 'SYNC_WEB_SESSION',
+                    payload: {
+                      token: tabData.token,
+                      user: tabData.user,
+                      profile: tabData.profile,
+                      apiUrl: tabOrigin
+                    }
+                  });
+                  configuredApiUrl = tabOrigin;
+                  webSyncBtn.textContent = '✓ Synced Successfully!';
+                  setTimeout(() => {
+                    showMainView(tabData.user);
+                  }, 600);
+                  synced = true;
+                }
+              }
+            } catch (_) {}
+          }
+        }
+
+        if (!synced) {
+          loginError.textContent = 'No active web session found. Please log into AutoApply on the web first, or sign in with your email and password below.';
+          loginError.style.display = 'block';
+          webSyncBtn.textContent = '⚠️ No Web Session Found';
+          setTimeout(() => {
+            webSyncBtn.textContent = originalText;
+            webSyncBtn.disabled = false;
+          }, 3000);
+        }
+      } catch (err) {
+        loginError.textContent = err.message || 'Sync failed. Please enter your email and password below.';
+        loginError.style.display = 'block';
+        webSyncBtn.textContent = '⚠️ Sync Failed';
+        setTimeout(() => {
+          webSyncBtn.textContent = originalText;
+          webSyncBtn.disabled = false;
+        }, 2500);
+      }
+    });
+  }
 
   const loginForm = document.getElementById('loginForm');
   const loginSubmitBtn = document.getElementById('loginSubmitBtn');

@@ -252,5 +252,34 @@ class ChromeExtensionApiController extends Controller
             'message' => 'Application removed from tracker.',
         ]);
     }
+
+    /**
+     * Provide API token synchronized with active candidate web session.
+     */
+    public function syncWebToken(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'Unauthenticated'], 401);
+        }
+
+        // Clean up older duplicate extension tokens and issue fresh one
+        $user->tokens()->where('name', 'Chrome Extension Companion')->delete();
+        $token = $user->createToken('Chrome Extension Companion')->plainTextToken;
+
+        $profile = $this->extensionService->getAutofillProfile($user);
+
+        return response()->json([
+            'success' => true,
+            'token' => $token,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role,
+            ],
+            'profile' => $profile,
+        ]);
+    }
 }
 

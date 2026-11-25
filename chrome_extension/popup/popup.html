@@ -13,11 +13,14 @@
     <header class="popup-header">
       <div class="brand-group">
         <div class="brand-icon">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
           </svg>
         </div>
-        <div class="brand-title">Auto<span>Apply</span></div>
+        <div class="brand-text-block">
+          <div class="brand-title">Auto<span>Apply</span></div>
+          <div class="brand-sub">AI COMPANION</div>
+        </div>
       </div>
       <div class="header-status">
         <span class="status-dot" id="statusDot"></span>
@@ -29,8 +32,26 @@
     <div class="view-panel" id="loginView" style="display: none;">
       <div class="login-card">
         <div class="login-header">
-          <h3>Connect Your Account</h3>
-          <p>Sign in with your AutoApply candidate account to activate AI matching & 1-click autofill.</p>
+          <h3>Candidate Sign In</h3>
+          <p>Sync your AutoApply candidate account for real-time ATS job scoring, AI screening answers, and 1-click form autofill.</p>
+        </div>
+
+        <!-- 1-Click Sync Option -->
+        <div class="web-sync-card" id="webSyncBox">
+          <div class="sync-card-left">
+            <div class="sync-icon-circle">⚡</div>
+            <div class="sync-text-group">
+              <div class="sync-title">Instant Web Session Sync</div>
+              <div class="sync-desc">Logged into AutoApply in any browser tab?</div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-sync btn-block" id="webSyncBtn">
+            ⚡ Sync Active Web Session
+          </button>
+        </div>
+
+        <div class="login-divider-row">
+          <span>or sign in with credentials</span>
         </div>
 
         <form id="loginForm">

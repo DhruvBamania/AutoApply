@@ -4,10 +4,11 @@ const DEFAULT_API_URL = 'https://auto-apply-two-phi.vercel.app';
 
 // Helper: Get configured API URL and Bearer Token
 async function getConfig() {
-  const result = await chrome.storage.local.get(['apiUrl', 'authToken']);
+  const result = await chrome.storage.local.get(['apiUrl', 'authToken', 'userProfile']);
   const apiUrl = (result.apiUrl || DEFAULT_API_URL).replace(/\/+$/, '');
   const authToken = result.authToken || '';
-  return { apiUrl, authToken };
+  const userProfile = result.userProfile || null;
+  return { apiUrl, authToken, userProfile };
 }
 
 // Helper: Make authenticated JSON request to AutoApply API
@@ -38,14 +39,21 @@ async function apiRequest(endpoint, method = 'GET', body = null) {
     options.body = JSON.stringify(body);
   }
 
-  const response = await fetch(url, options);
+  let response;
+  try {
+    response = await fetch(url, options);
+  } catch (netErr) {
+    // Network / offline error - DO NOT clear stored credentials!
+    throw new Error(`NETWORK_ERROR: ${netErr.message || 'Unable to reach AutoApply server'}`);
+  }
 
+  // Strictly check 401 Unauthorized before wiping credentials
   if (response.status === 401) {
-    await chrome.storage.local.remove(['authToken', 'userProfile']);
+    await chrome.storage.local.remove(['authToken', 'userProfile', 'autofillProfile']);
     throw new Error('SESSION_EXPIRED: Your session has expired. Please log in again.');
   }
 
-  const data = await response.json();
+  const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
     throw new Error(data.message || data.error || `HTTP error ${response.status}`);
@@ -59,16 +67,45 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   const handleMessage = async () => {
     switch (message.action) {
       case 'CHECK_STATUS': {
-        const { apiUrl, authToken } = await getConfig();
+        const { apiUrl, authToken, userProfile } = await getConfig();
         if (!authToken) {
           return { success: false, authenticated: false, apiUrl };
         }
         try {
           const res = await apiRequest('/candidate/extension/status');
+          if (res && res.user) {
+            await chrome.storage.local.set({ userProfile: res.user });
+          }
           return { success: true, authenticated: true, apiUrl, data: res };
         } catch (err) {
+          // If network glitch or timeout occurred, NEVER wipe session if token is saved
+          if (userProfile && !err.message.includes('SESSION_EXPIRED')) {
+            return {
+              success: true,
+              authenticated: true,
+              apiUrl,
+              offline: true,
+              data: { user: userProfile }
+            };
+          }
           return { success: false, authenticated: false, error: err.message, apiUrl };
         }
+      }
+
+      case 'SYNC_WEB_SESSION': {
+        const { token, user, profile, apiUrl } = message.payload || {};
+        if (!token) {
+          return { success: false, error: 'No token provided for session sync' };
+        }
+        const updates = {
+          authToken: token,
+          userProfile: user
+        };
+        if (profile) updates.autofillProfile = profile;
+        if (apiUrl) updates.apiUrl = apiUrl.replace(/\/+$/, '');
+
+        await chrome.storage.local.set(updates);
+        return { success: true, user, token };
       }
 
       case 'LOGIN': {
@@ -106,6 +143,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           apiUrl: targetApiUrl
         });
 
+        // Pre-fetch candidate autofill profile silently
+        try {
+          const profileRes = await apiRequest('/candidate/extension/autofill-profile', 'GET');
+          if (profileRes && (profileRes.data || profileRes.profile)) {
+            await chrome.storage.local.set({ autofillProfile: profileRes.data || profileRes.profile });
+          }
+        } catch (_) {}
+
         return { success: true, user, token };
       }
 
@@ -118,7 +163,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
 
       case 'GET_AUTOFILL_PROFILE': {
-        return await apiRequest('/candidate/extension/autofill-profile', 'GET');
+        const cached = await chrome.storage.local.get(['autofillProfile']);
+        try {
+          const fresh = await apiRequest('/candidate/extension/autofill-profile', 'GET');
+          if (fresh && (fresh.data || fresh.profile)) {
+            await chrome.storage.local.set({ autofillProfile: fresh.data || fresh.profile });
+          }
+          return fresh;
+        } catch (err) {
+          if (cached && cached.autofillProfile) {
+            return { success: true, data: cached.autofillProfile, cached: true };
+          }
+          throw err;
+        }
       }
 
       case 'SAVE_JOB': {
@@ -129,7 +186,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         try {
           await apiRequest('/auth/logout', 'POST');
         } catch (_) {}
-        await chrome.storage.local.remove(['authToken', 'userProfile']);
+        await chrome.storage.local.remove(['authToken', 'userProfile', 'autofillProfile']);
         return { success: true };
       }
 
@@ -158,4 +215,3 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     }
   }
 });
-

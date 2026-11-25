@@ -9,8 +9,13 @@
             <p class="subtitle">Track and organize job applications captured via the AutoApply AI Chrome Companion & web platform.</p>
         </div>
         <div class="header-action-btns">
-            <a href="{{ route('chrome_extension.index') }}" class="btn btn-secondary">
-                <span>🧩</span> Chrome Extension
+            <a href="{{ route('chrome_extension.index') }}" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                <span class="brand-icon-box sm" style="width: 20px; height: 20px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg style="width: 12px; height: 12px; color: white;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+                        <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                    </svg>
+                </span>
+                <span>Chrome Extension</span>
             </a>
             <a href="{{ route('jobs.index') }}" class="btn btn-primary">
                 <span>💼</span> Browse Jobs

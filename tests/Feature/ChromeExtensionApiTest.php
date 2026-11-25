@@ -253,4 +253,32 @@ class ChromeExtensionApiTest extends TestCase
         $response->assertSee('Cloudflare', false);
         $response->assertSee('92% Match', false);
     }
+
+    public function test_candidate_can_sync_web_token(): void
+    {
+        $candidate = User::factory()->create([
+            'role' => 'user',
+            'name' => 'Sync Test Candidate',
+            'email' => 'sync.candidate@example.com',
+        ]);
+
+        // Unauthenticated JSON request returns 401
+        $unauthResponse = $this->getJson(route('candidate.extension.sync_token'));
+        $unauthResponse->assertStatus(401);
+
+        // Authenticated web session returns Sanctum token and profile
+        $authResponse = $this->actingAs($candidate)->getJson(route('candidate.extension.sync_token'));
+        $authResponse->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'user' => [
+                    'id' => $candidate->id,
+                    'name' => 'Sync Test Candidate',
+                    'email' => 'sync.candidate@example.com',
+                ],
+            ]);
+
+        $this->assertNotEmpty($authResponse->json('token'));
+        $this->assertNotEmpty($authResponse->json('profile'));
+    }
 }

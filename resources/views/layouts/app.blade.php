@@ -856,17 +856,18 @@
         /* Laptops & Standard Desktops (<= 1280px) */
         @media (max-width: 1280px) {
             .app-layout { padding-left: 1.25rem; padding-right: 1.25rem; }
-            .navbar { gap: 0.65rem; padding: 0.55rem 0.95rem; }
-            .header-nav-link { padding: 0.38rem 0.55rem; font-size: 0.82rem; gap: 0.25rem; }
-            .header-brand { margin-right: 0.25rem; }
-            .header-actions { margin-left: 0.25rem; gap: 0.45rem; }
+            .navbar { gap: 0.5rem; padding: 0.55rem 0.85rem; flex-wrap: nowrap; }
+            .header-nav-center { gap: 0.25rem; min-width: 0; overflow: hidden; }
+            .header-nav-link { padding: 0.35rem 0.5rem; font-size: 0.8rem; gap: 0.2rem; }
+            .header-brand { margin-right: 0.25rem; flex-shrink: 0; }
+            .header-actions { margin-left: 0.25rem; gap: 0.4rem; flex-shrink: 0; }
             .user-role-badge { display: none; } /* Hide role text on laptops to prevent horizontal crowding */
-            .user-info-text { max-width: 85px; }
-            .lang-current-label { max-width: 70px; }
+            .user-info-text { max-width: 80px; }
+            .lang-current-label { max-width: 65px; }
         }
 
-        /* Compact Laptops, Tablets Landscape & Split Screen (<= 1040px) */
-        @media (max-width: 1040px) {
+        /* Compact Laptops, Tablets Landscape & Split Screen (<= 1160px) */
+        @media (max-width: 1160px) {
             .header-nav-center { display: none; } /* Seamlessly collapse center links into mobile drawer */
             .hamburger-btn { display: flex; }
             .navbar { padding: 0.55rem 1rem; margin-bottom: 1.5rem; }
@@ -1163,7 +1164,11 @@
                                 </a>
                                 <div class="dropdown-menu-divider"></div>
                                 <a href="{{ route('chrome_extension.index') }}" class="dropdown-menu-item {{ request()->routeIs('chrome_extension.*') ? 'active' : '' }}">
-                                    <span class="item-icon-box">🧩</span>
+                                    <div class="brand-icon-box sm" style="width: 26px; height: 26px; border-radius: 7px; flex-shrink: 0;">
+                                        <svg style="width: 14px; height: 14px; color: white;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                                        </svg>
+                                    </div>
                                     <div class="item-text-group">
                                         <div style="display: flex; align-items: center; gap: 0.35rem;">
                                             <span class="item-title">Chrome Extension</span>
@@ -1518,7 +1523,14 @@
                             <span><span class="drawer-link-icon">🔗</span> Integrations & APIs</span>
                         </a>
                         <a href="{{ route('chrome_extension.index') }}" class="drawer-link {{ request()->routeIs('chrome_extension.*') ? 'active' : '' }}">
-                            <span><span class="drawer-link-icon">🧩</span> Chrome Extension</span>
+                            <span style="display: inline-flex; align-items: center; gap: 0.65rem;">
+                                <span class="brand-icon-box sm" style="width: 22px; height: 22px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <svg style="width: 13px; height: 13px; color: white;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                                    </svg>
+                                </span>
+                                Chrome Extension
+                            </span>
                             <span class="drawer-badge" style="background: #eef2ff; color: #4338ca;">AI COMPANION</span>
                         </a>
                         <a href="{{ route('candidate.applications.index') }}" class="drawer-link {{ request()->routeIs('candidate.applications.*') ? 'active' : '' }}">
@@ -1616,7 +1628,7 @@
                         <li><a href="{{ route('resume_editor.index') }}" style="color: #475569; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">Dynamic Visual Editor</a></li>
                         <li><a href="{{ route('interview_prep.index') }}" style="color: #475569; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">🎯 AI Interview Prep Studio</a></li>
                         <li><a href="{{ route('candidate.headhunter.index') }}" style="color: #475569; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">🎯 Scouted Jobs Portal</a></li>
-                        <li><a href="{{ route('chrome_extension.index') }}" style="color: #475569; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">🧩 AI Chrome Extension</a></li>
+                        <li><a href="{{ route('chrome_extension.index') }}" style="color: #475569; text-decoration: none; transition: color 0.2s; display: inline-flex; align-items: center; gap: 0.45rem;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'"><span class="brand-icon-box sm" style="width: 18px; height: 18px; border-radius: 5px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg style="width: 11px; height: 11px; color: white;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg></span> AutoApply Chrome Extension</a></li>
                         <li><a href="{{ route('candidate.applications.index') }}" style="color: #475569; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">📊 Application Tracker</a></li>
                         <li><a href="{{ route('social_posts.index') }}" style="color: #475569; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#4f46e5'" onmouseout="this.style.color='#475569'">Social Leadership Campaigns</a></li>
                     </ul>
