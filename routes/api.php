@@ -11,14 +11,16 @@ use App\Http\Controllers\Api\CandidateCampaignApiController;
 
 /*
 |--------------------------------------------------------------------------
-| Mobile Application REST API Routes (v1)
+| Mobile & Chrome Extension REST API Routes (v1 & api/v1)
 |--------------------------------------------------------------------------
 |
-| Connected with Flutter Mobile Client using Laravel Sanctum Bearer tokens.
+| Stateless REST APIs using Laravel Sanctum Bearer tokens.
+| Registered for both /v1/* and /api/v1/* to ensure 100% compatibility across
+| Vercel serverless environments and local development without mount collisions.
 |
 */
 
-Route::prefix('v1')->group(function () {
+$apiRoutes = function () {
 
     // ==========================================
     // 1. Authentication (Public)
@@ -140,4 +142,10 @@ Route::prefix('v1')->group(function () {
 
     });
 
-});
+};
+
+// Register directly under /v1/* (bypasses Vercel's /api collision)
+Route::prefix('v1')->group($apiRoutes);
+
+// Register also under /api/v1/* (standard REST format)
+Route::prefix('api/v1')->group($apiRoutes);

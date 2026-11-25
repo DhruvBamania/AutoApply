@@ -43,10 +43,16 @@
             <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
           </div>
 
-          <details class="server-config-details">
-            <summary>Advanced: API Server URL</summary>
-            <input type="url" id="loginApiUrl" placeholder="https://auto-apply-two-phi.vercel.app">
-          </details>
+          <div class="form-group" style="margin-top: 4px;">
+            <label for="loginApiUrl" style="display: flex; justify-content: space-between; align-items: center;">
+              <span>API Server Endpoint</span>
+              <span style="font-size: 10px; font-weight: normal;">
+                <a href="#" id="setPresetLive" style="color: #4f46e5; text-decoration: none; margin-right: 6px; font-weight: 600;">☁️ Live Vercel</a>
+                <a href="#" id="setPresetLocal" style="color: #4f46e5; text-decoration: none; font-weight: 600;">💻 Localhost</a>
+              </span>
+            </label>
+            <input type="url" id="loginApiUrl" placeholder="https://auto-apply-two-phi.vercel.app" style="font-size: 11px;">
+          </div>
 
           <div class="form-error" id="loginError" style="display: none;"></div>
 

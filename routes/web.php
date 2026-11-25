@@ -890,20 +890,4 @@ Route::match(['get', 'post'], '/migrate', function (\Illuminate\Http\Request $re
     }
 })->name('artisan.migrate');
 
-// --- Proxy/Vercel Fallback: Support /v1/* direct requests when /api prefix is stripped ---
-Route::any('/v1/{any}', function (\Illuminate\Http\Request $request, $any) {
-    $newUri = '/api/v1/' . $any . ($request->getQueryString() ? '?' . $request->getQueryString() : '');
-    $subRequest = \Illuminate\Http\Request::create(
-        $newUri,
-        $request->getMethod(),
-        $request->all(),
-        $request->cookies->all(),
-        $request->allFiles(),
-        $request->server->all(),
-        $request->getContent()
-    );
-    $subRequest->headers->replace($request->headers->all());
-    return app()->handle($subRequest);
-})->where('any', '.*');
-
 

@@ -463,6 +463,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     showLoginView();
   });
 
+  // Server Presets
+  const presetLiveBtn = document.getElementById('setPresetLive');
+  const presetLocalBtn = document.getElementById('setPresetLocal');
+  if (presetLiveBtn) {
+    presetLiveBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('loginApiUrl');
+      if (input) input.value = 'https://auto-apply-two-phi.vercel.app';
+    });
+  }
+  if (presetLocalBtn) {
+    presetLocalBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('loginApiUrl');
+      if (input) input.value = 'http://127.0.0.1:8000';
+    });
+  }
+
   // External Web App Links
   document.getElementById('openWebAppRegister').addEventListener('click', (e) => {
     e.preventDefault();

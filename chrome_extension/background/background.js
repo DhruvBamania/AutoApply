@@ -18,9 +18,9 @@ async function apiRequest(endpoint, method = 'GET', body = null) {
     throw new Error('NOT_AUTHENTICATED: Please log in via the AutoApply extension popup.');
   }
 
-  // Ensure /api/v1 prefix
-  const cleanBase = apiUrl.replace(/\/api\/v1$|\/v1$/, '');
-  const base = `${cleanBase}/api/v1`;
+  // Ensure /v1 prefix (bypasses Vercel's /api Serverless function mount collision)
+  const cleanBase = apiUrl.replace(/\/api\/v1$|\/api$|\/v1$/, '');
+  const base = `${cleanBase}/v1`;
   const url = `${base}${endpoint}`;
 
   const headers = {
@@ -74,21 +74,27 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       case 'LOGIN': {
         const { email, password, apiUrl: customUrl } = message.payload;
         const targetApiUrl = (customUrl || DEFAULT_API_URL).replace(/\/+$/, '');
-        const cleanBase = targetApiUrl.replace(/\/api\/v1$|\/v1$/, '');
-        const base = `${cleanBase}/api/v1`;
+        const cleanBase = targetApiUrl.replace(/\/api\/v1$|\/api$|\/v1$/, '');
+        const base = `${cleanBase}/v1`;
 
-        const res = await fetch(`${base}/auth/login`, {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ email, password, device_name: 'Chrome Extension Companion' })
-        });
+        let res;
+        try {
+          res = await fetch(`${base}/auth/login`, {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password, device_name: 'Chrome Extension Companion' })
+          });
+        } catch (netErr) {
+          throw new Error(`Cannot connect to server at ${cleanBase}. If running locally, check if your local server is running or set URL to http://127.0.0.1:8000.`);
+        }
 
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
         if (!res.ok) {
-          throw new Error(data.message || 'Login failed. Please check credentials.');
+          const errMsg = data.message || (data.errors ? Object.values(data.errors).flat().join(' ') : null) || `Login failed (HTTP ${res.status})`;
+          throw new Error(errMsg);
         }
 
         const token = data.token || data.access_token;
