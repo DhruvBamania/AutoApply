@@ -22,14 +22,22 @@
                 </div>
             </div>
 
-            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.75rem;">
-                <!-- WhatsApp Direct Message Hero Button -->
-                <button type="button" onclick="openWhatsAppModal()" class="btn-whatsapp" style="display: inline-flex; align-items: center; gap: 0.6rem; background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: white; border: none; padding: 0.75rem 1.35rem; border-radius: 12px; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 16px rgba(37,211,102,0.35); cursor: pointer; transition: all 0.2s ease;">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.772.82 2.791.82 3.181 0 5.767-2.586 5.768-5.766 0-3.18-2.586-5.766-5.768-5.766zm9.969 5.828c0 5.514-4.486 10-10 10-1.802 0-3.486-.481-4.945-1.321l-5.055 1.321 1.353-4.939c-.896-1.492-1.353-3.21-1.353-5.061 0-5.514 4.486-10 10-10s10 4.486 10 10z"/>
-                    </svg>
-                    <span>Message on WhatsApp</span>
-                </button>
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end;">
+                    <!-- Mobile App Deep Link Button -->
+                    <a href="{{ route('app.deeplink.open', ['target' => 'job', 'id' => $job->id]) }}" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.72rem 1.15rem; border-radius: 12px; font-weight: 700; font-size: 0.9rem; text-decoration: none; border: 1.5px solid rgba(79, 70, 229, 0.35); color: #4338ca; background: #ffffff;">
+                        <span>📱</span>
+                        <span>Open in App</span>
+                    </a>
+
+                    <!-- WhatsApp Direct Message Hero Button -->
+                    <button type="button" onclick="openWhatsAppModal()" class="btn-whatsapp" style="display: inline-flex; align-items: center; gap: 0.6rem; background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: white; border: none; padding: 0.75rem 1.35rem; border-radius: 12px; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 16px rgba(37,211,102,0.35); cursor: pointer; transition: all 0.2s ease;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.772.82 2.791.82 3.181 0 5.767-2.586 5.768-5.766 0-3.18-2.586-5.766-5.768-5.766zm9.969 5.828c0 5.514-4.486 10-10 10-1.802 0-3.486-.481-4.945-1.321l-5.055 1.321 1.353-4.939c-.896-1.492-1.353-3.21-1.353-5.061 0-5.514 4.486-10 10-10s10 4.486 10 10z"/>
+                        </svg>
+                        <span>Message on WhatsApp</span>
+                    </button>
+                </div>
 
                 @if($referralPlatform !== 'direct')
                     <div style="font-size: 0.8rem; background: rgba(99, 102, 241, 0.1); color: #4338ca; padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600;">

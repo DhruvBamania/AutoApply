@@ -98,5 +98,77 @@
         </div>
     </div>
 
+    <!-- Interactive Deep Link Testing Hub -->
+    <div class="card" style="padding: 2rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 1.5rem;">⚡</span>
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: #1e1b4b; margin: 0;">Interactive Deep Link Tester & Router</h3>
+            </div>
+            <span class="badge" style="background: #eef2ff; color: #4338ca; font-weight: 700;">
+                autoapply:// & Universal Links
+            </span>
+        </div>
+        <p class="text-muted" style="font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.5;">
+            Test deep linking on your mobile phone or browser. Tapping any button triggers the native app intent, navigating directly to that screen inside the AutoApply Mobile App.
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
+            <!-- Deep Link 1: Explore Jobs -->
+            <a href="{{ route('app.deeplink.open', ['target' => 'jobs']) }}" class="card" style="padding: 1.1rem; border: 1px solid #e2e8f0; border-radius: 14px; text-decoration: none; transition: all 0.2s; background: #f8fafc;" onmouseover="this.style.background='#ffffff'; this.style.borderColor='#4f46e5';" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0';">
+                <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.35rem;">
+                    <span style="font-size: 1.25rem;">💼</span>
+                    <strong style="color: #1e1b4b; font-size: 0.95rem;">Explore Jobs Feed</strong>
+                </div>
+                <div style="font-size: 0.78rem; color: #64748b; font-family: monospace;">autoapply://jobs</div>
+            </a>
+
+            <!-- Deep Link 2: Scouted Opportunities -->
+            <a href="{{ route('app.deeplink.open', ['target' => 'scouted']) }}" class="card" style="padding: 1.1rem; border: 1px solid #e2e8f0; border-radius: 14px; text-decoration: none; transition: all 0.2s; background: #f8fafc;" onmouseover="this.style.background='#ffffff'; this.style.borderColor='#4f46e5';" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0';">
+                <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.35rem;">
+                    <span style="font-size: 1.25rem;">🎯</span>
+                    <strong style="color: #1e1b4b; font-size: 0.95rem;">Scouted Invitations</strong>
+                </div>
+                <div style="font-size: 0.78rem; color: #64748b; font-family: monospace;">autoapply://scouted</div>
+            </a>
+
+            <!-- Deep Link 3: AI Resume Studio -->
+            <a href="{{ route('app.deeplink.open', ['target' => 'resumes']) }}" class="card" style="padding: 1.1rem; border: 1px solid #e2e8f0; border-radius: 14px; text-decoration: none; transition: all 0.2s; background: #f8fafc;" onmouseover="this.style.background='#ffffff'; this.style.borderColor='#4f46e5';" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0';">
+                <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.35rem;">
+                    <span style="font-size: 1.25rem;">📄</span>
+                    <strong style="color: #1e1b4b; font-size: 0.95rem;">AI Resume Builder</strong>
+                </div>
+                <div style="font-size: 0.78rem; color: #64748b; font-family: monospace;">autoapply://resume-builder</div>
+            </a>
+
+            <!-- Deep Link 4: AI Interview Prep -->
+            <a href="{{ route('app.deeplink.open', ['target' => 'interview-prep']) }}" class="card" style="padding: 1.1rem; border: 1px solid #e2e8f0; border-radius: 14px; text-decoration: none; transition: all 0.2s; background: #f8fafc;" onmouseover="this.style.background='#ffffff'; this.style.borderColor='#4f46e5';" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0';">
+                <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.35rem;">
+                    <span style="font-size: 1.25rem;">💡</span>
+                    <strong style="color: #1e1b4b; font-size: 0.95rem;">AI Interview Prep</strong>
+                </div>
+                <div style="font-size: 0.78rem; color: #64748b; font-family: monospace;">autoapply://interview-prep</div>
+            </a>
+
+            <!-- Deep Link 5: Employer Dashboard -->
+            <a href="{{ route('app.deeplink.open', ['target' => 'dashboard']) }}" class="card" style="padding: 1.1rem; border: 1px solid #e2e8f0; border-radius: 14px; text-decoration: none; transition: all 0.2s; background: #f8fafc;" onmouseover="this.style.background='#ffffff'; this.style.borderColor='#4f46e5';" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0';">
+                <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.35rem;">
+                    <span style="font-size: 1.25rem;">🏢</span>
+                    <strong style="color: #1e1b4b; font-size: 0.95rem;">Company Dashboard</strong>
+                </div>
+                <div style="font-size: 0.78rem; color: #64748b; font-family: monospace;">autoapply://company/dashboard</div>
+            </a>
+
+            <!-- Deep Link 6: Inquiries & Leads -->
+            <a href="{{ route('app.deeplink.open', ['target' => 'inquiries']) }}" class="card" style="padding: 1.1rem; border: 1px solid #e2e8f0; border-radius: 14px; text-decoration: none; transition: all 0.2s; background: #f8fafc;" onmouseover="this.style.background='#ffffff'; this.style.borderColor='#4f46e5';" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0';">
+                <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.35rem;">
+                    <span style="font-size: 1.25rem;">💬</span>
+                    <strong style="color: #1e1b4b; font-size: 0.95rem;">Recruiter Inquiries</strong>
+                </div>
+                <div style="font-size: 0.78rem; color: #64748b; font-family: monospace;">autoapply://company/inquiries</div>
+            </a>
+        </div>
+    </div>
+
 </div>
 @endsection

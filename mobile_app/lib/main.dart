@@ -13,6 +13,7 @@ import 'screens/splash_screen.dart';
 /// ---------------------------------------------------------------------------
 
 import 'core/services/storage_service.dart';
+import 'core/services/deeplink_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,13 +27,34 @@ void main() async {
 }
 
 /// The Root Widget of the Mobile Application
-class AiLoopingApp extends StatelessWidget {
+class AiLoopingApp extends ConsumerStatefulWidget {
   const AiLoopingApp({super.key});
+
+  @override
+  ConsumerState<AiLoopingApp> createState() => _AiLoopingAppState();
+}
+
+class _AiLoopingAppState extends ConsumerState<AiLoopingApp> {
+  @override
+  void initState() {
+    super.initState();
+    // Initialize DeepLink routing & incoming Universal Links
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      DeepLinkService.init(ref);
+    });
+  }
+
+  @override
+  void dispose() {
+    DeepLinkService.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'AI Looping',
+      navigatorKey: DeepLinkService.navigatorKey,
+      title: 'AutoApply AI Looping',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       // The app starts at SplashScreen to check session status

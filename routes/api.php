@@ -50,6 +50,28 @@ $apiRoutes = function () {
         Route::get('/auth/me', [AuthController::class, 'me']);
         Route::post('/auth/logout', [AuthController::class, 'logout']);
 
+        // Deep Link Generation Helper API
+        Route::post('/deeplink/generate', function (\Illuminate\Http\Request $request) {
+            $validated = $request->validate([
+                'target' => 'required|string',
+                'id' => 'nullable',
+                'params' => 'nullable|array',
+            ]);
+            $target = $validated['target'];
+            $params = $validated['params'] ?? [];
+            if (!empty($validated['id'])) {
+                $params['id'] = $validated['id'];
+            }
+            $custom = \App\Services\DeepLinkService::createCustomSchemeUrl($target, $params);
+            $universal = \App\Services\DeepLinkService::createUniversalUrl($target, $params);
+            return response()->json([
+                'success' => true,
+                'deeplink' => $custom,
+                'universal' => $universal,
+                'target' => $target,
+            ]);
+        });
+
         // --- COMPANY ENDPOINTS ---
         Route::prefix('company')->group(function () {
             // Profile & WhatsApp Settings

@@ -8,14 +8,25 @@ import 'candidate_profile_screen.dart';
 
 /// CandidateShell: Bottom Navigation Container for Job Seekers / Candidates
 class CandidateShell extends StatefulWidget {
-  const CandidateShell({super.key});
+  final int initialIndex;
+
+  const CandidateShell({
+    super.key,
+    this.initialIndex = 0,
+  });
 
   @override
   State<CandidateShell> createState() => _CandidateShellState();
 }
 
 class _CandidateShellState extends State<CandidateShell> {
-  int _currentIndex = 0;
+  late int _currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.initialIndex;
+  }
 
   final List<Widget> _screens = const [
     JobDiscoveryScreen(),

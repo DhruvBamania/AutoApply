@@ -779,6 +779,12 @@ Route::get('/app-download', function () {
     return view('download_app', compact('downloadUrl', 'defaultGithubReleaseUrl', 'githubReleasePage', 'fileSizeMb', 'currentHost'));
 })->name('app.download.page');
 
+// --- Mobile Deep Linking & Universal App Links ---
+Route::get('/.well-known/assetlinks.json', [\App\Http\Controllers\DeepLinkController::class, 'assetLinks'])->name('deeplink.assetlinks');
+Route::get('/.well-known/apple-app-site-association', [\App\Http\Controllers\DeepLinkController::class, 'appleAppSiteAssociation'])->name('deeplink.apple_site_association');
+Route::get('/open-app', [\App\Http\Controllers\DeepLinkController::class, 'open'])->name('app.deeplink.open');
+Route::get('/app/open', [\App\Http\Controllers\DeepLinkController::class, 'open'])->name('app.deeplink.open_alt');
+
 // --- AI Multi-Platform Chrome Extension Companion ---
 Route::get('/chrome-extension', [\App\Http\Controllers\ChromeExtensionController::class, 'index'])->name('chrome_extension.index');
 Route::get('/chrome-extension/download', [\App\Http\Controllers\ChromeExtensionController::class, 'downloadZip'])->name('chrome_extension.download');

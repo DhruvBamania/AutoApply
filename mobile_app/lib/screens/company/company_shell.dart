@@ -10,14 +10,25 @@ import 'company_profile_screen.dart';
 /// In Flutter, a BottomNavigationBar inside a Scaffold allows switching
 /// between major app areas without pushing new routes onto the stack.
 class CompanyShell extends StatefulWidget {
-  const CompanyShell({super.key});
+  final int initialIndex;
+
+  const CompanyShell({
+    super.key,
+    this.initialIndex = 0,
+  });
 
   @override
   State<CompanyShell> createState() => _CompanyShellState();
 }
 
 class _CompanyShellState extends State<CompanyShell> {
-  int _currentIndex = 0;
+  late int _currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.initialIndex;
+  }
 
   final List<Widget> _screens = const [
     CompanyDashboardScreen(),
