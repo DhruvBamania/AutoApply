@@ -1,5 +1,16 @@
 @extends('layouts.app')
 
+@section('title', 'AutoApply AI Chrome Extension | 1-Click ATS Matching & Form AutoFill')
+@section('meta_description', 'Supercharge your job hunt on LinkedIn, Indeed, and Glassdoor with the AutoApply Chrome Extension: real-time ATS match scoring, AI screening question answers, and 1-click form autofill.')
+@section('og_title', 'AutoApply AI Chrome Companion')
+@section('meta_keywords', 'chrome extension, job apply bot, ATS scanner, autofill job applications, LinkedIn apply assistant, Indeed companion')
+
+@push('json_ld')
+<script type="application/ld+json">
+    {!! json_encode(\App\Services\SeoService::generateSoftwareApplicationJsonLd('extension'), JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+</script>
+@endpush
+
 @section('content')
 <div class="extension-page-wrapper">
     <!-- Hero Section -->

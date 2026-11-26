@@ -1,5 +1,16 @@
 @extends('layouts.app')
 
+@section('title', 'Download AutoApply Android App (APK) | AI Looping Mobile')
+@section('meta_description', 'Download the official AutoApply Android APK. Access real-time job notifications, candidate scouting, 1-tap WhatsApp apply, and AI interview prep on your phone.')
+@section('og_title', 'Download AutoApply Android App')
+@section('meta_keywords', 'download APK, android recruitment app, AutoApply mobile, job search app')
+
+@push('json_ld')
+<script type="application/ld+json">
+    {!! json_encode(\App\Services\SeoService::generateSoftwareApplicationJsonLd('mobile'), JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+</script>
+@endpush
+
 @section('content')
 <div style="max-width: 860px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 2rem;">
 

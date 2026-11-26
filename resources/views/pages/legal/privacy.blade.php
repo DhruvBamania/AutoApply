@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('title', 'Privacy Policy | AutoApply')
+@section('meta_description', 'AutoApply Privacy Policy: Learn how we protect your resume data, contact information, and job search privacy.')
+
 @section('content')
 <div style="max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 2rem;">
 

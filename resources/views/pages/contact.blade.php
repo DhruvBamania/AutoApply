@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title', 'Contact AutoApply Support & Sales Team')
+@section('meta_description', 'Contact AutoApply and AI Looping. Get 24/7 dedicated assistance for candidate applications, recruiter accounts, API integrations, and partnerships.')
+@section('og_title', 'Contact AutoApply Support')
+
 @section('content')
 <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 2rem;">
 

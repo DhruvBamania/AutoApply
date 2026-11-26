@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@section('title', 'Explore Job Openings & Instant WhatsApp Apply | AutoApply')
+@section('meta_description', 'Browse active tech and professional job openings. Connect with verified employers via 1-click WhatsApp messaging and tailored resume submissions.')
+@section('og_title', 'Explore Active Job Openings | AutoApply')
+@section('meta_keywords', 'jobs, tech jobs, software engineer jobs, remote jobs, WhatsApp apply, recruiter direct hire')
+
 @section('content')
 <div style="max-width: 1200px; margin: 0 auto; padding-bottom: 3rem;">
     <!-- Hero Header & Stats Banner -->

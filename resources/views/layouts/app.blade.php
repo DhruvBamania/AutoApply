@@ -4,7 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'AI Looping') }}</title>
+
+    <!-- Primary SEO Meta Tags -->
+    <title>@yield('title', \App\Services\SeoService::DEFAULT_TITLE)</title>
+    <meta name="title" content="@yield('title', \App\Services\SeoService::DEFAULT_TITLE)">
+    <meta name="description" content="@yield('meta_description', \App\Services\SeoService::DEFAULT_DESCRIPTION)">
+    <meta name="keywords" content="@yield('meta_keywords', \App\Services\SeoService::DEFAULT_KEYWORDS)">
+    <meta name="author" content="AutoApply AI - Dhruv Bamania">
+    <meta name="robots" content="@yield('meta_robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')">
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="application-name" content="AutoApply">
+    <meta name="apple-mobile-web-app-title" content="AutoApply">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="@yield('canonical_url', url()->current())">
+
+    <!-- Favicons & App Icons -->
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('chrome_extension/icons/icon16.png') }}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{{ asset('chrome_extension/icons/icon48.png') }}">
+    <link rel="icon" type="image/png" sizes="128x128" href="{{ asset('chrome_extension/icons/icon128.png') }}">
+    <link rel="apple-touch-icon" sizes="128x128" href="{{ asset('chrome_extension/icons/icon128.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+
+    <!-- Open Graph / Facebook / LinkedIn / WhatsApp Social Cards -->
+    <meta property="og:type" content="@yield('og_type', 'website')">
+    <meta property="og:url" content="@yield('canonical_url', url()->current())">
+    <meta property="og:title" content="@yield('og_title', \App\Services\SeoService::DEFAULT_TITLE)">
+    <meta property="og:description" content="@yield('meta_description', \App\Services\SeoService::DEFAULT_DESCRIPTION)">
+    <meta property="og:image" content="@yield('og_image', asset('images/og-image.png'))">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="AutoApply AI Platform Banner">
+    <meta property="og:site_name" content="AutoApply">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter / X Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="@yield('canonical_url', url()->current())">
+    <meta name="twitter:title" content="@yield('og_title', \App\Services\SeoService::DEFAULT_TITLE)">
+    <meta name="twitter:description" content="@yield('meta_description', \App\Services\SeoService::DEFAULT_DESCRIPTION)">
+    <meta name="twitter:image" content="@yield('og_image', asset('images/og-image.png'))">
+    <meta name="twitter:creator" content="@AutoApplyAI">
+
+    <!-- Global Schema.org JSON-LD (Organization & WebSite) -->
+    <script type="application/ld+json">
+        {!! json_encode(\App\Services\SeoService::generateOrganizationJsonLd(), JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+    </script>
+    <script type="application/ld+json">
+        {!! json_encode(\App\Services\SeoService::generateWebSiteJsonLd(), JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+    </script>
+
+    <!-- Page Specific Structured Data (JobPosting, SoftwareApplication, etc.) -->
+    @stack('json_ld')
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
@@ -857,7 +911,7 @@
         @media (max-width: 1280px) {
             .app-layout { padding-left: 1.25rem; padding-right: 1.25rem; }
             .navbar { gap: 0.5rem; padding: 0.55rem 0.85rem; flex-wrap: nowrap; }
-            .header-nav-center { gap: 0.25rem; min-width: 0; overflow: hidden; }
+            .header-nav-center { gap: 0.25rem; min-width: 0; overflow: visible; }
             .header-nav-link { padding: 0.35rem 0.5rem; font-size: 0.8rem; gap: 0.2rem; }
             .header-brand { margin-right: 0.25rem; flex-shrink: 0; }
             .header-actions { margin-left: 0.25rem; gap: 0.4rem; flex-shrink: 0; }

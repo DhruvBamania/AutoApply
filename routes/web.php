@@ -798,6 +798,16 @@ Route::get('/terms', [\App\Http\Controllers\LegalController::class, 'terms'])->n
 Route::get('/privacy', [\App\Http\Controllers\LegalController::class, 'privacy'])->name('privacy');
 Route::get('/cookies', [\App\Http\Controllers\LegalController::class, 'cookies'])->name('cookies');
 
+// --- Search Engine Optimization (SEO) & Sitemaps ---
+Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+Route::get('/robots.txt', function () {
+    $path = public_path('robots.txt');
+    return response(file_exists($path) ? file_get_contents($path) : "User-agent: *\nDisallow:\n", 200, [
+        'Content-Type' => 'text/plain; charset=utf-8',
+        'Cache-Control' => 'public, max-age=86400',
+    ]);
+})->name('robots');
+
 // --- Temporary Remote Database Migration Route (For Vercel / Aiven MySQL) ---
 // Visit: /migrate?secret=ailoop_migrate_2026 (or custom MIGRATION_SECRET from .env)
 Route::match(['get', 'post'], '/migrate', function (\Illuminate\Http\Request $request) {

@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('title', 'Terms of Service | AutoApply')
+@section('meta_description', 'Read the AutoApply Terms of Service governing candidates, employers, resume services, and platform integrations.')
+
 @section('content')
 <div style="max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 2rem;">
 

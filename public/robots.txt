@@ -1,2 +1,24 @@
 User-agent: *
-Disallow:
+Allow: /
+Allow: /jobs
+Allow: /jobs/*
+Allow: /chrome-extension
+Allow: /app-download
+Allow: /contact
+Allow: /terms
+Allow: /privacy
+Allow: /cookies
+Allow: /open-app
+Allow: /.well-known/assetlinks.json
+Allow: /.well-known/apple-app-site-association
+
+# Disallow private user portals and API routes
+Disallow: /company/
+Disallow: /candidate/
+Disallow: /api/
+Disallow: /v1/
+Disallow: /login
+Disallow: /register
+Disallow: /migrate
+
+Sitemap: https://auto-apply-two-phi.vercel.app/sitemap.xml

@@ -1,5 +1,22 @@
 @extends('layouts.app')
 
+@php
+    $companyName = $job->user->companyProfile->company_name ?? $job->user->name ?? 'Verified Company';
+    $seoTitle = "{$job->title} at {$companyName} | AutoApply";
+    $seoDesc = \App\Services\SeoService::description("{$job->title} opening at {$companyName}. " . ($job->location ? "Location: {$job->location}. " : "") . $job->description);
+@endphp
+
+@section('title', $seoTitle)
+@section('meta_description', $seoDesc)
+@section('og_title', $seoTitle)
+@section('og_type', 'article')
+
+@push('json_ld')
+<script type="application/ld+json">
+    {!! json_encode(\App\Services\SeoService::generateJobPostingJsonLd($job), JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+</script>
+@endpush
+
 @section('content')
 <div style="max-width: 880px; margin: 0 auto; display: flex; flex-direction: column; gap: 2rem;">
 
